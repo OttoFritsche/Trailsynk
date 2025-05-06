@@ -14,6 +14,7 @@ import RoutesPage from "./pages/Routes";
 import Statistics from "./pages/Statistics";
 import Badges from "./pages/Badges";
 import Trails from "./pages/Trails";
+import NewRoute from "./pages/NewRoute";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route index element={<AppHome />} />
             <Route path="profile" element={<Profile />} />
             <Route path="routes" element={<RoutesPage />} />
+            <Route path="routes/new" element={<NewRoute />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="badges" element={<Badges />} />
             <Route path="trails" element={<Trails />} />

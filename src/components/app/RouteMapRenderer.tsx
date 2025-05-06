@@ -6,9 +6,16 @@ import { config } from '@/config/env';
 interface RouteMapRendererProps {
   routeId?: string;
   zoom: number;
+  isEditing?: boolean;
+  points?: Array<[number, number]>;
 }
 
-const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ routeId, zoom }) => {
+const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ 
+  routeId, 
+  zoom, 
+  isEditing = false,
+  points = []
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -47,8 +54,34 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ routeId, zoom }) =>
     svg.style.left = '0';
     svg.style.pointerEvents = 'none';
     
-    // Path style changes based on selected route
-    if (routeId) {
+    // Path style changes based on selected route or editing mode
+    if (isEditing) {
+      // Show editing mode interface
+      const textOverlay = document.createElement('div');
+      textOverlay.style.position = 'absolute';
+      textOverlay.style.top = '10px';
+      textOverlay.style.left = '10px';
+      textOverlay.style.background = 'rgba(255,255,255,0.8)';
+      textOverlay.style.padding = '8px 12px';
+      textOverlay.style.borderRadius = '4px';
+      textOverlay.style.fontSize = '14px';
+      textOverlay.style.fontWeight = 'bold';
+      textOverlay.style.color = '#2ECC71';
+      textOverlay.textContent = 'Modo Edição';
+      mapContainer.appendChild(textOverlay);
+      
+      // We would add editing-specific elements here
+      // For now, just add a visual cue that the map is in editing mode
+      const editingOverlay = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      editingOverlay.setAttribute('width', '100%');
+      editingOverlay.setAttribute('height', '100%');
+      editingOverlay.setAttribute('fill', 'none');
+      editingOverlay.setAttribute('stroke', '#2ECC71');
+      editingOverlay.setAttribute('stroke-width', '6');
+      editingOverlay.setAttribute('stroke-opacity', '0.4');
+      svg.appendChild(editingOverlay);
+      
+    } else if (routeId) {
       // Create a more complex path if route is selected
       const routeType = routeId === '2' || routeId === '5' ? 'mountain' : 'road';
       const pathColor = routeType === 'mountain' ? '#2ECC71' : '#3498DB';
@@ -116,7 +149,7 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ routeId, zoom }) =>
       textElement.setAttribute('text-anchor', 'middle');
       textElement.setAttribute('font-size', '14px');
       textElement.setAttribute('fill', '#888');
-      textElement.textContent = 'Selecione uma rota para visualizar no mapa';
+      textElement.textContent = isEditing ? 'Clique para adicionar pontos' : 'Selecione uma rota para visualizar no mapa';
       svg.appendChild(textElement);
     }
     
@@ -124,7 +157,7 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ routeId, zoom }) =>
     mapContainer.appendChild(mapBackground);
     mapContainer.appendChild(svg);
     
-    console.log(`Mapa inicializado ${routeId ? `para rota ${routeId}` : 'sem rota específica'} com zoom ${zoom}`);
+    console.log(`Mapa inicializado ${routeId ? `para rota ${routeId}` : isEditing ? 'em modo de edição' : 'sem rota específica'} com zoom ${zoom}`);
     
     return () => {
       // Cleanup when unmounting
@@ -132,13 +165,13 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ routeId, zoom }) =>
         mapContainer.removeChild(mapContainer.firstChild);
       }
     };
-  }, [routeId, zoom]);
+  }, [routeId, zoom, isEditing, points]);
 
   return (
     <div 
       ref={mapRef} 
       className="relative w-full h-64 bg-gray-100 rounded-md"
-      style={{ minHeight: '250px' }}
+      style={{ minHeight: '250px', cursor: isEditing ? 'crosshair' : 'default' }}
     >
       <div className="absolute inset-0 flex items-center justify-center text-gray-400 z-0">
         <MapIcon className="h-8 w-8 opacity-20 mr-2" />

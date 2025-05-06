@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Bike, Mountain, PlusCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import RouteMap from '@/components/app/RouteMap';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -53,6 +54,7 @@ const mockRoutes = [
 
 const Routes: React.FC = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [selectedRouteId, setSelectedRouteId] = React.useState<string | undefined>(undefined);
   
   const handleRouteSelection = (routeId: string) => {
@@ -70,12 +72,19 @@ const Routes: React.FC = () => {
     }
   };
   
+  const handleNewRoute = () => {
+    navigate('/app/routes/new');
+  };
+  
   return (
     <div className="space-y-4">
       <div className="flex flex-col space-y-2">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Rotas Sugeridas e Exploradas</h1>
-          <Button className="bg-primary hover:bg-primary-dark">
+          <Button 
+            className="bg-[#2ECC71] hover:bg-[#27ae60]"
+            onClick={handleNewRoute}
+          >
             <PlusCircle className="h-4 w-4 mr-2" />
             Nova Rota
           </Button>
