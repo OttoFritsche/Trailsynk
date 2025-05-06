@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-[32px]">
           {/* Left column - Text content */}
           <div className="text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[50px] px-[49px] md:text-6xl">
               Seu Copiloto Inteligente para Aventuras de Bicicleta Inesquecíveis
             </h1>
             
