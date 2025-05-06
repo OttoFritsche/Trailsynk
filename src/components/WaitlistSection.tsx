@@ -2,13 +2,12 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSupabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const WaitlistSection: React.FC = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const supabase = useSupabase();
   const { toast } = useToast();
 
   const validateEmail = (email: string) => {
@@ -31,10 +30,6 @@ const WaitlistSection: React.FC = () => {
     setLoading(true);
     
     try {
-      if (!supabase) {
-        throw new Error("Conexão com Supabase não disponível");
-      }
-      
       const { error } = await supabase
         .from("waitlist_leads")
         .insert([{ email, created_at: new Date().toISOString() }]);
