@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import RoutesPage from "./pages/Routes";
 import Statistics from "./pages/Statistics";
 import Badges from "./pages/Badges";
+import Trails from "./pages/Trails";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="routes" element={<RoutesPage />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="badges" element={<Badges />} />
+            <Route path="trails" element={<Trails />} />
             {/* Future routes will be added here */}
           </Route>
           
