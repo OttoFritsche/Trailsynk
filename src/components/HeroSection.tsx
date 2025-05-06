@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
           {/* Right column - App mockup image */}
           <div className="flex justify-center lg:justify-end items-center animate-fade-in">
             <img 
-              src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" 
+              src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" 
               alt="TrailSynk App Mockup com Mapa de Ciclismo" 
               className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-none lg:w-[95%] h-auto object-contain"
             />
