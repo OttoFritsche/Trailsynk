@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import AppHome from "./pages/AppHome";
 import Profile from "./pages/Profile";
+import RoutesPage from "./pages/Routes";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -34,6 +35,7 @@ const App = () => (
           }>
             <Route index element={<AppHome />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="routes" element={<RoutesPage />} />
             {/* Future routes will be added here */}
           </Route>
           
