@@ -6,6 +6,8 @@ import { Helmet } from 'react-helmet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { Card, CardContent } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 // Dados fictícios para o feed inicial
 const mockActivities: Activity[] = [
@@ -48,6 +50,7 @@ const mockActivities: Activity[] = [
     createdAt: new Date('2023-05-14T16:20:00'),
     likes: 24,
     comments: 8,
+    hasLiked: true,
   },
   {
     id: '3',
@@ -67,6 +70,26 @@ const mockActivities: Activity[] = [
     createdAt: new Date('2023-05-14T06:45:00'),
     likes: 8,
     comments: 2,
+  },
+  {
+    id: '4',
+    user: {
+      id: 'user4',
+      name: 'Mariana Souza',
+      avatar: 'https://i.pravatar.cc/150?img=9',
+    },
+    type: 'trilha',
+    title: 'Aventura na Serra do Mar',
+    description: 'Trilha desafiadora com vistas incríveis. O esforço valeu muito a pena!',
+    metrics: {
+      distance: 12.4,
+      duration: 180,
+      elevation: 780,
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1553007830-89e37b527205?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+    createdAt: new Date('2023-05-13T11:15:00'),
+    likes: 17,
+    comments: 5,
   },
 ];
 
@@ -96,6 +119,7 @@ const exampleRoutes = [
 ];
 
 const AppHome: React.FC = () => {
+  const [activities, setActivities] = useState<Activity[]>(mockActivities);
   const [activeTab, setActiveTab] = useState("feed");
   const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>();
   const { user } = useAuth();
@@ -106,8 +130,29 @@ const AppHome: React.FC = () => {
   const handleConnectStrava = () => {
     // Simulação de conexão com Strava
     console.log("Solicitando conexão com Strava...");
-    alert("Função de conexão com Strava será implementada no backend");
+    toast.info("Função de conexão com Strava será implementada no backend");
     setIsConnectedToStrava(true);
+  };
+  
+  const handleLike = (activityId: string) => {
+    setActivities(prevActivities => 
+      prevActivities.map(activity => {
+        if (activity.id === activityId) {
+          const hasLiked = !activity.hasLiked;
+          const likeDelta = hasLiked ? 1 : -1;
+          return {
+            ...activity,
+            hasLiked,
+            likes: activity.likes + likeDelta
+          };
+        }
+        return activity;
+      })
+    );
+  };
+  
+  const handleComment = (activityId: string) => {
+    toast.info("Função de comentários será implementada em breve");
   };
   
   return (
@@ -118,19 +163,21 @@ const AppHome: React.FC = () => {
 
       <div className="space-y-6">
         {!isConnectedToStrava && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center justify-between mb-4">
-            <div>
-              <h3 className="font-medium text-yellow-800">Conecte-se ao Strava</h3>
-              <p className="text-yellow-700 text-sm">Conecte sua conta ao Strava para sincronizar suas atividades e rotas.</p>
-            </div>
-            <Button onClick={handleConnectStrava} className="bg-[#FC4C02] hover:bg-[#FB5B1F] text-white border-0">
-              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
-                      fill="currentColor"/>
-              </svg>
-              Conectar Strava
-            </Button>
-          </div>
+          <Card className="border-yellow-200 bg-yellow-50">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-yellow-800">Conecte-se ao Strava</h3>
+                <p className="text-yellow-700 text-sm">Conecte sua conta ao Strava para sincronizar suas atividades e rotas.</p>
+              </div>
+              <Button onClick={handleConnectStrava} className="bg-[#FC4C02] hover:bg-[#FB5B1F] text-white border-0">
+                <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                        fill="currentColor"/>
+                </svg>
+                Conectar Strava
+              </Button>
+            </CardContent>
+          </Card>
         )}
         
         <Tabs defaultValue="feed" value={activeTab} onValueChange={setActiveTab}>
@@ -139,22 +186,27 @@ const AppHome: React.FC = () => {
             <TabsTrigger value="routes">Rotas</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="feed" className="space-y-6">
+          <TabsContent value="feed" className="space-y-6 animate-fade-in">
             <h1 className="text-2xl font-bold">Feed de Atividades</h1>
             
             <div className="space-y-4">
-              {mockActivities.map((activity) => (
-                <ActivityFeedItem key={activity.id} activity={activity} />
+              {activities.map((activity) => (
+                <ActivityFeedItem 
+                  key={activity.id} 
+                  activity={activity} 
+                  onLike={handleLike}
+                  onComment={handleComment}
+                />
               ))}
             </div>
           </TabsContent>
           
-          <TabsContent value="routes" className="space-y-6">
+          <TabsContent value="routes" className="space-y-6 animate-fade-in">
             <h1 className="text-2xl font-bold">Rotas</h1>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <RouteMap routeId={selectedRouteId} className="h-full" />
+                <RouteMap routeId={selectedRouteId} className="h-[400px] w-full rounded-lg border" />
               </div>
               
               <div className="space-y-2">

@@ -5,8 +5,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CalendarClock, Award, BarChart3, ArrowUpRight } from 'lucide-react';
+import { 
+  CalendarClock, Award, BarChart3, ArrowUpRight, 
+  Trophy, Clock, Bike, TrendingUp, Mountain 
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
 interface ProfileData {
@@ -16,10 +20,55 @@ interface ProfileData {
   created_at?: string;
 }
 
+interface UserStats {
+  totalDistance: number;
+  totalDuration: number;
+  highestElevation: number;
+  longestRide: number;
+}
+
+interface UserBadge {
+  id: string;
+  title: string;
+  description: string;
+  iconUrl?: string;
+  dateEarned: Date;
+}
+
 const Profile = () => {
   const { user } = useAuth();
   const [profileData, setProfileData] = useState<ProfileData>({});
   const [loading, setLoading] = useState(true);
+  
+  // Placeholder for future data integration
+  const [userStats, setUserStats] = useState<UserStats>({
+    totalDistance: 0,
+    totalDuration: 0,
+    highestElevation: 0,
+    longestRide: 0
+  });
+  
+  // Placeholder badges
+  const [badges, setBadges] = useState<UserBadge[]>([
+    {
+      id: 'b1',
+      title: 'Iniciante',
+      description: 'Completou sua primeira trilha',
+      dateEarned: new Date('2023-10-15')
+    },
+    {
+      id: 'b2',
+      title: 'Explorador',
+      description: 'Explorou 5 rotas diferentes',
+      dateEarned: new Date('2023-11-02')
+    },
+    {
+      id: 'b3',
+      title: 'Aventureiro',
+      description: 'Percorreu mais de 100km em trilhas',
+      dateEarned: new Date('2023-12-18')
+    }
+  ]);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -35,6 +84,16 @@ const Profile = () => {
         if (error) throw error;
         
         setProfileData(data || {});
+        
+        // Simulate fetching stats (would be from Supabase in real implementation)
+        // This would be replaced with actual API calls
+        setUserStats({
+          totalDistance: 457.8,
+          totalDuration: 3840, // in minutes
+          highestElevation: 1250,
+          longestRide: 78.5
+        });
+        
       } catch (error: any) {
         console.error('Error fetching profile data:', error.message);
         toast.error('Erro ao carregar dados do perfil');
@@ -66,11 +125,36 @@ const Profile = () => {
       year: 'numeric'
     }).format(date);
   };
+  
+  const formatDuration = (minutes: number) => {
+    const days = Math.floor(minutes / (60 * 24));
+    const hours = Math.floor((minutes % (60 * 24)) / 60);
+    const mins = minutes % 60;
+    
+    return `${days ? `${days}d ` : ''}${hours ? `${hours}h ` : ''}${mins}min`;
+  };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[70vh]">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+      <div className="space-y-6">
+        <div className="flex items-center gap-6 bg-white rounded-xl shadow-sm p-6">
+          <Skeleton className="h-32 w-32 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+        </div>
+        
+        {[1, 2, 3].map(i => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-8 w-48" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-32 w-full" />
+            </CardContent>
+          </Card>
+        ))}
       </div>
     );
   }
@@ -160,36 +244,77 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Stats Placeholder */}
-        <Card className="bg-gray-50 border border-dashed">
+        {/* Stats Section - Improved */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-muted-foreground">
-              <BarChart3 className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
               Estatísticas de Performance
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-32 flex items-center justify-center">
-              <p className="text-muted-foreground text-sm">
-                Estatísticas de performance serão exibidas aqui.
-              </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center shadow-sm">
+                <Bike className="h-6 w-6 text-primary mb-2" />
+                <p className="text-sm text-muted-foreground mb-1">Distância Total</p>
+                <p className="text-xl font-bold">{userStats.totalDistance} km</p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center shadow-sm">
+                <Clock className="h-6 w-6 text-primary mb-2" />
+                <p className="text-sm text-muted-foreground mb-1">Tempo Total</p>
+                <p className="text-xl font-bold">{formatDuration(userStats.totalDuration)}</p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center shadow-sm">
+                <Mountain className="h-6 w-6 text-primary mb-2" />
+                <p className="text-sm text-muted-foreground mb-1">Maior Elevação</p>
+                <p className="text-xl font-bold">{userStats.highestElevation}m</p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center shadow-sm">
+                <Trophy className="h-6 w-6 text-primary mb-2" />
+                <p className="text-sm text-muted-foreground mb-1">Maior Pedalada</p>
+                <p className="text-xl font-bold">{userStats.longestRide} km</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Badges Placeholder */}
-        <Card className="bg-gray-50 border border-dashed">
+        {/* Badges Section - Improved */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-muted-foreground">
-              <Award className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-primary" />
               Badges Conquistados
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-32 flex items-center justify-center">
-              <p className="text-muted-foreground text-sm">
-                Seus badges e conquistas serão exibidos aqui.
-              </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {badges.map(badge => (
+                <div key={badge.id} className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2 shadow-sm">
+                    {badge.iconUrl ? (
+                      <img src={badge.iconUrl} alt={badge.title} className="w-10 h-10" />
+                    ) : (
+                      <Trophy className="w-8 h-8 text-primary" />
+                    )}
+                  </div>
+                  <h4 className="text-sm font-medium text-center">{badge.title}</h4>
+                  <p className="text-xs text-muted-foreground text-center mt-1">{badge.description}</p>
+                </div>
+              ))}
+              
+              {/* Placeholder para badges futuros */}
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={`placeholder-${index}`} className="flex flex-col items-center opacity-40">
+                  <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2 border border-dashed border-gray-300">
+                    <Award className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h4 className="text-sm font-medium text-center">???</h4>
+                  <p className="text-xs text-muted-foreground text-center mt-1">Badge Bloqueado</p>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
