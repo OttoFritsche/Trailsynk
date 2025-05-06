@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Bike, Navigation, Map, Activity } from 'lucide-react';
-
 const HeroSection: React.FC = () => {
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById('waitlist');
@@ -12,7 +10,6 @@ const HeroSection: React.FC = () => {
       });
     }
   };
-
   return <section className="relative flex items-center justify-center bg-gradient-to-br from-white to-gray-50 overflow-hidden pt-24 pb-12">
       {/* Stylized background */}
       <div className="absolute inset-0 z-0">
@@ -64,15 +61,10 @@ const HeroSection: React.FC = () => {
           
           {/* Right column - App mockup image */}
           <div className="relative animate-fade-in flex justify-center lg:justify-end">
-            <img 
-              src="/public/lovable-uploads/e8d29d1f-b87b-45a9-93c1-55d12ffee19c.png" 
-              alt="TrailSynk App Interface" 
-              className="rounded-lg shadow-2xl max-w-full h-auto object-cover"
-            />
+            <img alt="TrailSynk App Interface" className="rounded-lg shadow-2xl max-w-full h-auto object-cover" src="/lovable-uploads/6138b269-f9dd-461e-b66d-86b44d5bc195.png" />
           </div>
         </div>
       </div>
     </section>;
 };
-
 export default HeroSection;
