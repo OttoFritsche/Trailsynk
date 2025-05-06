@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from '@/integrations/supabase/client';
-import { Home, Map, User as UserIcon } from 'lucide-react';
+import { Home, Map, User as UserIcon, BarChart3, Award } from 'lucide-react';
 
 interface AppHeaderProps {
   user: User | null;
@@ -62,10 +63,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const displayName = profileData.username || profileData.full_name || user?.email?.split('@')[0] || 'TS';
   const avatarUrl = profileData.avatar_url || user?.user_metadata?.avatar_url;
   
-  // Navigation items
+  // Navigation items - Updated with new pages
   const navItems = [
     { name: 'Feed', path: '/app', icon: Home },
     { name: 'Rotas', path: '/app/routes', icon: Map },
+    { name: 'Estatísticas', path: '/app/statistics', icon: BarChart3 },
+    { name: 'Badges', path: '/app/badges', icon: Award },
     { name: 'Perfil', path: '/app/profile', icon: UserIcon }
   ];
   
@@ -148,6 +151,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/app/profile">Perfil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/app/statistics">Estatísticas</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/app/badges">Badges</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/app/routes">Minhas Rotas</Link>
