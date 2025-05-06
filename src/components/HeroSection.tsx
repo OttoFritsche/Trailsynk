@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Bike, Navigation, Map, Activity } from 'lucide-react';
+
 const HeroSection: React.FC = () => {
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById('waitlist');
@@ -10,6 +12,7 @@ const HeroSection: React.FC = () => {
       });
     }
   };
+
   return <section className="relative flex items-center justify-center bg-gradient-to-br from-white to-gray-50 overflow-hidden pt-24 pb-12">
       {/* Stylized background */}
       <div className="absolute inset-0 z-0">
@@ -33,52 +36,43 @@ const HeroSection: React.FC = () => {
       </div>
 
       <div className="container mx-auto z-10 py-[50px] px-[17px]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in">
-            Seu Copiloto Inteligente para Aventuras de Bicicleta Inesquecíveis
-          </h1>
-          
-          <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto animate-fade-in">
-            Descubra um novo jeito de pedalar com o TrailSynk. Nossa IA analisa rotas em tempo real 
-            para sua segurança, sugere percursos personalizados para seus objetivos, lembra da manutenção 
-            da sua bike e conecta você a uma comunidade vibrante.
-          </h2>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 animate-fade-in">
-            <Button onClick={scrollToWaitlist} size="lg" className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-              Quero Meu Assessor Ciclista!
-            </Button>
-          </div>
-
-          <div className="mt-4 animate-bounce">
-            <a href="#features" className="text-primary hover:text-primary-dark">
-              <ArrowDown className="mx-auto" size={32} />
-            </a>
-          </div>
-          
-          {/* App mockup showcase - Updated to show realistic app view */}
-          <div className="mt-8 md:mt-10 relative">
-            <div className="bg-white rounded-xl shadow-2xl overflow-hidden transition-all hover:shadow-3xl">
-              <div className="p-1 bg-gradient-to-r from-primary to-primary-dark px-0 mx-0 my-0 py-[11px]">
-                <div className="p-2 bg-white rounded-lg">
-                  {/* Realistic app mockup */}
-                  <div className="relative aspect-[5/3] md:aspect-[16/9] w-full bg-gray-50 rounded-lg overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {/* Realistic TrailSynk app mockup */}
-                      <div className="flex items-center justify-center w-full h-full py-0 my-0 mx-0 px-0">
-                        <div className="relative w-full max-w-lg py-0 px-0 rounded-sm mx-0 my-0">
-                          {/* Device frame */}
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Left column - Text content */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in">
+              Seu Copiloto Inteligente para Aventuras de Bicicleta Inesquecíveis
+            </h1>
+            
+            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">
+              Descubra um novo jeito de pedalar com o TrailSynk. Nossa IA analisa rotas em tempo real 
+              para sua segurança, sugere percursos personalizados para seus objetivos, lembra da manutenção 
+              da sua bike e conecta você a uma comunidade vibrante.
+            </h2>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 animate-fade-in">
+              <Button onClick={scrollToWaitlist} size="lg" className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                Quero Meu Assessor Ciclista!
+              </Button>
             </div>
+
+            <div className="mt-4 animate-bounce lg:hidden">
+              <a href="#features" className="text-primary hover:text-primary-dark">
+                <ArrowDown className="mx-auto" size={32} />
+              </a>
+            </div>
+          </div>
+          
+          {/* Right column - App mockup image */}
+          <div className="relative animate-fade-in flex justify-center lg:justify-end">
+            <img 
+              src="/public/lovable-uploads/e8d29d1f-b87b-45a9-93c1-55d12ffee19c.png" 
+              alt="TrailSynk App Interface" 
+              className="rounded-lg shadow-2xl max-w-full h-auto object-cover"
+            />
           </div>
         </div>
       </div>
     </section>;
 };
+
 export default HeroSection;
