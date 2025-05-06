@@ -5,7 +5,7 @@ import RouteMap from '@/components/app/RouteMap';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
-import { useMediaQuery } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Mock data for route examples
 const mockRoutes = [
@@ -52,7 +52,7 @@ const mockRoutes = [
 ];
 
 const Routes: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   const [selectedRouteId, setSelectedRouteId] = React.useState<string | undefined>(undefined);
   
   const handleRouteSelection = (routeId: string) => {
