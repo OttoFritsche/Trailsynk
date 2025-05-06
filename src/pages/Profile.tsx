@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/integrations/supabase/client';
@@ -444,11 +443,11 @@ const Profile = () => {
                                 <div className="font-medium">{payload[0].payload.month}</div>
                                 <div className="flex items-center gap-2 mt-1">
                                   <div className="h-2 w-2 rounded-full bg-primary" />
-                                  <span>Distância: {payload[0].value} km</span>
+                                  <span>Distância: {payload[0]?.value} km</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <div className="h-2 w-2 rounded-full bg-orange-500" />
-                                  <span>Elevação: {payload[2].value} m</span>
+                                  <span>Elevação: {payload[2]?.value || 0} m</span>
                                 </div>
                               </div>
                             )
