@@ -16,21 +16,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 type AuthView = 'login' | 'register';
 
-// Schema for form validation
+// Schema for form validation with simplified rules
 const registerSchema = z.object({
-  fullName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
-  username: z.string()
-    .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
-    .max(20, "Nome de usuário deve ter no máximo 20 caracteres")
-    .regex(/^[a-zA-Z0-9_]+$/, "Nome de usuário deve conter apenas letras, números e underscore"),
+  fullName: z.string().min(1, "Nome obrigatório"),
+  username: z.string().min(1, "Nome de usuário obrigatório"),
   email: z.string().email("Email inválido"),
-  phone: z.string().regex(/^(\+\d{1,3})?\s?\(?\d{2}\)?[\s.-]?\d{4,5}[\s.-]?\d{4}$/, "Telefone inválido"),
-  password: z.string()
-    .min(8, "Senha deve ter pelo menos 8 caracteres")
-    .regex(/[A-Z]/, "Senha deve conter pelo menos uma letra maiúscula")
-    .regex(/[a-z]/, "Senha deve conter pelo menos uma letra minúscula")
-    .regex(/[0-9]/, "Senha deve conter pelo menos um número")
-    .regex(/[^A-Za-z0-9]/, "Senha deve conter pelo menos um caractere especial"),
+  phone: z.string().optional(),
+  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
@@ -66,7 +58,7 @@ const Auth: React.FC = () => {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange',
+    mode: 'onSubmit', // Changed from onChange to onSubmit
   });
 
   const loginForm = useForm<LoginFormValues>({
@@ -83,13 +75,15 @@ const Auth: React.FC = () => {
     try {
       const { fullName, username, email, phone, password } = data;
       
+      console.log("Registering with data:", { fullName, username, email, phone });
+      
       const result = await signUp(
         email, 
         password, 
         {
           full_name: fullName,
           username,
-          phone,
+          phone: phone || undefined,
         }
       );
       
@@ -251,129 +245,107 @@ const Auth: React.FC = () => {
               ) : (
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
-                    <FormField
-                      control={registerForm.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nome completo</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Seu nome completo"
-                              autoComplete="name"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={registerForm.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nome de usuário</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="seu_usuario"
-                              autoComplete="username"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="email"
-                              placeholder="seu@email.com"
-                              autoComplete="email"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={registerForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Telefone</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="tel"
-                              placeholder="(99) 99999-9999"
-                              autoComplete="tel"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={registerForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Senha</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="password"
-                              placeholder="Crie uma senha forte"
-                              autoComplete="new-password"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={registerForm.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirmar senha</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="password"
-                              placeholder="Confirme sua senha"
-                              autoComplete="new-password"
-                              disabled={loading}
-                              className="flex h-10"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="space-y-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="fullName">Nome completo</Label>
+                        <Input
+                          id="fullName"
+                          placeholder="Seu nome completo"
+                          autoComplete="name"
+                          disabled={loading}
+                          {...registerForm.register("fullName")}
+                        />
+                        {registerForm.formState.errors.fullName && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.fullName.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <Label htmlFor="username">Nome de usuário</Label>
+                        <Input
+                          id="username"
+                          placeholder="seu_usuario"
+                          autoComplete="username"
+                          disabled={loading}
+                          {...registerForm.register("username")}
+                        />
+                        {registerForm.formState.errors.username && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.username.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="seu@email.com"
+                          autoComplete="email"
+                          disabled={loading}
+                          {...registerForm.register("email")}
+                        />
+                        {registerForm.formState.errors.email && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.email.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <Label htmlFor="phone">Telefone (opcional)</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="(99) 99999-9999"
+                          autoComplete="tel"
+                          disabled={loading}
+                          {...registerForm.register("phone")}
+                        />
+                        {registerForm.formState.errors.phone && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.phone.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <Label htmlFor="password">Senha</Label>
+                        <Input
+                          id="password"
+                          type="password"
+                          placeholder="Crie uma senha forte"
+                          autoComplete="new-password"
+                          disabled={loading}
+                          {...registerForm.register("password")}
+                        />
+                        {registerForm.formState.errors.password && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.password.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <Label htmlFor="confirmPassword">Confirmar senha</Label>
+                        <Input
+                          id="confirmPassword"
+                          type="password"
+                          placeholder="Confirme sua senha"
+                          autoComplete="new-password"
+                          disabled={loading}
+                          {...registerForm.register("confirmPassword")}
+                        />
+                        {registerForm.formState.errors.confirmPassword && (
+                          <p className="text-sm font-medium text-destructive">
+                            {registerForm.formState.errors.confirmPassword.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                     
                     <Button 
                       type="submit" 
