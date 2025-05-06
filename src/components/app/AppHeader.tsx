@@ -25,7 +25,6 @@ interface ProfileData {
   username?: string;
   full_name?: string;
   avatar_url?: string;
-  is_connected_to_strava?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
@@ -37,19 +36,23 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   useEffect(() => {
     const fetchProfileData = async () => {
       if (user) {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('username, full_name, avatar_url, is_connected_to_strava')
-          .eq('id', user.id)
-          .single();
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('username, full_name, avatar_url')
+            .eq('id', user.id)
+            .single();
+            
+          if (error) {
+            console.error('Error fetching profile data:', error);
+            return;
+          }
           
-        if (error) {
-          console.error('Error fetching profile data:', error);
-          return;
-        }
-        
-        if (data) {
-          setProfileData(data);
+          if (data) {
+            setProfileData(data);
+          }
+        } catch (error) {
+          console.error('Error in profile data fetch:', error);
         }
       }
     };
@@ -122,15 +125,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
             ))}
           </div>
           
-          {profileData.is_connected_to_strava && (
-            <Badge variant="outline" className="bg-[#FC4C02]/10 text-[#FC4C02] border-[#FC4C02]/20">
-              <svg className="mr-1 h-3 w-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
-                      fill="currentColor"/>
-              </svg>
-              Strava
-            </Badge>
-          )}
+          {/* We'll add Strava badge later once the database is updated */}
           
           {user && (
             <DropdownMenu>
@@ -158,17 +153,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
                 <DropdownMenuItem asChild>
                   <Link to="/app/routes">Minhas Rotas</Link>
                 </DropdownMenuItem>
-                {!profileData.is_connected_to_strava && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/app/profile" className="flex items-center">
-                      <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
-                              fill="#FC4C02"/>
-                      </svg>
-                      Conectar ao Strava
-                    </Link>
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem asChild>
+                  <Link to="/app/profile" className="flex items-center">
+                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                            fill="#FC4C02"/>
+                    </svg>
+                    Conectar ao Strava
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
                   Sair

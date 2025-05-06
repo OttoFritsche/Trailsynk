@@ -14,7 +14,6 @@ interface ProfileData {
   full_name?: string;
   avatar_url?: string;
   created_at?: string;
-  is_connected_to_strava?: boolean;
 }
 
 const Profile = () => {
@@ -29,7 +28,7 @@ const Profile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, full_name, avatar_url, created_at, is_connected_to_strava')
+          .select('username, full_name, avatar_url, created_at')
           .eq('id', user.id)
           .single();
 
@@ -81,6 +80,10 @@ const Profile = () => {
     : 'Data desconhecida';
 
   const displayName = profileData.full_name || profileData.username || user?.email?.split('@')[0] || 'Ciclista';
+  
+  // For now, we'll assume the user is not connected to Strava
+  // Once the database is updated, we can fetch this value
+  const isConnectedToStrava = false;
 
   return (
     <>
@@ -123,7 +126,7 @@ const Profile = () => {
             <CardTitle className="flex items-center gap-2">
               <svg className="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
-                      fill={profileData.is_connected_to_strava ? "#FC4C02" : "currentColor"}/>
+                      fill={isConnectedToStrava ? "#FC4C02" : "currentColor"}/>
               </svg>
               Conexão com Strava
             </CardTitle>
@@ -132,25 +135,25 @@ const Profile = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  {profileData.is_connected_to_strava ? (
+                  {isConnectedToStrava ? (
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Conectado</Badge>
                   ) : (
                     <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">Desconectado</Badge>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {profileData.is_connected_to_strava 
+                  {isConnectedToStrava 
                     ? 'Sua conta está conectada ao Strava. Seus dados de atividades estão sendo sincronizados.' 
                     : 'Conecte sua conta Strava para sincronizar automaticamente suas atividades e estatísticas.'}
                 </p>
               </div>
               <Button 
                 onClick={handleStravaConnect}
-                className={profileData.is_connected_to_strava 
+                className={isConnectedToStrava 
                   ? "bg-white text-gray-800 border border-gray-200 hover:bg-gray-50" 
                   : "bg-[#FC4C02] hover:bg-[#E34302] text-white"}
               >
-                {profileData.is_connected_to_strava ? 'Reconectar' : 'Conectar Strava'}
+                {isConnectedToStrava ? 'Reconectar' : 'Conectar Strava'}
                 <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
