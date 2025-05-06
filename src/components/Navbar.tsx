@@ -9,11 +9,11 @@ const Navbar: React.FC = () => {
       });
     }
   };
-  return <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
+  return <nav className="fixed top-0 left-0 w-full z-40 bg-white/90 backdrop-blur-md shadow-sm py-0 px-0 mx-0 my-0">
       <div className="container mx-auto flex items-center justify-between py-0 px-[15px]">
         <div className="flex items-center">
           <a href="#" className="flex items-center">
-            <img src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" alt="TrailSynk Logo" className="h-40 w-auto" />
+            <img src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" alt="TrailSynk Logo" className="h-32 w-auto" />
           </a>
         </div>
 
