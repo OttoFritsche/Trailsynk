@@ -135,12 +135,19 @@ const Auth: React.FC = () => {
   };
 
   const handleStravaLogin = () => {
-    // Placeholder for Strava OAuth flow
-    // This would typically redirect to a backend endpoint like /auth/strava
-    console.log("Iniciando fluxo de autenticação do Strava");
-    // Exemplo de redirecionamento para um endpoint backend (comentado)
-    // window.location.href = "/api/auth/strava";
-    alert("Função de login com Strava será implementada no backend");
+    // In a real application, this would be your backend endpoint that
+    // handles the OAuth flow initiation
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://your-backend-url.com';
+    const endpoint = `${backendUrl}/auth/strava`;
+    
+    // Using window.location to redirect to the backend endpoint
+    toast.info('Redirecionando para autenticação do Strava...');
+    
+    // In a production environment, we would uncomment this line:
+    window.location.href = endpoint;
+    
+    // For development, show a toast with information
+    // toast.info('Em ambiente de produção, você seria redirecionado para autenticação do Strava');
   };
 
   return (

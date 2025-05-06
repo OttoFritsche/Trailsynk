@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from '@supabase/supabase-js';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from '@/integrations/supabase/client';
+import { Home, Map, User as UserIcon } from 'lucide-react';
 
 interface AppHeaderProps {
   user: User | null;
@@ -24,15 +25,13 @@ interface ProfileData {
   username?: string;
   full_name?: string;
   avatar_url?: string;
+  is_connected_to_strava?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const { signOut } = useAuth();
   const [profileData, setProfileData] = useState<ProfileData>({});
-  
-  // Estado de exemplo para simular conexão com Strava
-  // Num app real, isso viria de uma API ou contexto
-  const isConnectedToStrava = false;
+  const location = useLocation();
   
   // Fetch user profile data
   useEffect(() => {
@@ -40,7 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
       if (user) {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, full_name, avatar_url')
+          .select('username, full_name, avatar_url, is_connected_to_strava')
           .eq('id', user.id)
           .single();
           
@@ -61,6 +60,21 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const displayName = profileData.username || profileData.full_name || user?.email?.split('@')[0] || 'TS';
   const avatarUrl = profileData.avatar_url || user?.user_metadata?.avatar_url;
   
+  // Navigation items
+  const navItems = [
+    { name: 'Feed', path: '/app', icon: Home },
+    { name: 'Rotas', path: '/app/routes', icon: Map },
+    { name: 'Perfil', path: '/app/profile', icon: UserIcon }
+  ];
+  
+  // Check if path is active
+  const isActive = (path: string) => {
+    if (path === '/app' && location.pathname === '/app') {
+      return true;
+    }
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
+  
   return (
     <header className="sticky top-0 border-b bg-white/95 backdrop-blur z-10">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-3xl">
@@ -72,8 +86,43 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
           />
         </Link>
         
-        <div className="flex items-center space-x-4">
-          {isConnectedToStrava && (
+        <div className="flex items-center space-x-2 md:space-x-4">
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(item.path)
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-secondary/70 hover:text-secondary hover:bg-gray-100'
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+          
+          {/* Mobile Navigation */}
+          <div className="flex md:hidden items-center space-x-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`p-2 rounded-md transition-colors ${
+                  isActive(item.path)
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-secondary/70 hover:bg-gray-100'
+                }`}
+                aria-label={item.name}
+              >
+                <item.icon className="h-5 w-5" />
+              </Link>
+            ))}
+          </div>
+          
+          {profileData.is_connected_to_strava && (
             <Badge variant="outline" className="bg-[#FC4C02]/10 text-[#FC4C02] border-[#FC4C02]/20">
               <svg className="mr-1 h-3 w-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
@@ -109,15 +158,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
                 <DropdownMenuItem asChild>
                   <Link to="/app/routes">Minhas Rotas</Link>
                 </DropdownMenuItem>
-                {!isConnectedToStrava && (
-                  <DropdownMenuItem>
-                    <span className="flex items-center">
+                {!profileData.is_connected_to_strava && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/app/profile" className="flex items-center">
                       <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
                               fill="#FC4C02"/>
                       </svg>
                       Conectar ao Strava
-                    </span>
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />

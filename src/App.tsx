@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import AppHome from "./pages/AppHome";
+import Profile from "./pages/Profile";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -32,6 +33,7 @@ const App = () => (
             </ProtectedRoute>
           }>
             <Route index element={<AppHome />} />
+            <Route path="profile" element={<Profile />} />
             {/* Future routes will be added here */}
           </Route>
           

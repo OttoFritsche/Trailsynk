@@ -16,6 +16,7 @@ export type UserMetadata = {
   username?: string;
   phone?: string;
   avatar_url?: string;
+  is_connected_to_strava?: boolean;
 }
 
 export const useAuth = () => {
