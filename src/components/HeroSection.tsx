@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-[32px]">
           {/* Left column - Text content */}
           <div className="text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[40px] px-[45px] md:text-6xl">Pedale Mais Longe, Mais Seguro. Com a Inteligência TrailSynk.</h1>
+            <h1 className="text-4xl sm:text-5xl mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[40px] md:text-6xl px-[42px] font-extrabold text-left mx-0 my-[30px]">Pedale Mais Longe, Mais Seguro. Com a Inteligência TrailSynk.</h1>
             
             <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">Desbloqueie novas aventuras com rotas otimizadas por IA para seu estilo de pedal, receba insights de manutenção e conecte-se com ciclistas que compartilham sua paixão.</h2>
             
