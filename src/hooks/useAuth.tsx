@@ -11,6 +11,13 @@ export type AuthState = {
   loading: boolean;
 };
 
+export type UserMetadata = {
+  full_name?: string;
+  username?: string;
+  phone?: string;
+  avatar_url?: string;
+}
+
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>({
     session: null,
@@ -51,34 +58,94 @@ export const useAuth = () => {
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (
+    email: string,
+    password: string,
+    username?: string
+  ) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
+      let response;
+      
+      if (username) {
+        // If username is provided, we need to find the email associated with it
+        const { data, error: fetchError } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', username)
+          .single();
+          
+        if (fetchError) {
+          console.error('Error fetching user by username:', fetchError);
+          throw new Error('Nome de usuário não encontrado');
+        }
+        
+        if (!data) {
+          throw new Error('Nome de usuário não encontrado');
+        }
+        
+        // Get user email from auth.users using the user ID
+        const { data: userData, error: userError } = await supabase.auth.admin.getUserById(data.id);
+        
+        if (userError || !userData?.user) {
+          throw new Error('Erro ao obter informações do usuário');
+        }
+        
+        // Now sign in with the email
+        response = await supabase.auth.signInWithPassword({
+          email: userData.user.email,
+          password,
+        });
+      } else {
+        // Normal email login
+        response = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+      }
+      
+      const { error } = response;
       if (error) throw error;
+      
       navigate('/app');
       return { success: true };
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao fazer login');
+      console.error('Login error:', error);
       return { success: false, error };
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, metadata?: UserMetadata) => {
     try {
+      // First check if username is unique if provided
+      if (metadata?.username) {
+        const { data: existingUser, error: checkError } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('username', metadata.username)
+          .maybeSingle();
+          
+        if (checkError) {
+          console.error('Error checking username:', checkError);
+        }
+        
+        if (existingUser) {
+          throw new Error('Este nome de usuário já está em uso');
+        }
+      }
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: metadata
+        }
       });
 
       if (error) throw error;
-      toast.success('Cadastro realizado! Verifique seu email.');
+      
       return { success: true };
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao criar conta');
+      console.error('Signup error:', error);
       return { success: false, error };
     }
   };
@@ -87,8 +154,28 @@ export const useAuth = () => {
     try {
       await supabase.auth.signOut();
       navigate('/auth');
+      return { success: true };
     } catch (error: any) {
+      console.error('Signout error:', error);
       toast.error('Erro ao sair da conta');
+      return { success: false, error };
+    }
+  };
+
+  const updateUserProfile = async (updates: UserMetadata) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: updates
+      });
+
+      if (error) throw error;
+      
+      toast.success('Perfil atualizado com sucesso');
+      return { success: true };
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      toast.error(error.message || 'Erro ao atualizar perfil');
+      return { success: false, error };
     }
   };
 
@@ -97,5 +184,6 @@ export const useAuth = () => {
     signIn,
     signUp,
     signOut,
+    updateUserProfile
   };
 };

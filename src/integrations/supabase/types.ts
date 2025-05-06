@@ -13,20 +13,29 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          full_name: string | null
           id: string
+          phone: string | null
           username: string | null
+          username_lower: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
           id: string
+          phone?: string | null
           username?: string | null
+          username_lower?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
           id?: string
+          phone?: string | null
           username?: string | null
+          username_lower?: string | null
         }
         Relationships: []
       }

@@ -1,20 +1,52 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Github, Mail } from 'lucide-react';
+import { Github, Mail, User, Phone, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Helmet } from 'react-helmet';
+import { toast } from 'sonner';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type AuthView = 'login' | 'register';
 
+// Schema for form validation
+const registerSchema = z.object({
+  fullName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+  username: z.string()
+    .min(3, "Nome de usuário deve ter pelo menos 3 caracteres")
+    .max(20, "Nome de usuário deve ter no máximo 20 caracteres")
+    .regex(/^[a-zA-Z0-9_]+$/, "Nome de usuário deve conter apenas letras, números e underscore"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().regex(/^(\+\d{1,3})?\s?\(?\d{2}\)?[\s.-]?\d{4,5}[\s.-]?\d{4}$/, "Telefone inválido"),
+  password: z.string()
+    .min(8, "Senha deve ter pelo menos 8 caracteres")
+    .regex(/[A-Z]/, "Senha deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "Senha deve conter pelo menos uma letra minúscula")
+    .regex(/[0-9]/, "Senha deve conter pelo menos um número")
+    .regex(/[^A-Za-z0-9]/, "Senha deve conter pelo menos um caractere especial"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
+});
+
+const loginSchema = z.object({
+  usernameOrEmail: z.string().min(1, "Digite seu nome de usuário ou email"),
+  password: z.string().min(1, "Digite sua senha"),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 const Auth: React.FC = () => {
   const [view, setView] = useState<AuthView>('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
   const { user, signIn, signUp } = useAuth();
@@ -24,25 +56,88 @@ const Auth: React.FC = () => {
     return <Navigate to="/app" replace />;
   }
   
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const registerForm = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      username: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+    },
+    mode: 'onChange',
+  });
+
+  const loginForm = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      usernameOrEmail: '',
+      password: '',
+    },
+  });
+
+  const handleRegister = useCallback(async (data: RegisterFormValues) => {
     setLoading(true);
     
     try {
-      if (view === 'login') {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
+      const { fullName, username, email, phone, password } = data;
+      
+      const result = await signUp(
+        email, 
+        password, 
+        {
+          full_name: fullName,
+          username,
+          phone,
+        }
+      );
+      
+      if (!result.success) {
+        throw new Error(result.error?.message || "Erro ao criar conta");
       }
+      
+      toast.success('Cadastro realizado! Você já pode fazer login.');
+      setView('login');
+      loginForm.setValue('usernameOrEmail', username);
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Erro ao criar conta");
     } finally {
       setLoading(false);
     }
-  };
+  }, [signUp]);
 
+  const handleLogin = useCallback(async (data: LoginFormValues) => {
+    setLoading(true);
+    
+    try {
+      const { usernameOrEmail, password } = data;
+      // Determine if the input is an email or username
+      const isEmail = usernameOrEmail.includes('@');
+      
+      const result = await signIn(
+        isEmail ? usernameOrEmail : '', 
+        password, 
+        isEmail ? undefined : usernameOrEmail
+      );
+      
+      if (!result.success) {
+        throw new Error(result.error?.message || "Erro ao fazer login");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Erro ao fazer login");
+    } finally {
+      setLoading(false);
+    }
+  }, [signIn]);
+  
   const toggleView = () => {
     setView(view === 'login' ? 'register' : 'login');
-    setEmail('');
-    setPassword('');
+    // Reset form states
+    registerForm.reset();
+    loginForm.reset();
   };
 
   const handleStravaLogin = () => {
@@ -100,43 +195,196 @@ const Auth: React.FC = () => {
             </CardHeader>
             
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoComplete="email"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder={view === 'login' ? 'Sua senha' : 'Crie uma senha forte'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    autoComplete={view === 'login' ? 'current-password' : 'new-password'}
-                  />
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={loading}
-                >
-                  {loading 
-                    ? 'Processando...'
-                    : view === 'login' ? 'Entrar' : 'Cadastrar'}
-                </Button>
-              </form>
+              {view === 'login' ? (
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+                    <FormField
+                      control={loginForm.control}
+                      name="usernameOrEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome de usuário ou Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="seu_usuario ou seu@email.com"
+                              autoComplete="username"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={loginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Senha</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              placeholder="Sua senha"
+                              autoComplete="current-password"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={loading}
+                    >
+                      {loading ? 'Processando...' : 'Entrar'}
+                    </Button>
+                  </form>
+                </Form>
+              ) : (
+                <Form {...registerForm}>
+                  <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
+                    <FormField
+                      control={registerForm.control}
+                      name="fullName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome completo</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Seu nome completo"
+                              autoComplete="name"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome de usuário</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="seu_usuario"
+                              autoComplete="username"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="email"
+                              placeholder="seu@email.com"
+                              autoComplete="email"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Telefone</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="tel"
+                              placeholder="(99) 99999-9999"
+                              autoComplete="tel"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Senha</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              placeholder="Crie uma senha forte"
+                              autoComplete="new-password"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={registerForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirmar senha</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              placeholder="Confirme sua senha"
+                              autoComplete="new-password"
+                              disabled={loading}
+                              className="flex h-10"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={loading}
+                    >
+                      {loading ? 'Processando...' : 'Cadastrar'}
+                    </Button>
+                  </form>
+                </Form>
+              )}
               
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">

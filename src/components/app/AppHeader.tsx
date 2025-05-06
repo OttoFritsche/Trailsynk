@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from '@supabase/supabase-js';
@@ -14,17 +14,52 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from '@/integrations/supabase/client';
 
 interface AppHeaderProps {
   user: User | null;
 }
 
+interface ProfileData {
+  username?: string;
+  full_name?: string;
+  avatar_url?: string;
+}
+
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const { signOut } = useAuth();
+  const [profileData, setProfileData] = useState<ProfileData>({});
   
   // Estado de exemplo para simular conexão com Strava
   // Num app real, isso viria de uma API ou contexto
   const isConnectedToStrava = false;
+  
+  // Fetch user profile data
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('username, full_name, avatar_url')
+          .eq('id', user.id)
+          .single();
+          
+        if (error) {
+          console.error('Error fetching profile data:', error);
+          return;
+        }
+        
+        if (data) {
+          setProfileData(data);
+        }
+      }
+    };
+    
+    fetchProfileData();
+  }, [user]);
+  
+  const displayName = profileData.username || profileData.full_name || user?.email?.split('@')[0] || 'TS';
+  const avatarUrl = profileData.avatar_url || user?.user_metadata?.avatar_url;
   
   return (
     <header className="sticky top-0 border-b bg-white/95 backdrop-blur z-10">
@@ -53,15 +88,20 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="p-0 h-9 w-9 rounded-full" aria-label="Menu de perfil">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.user_metadata?.avatar_url} />
+                    <AvatarImage src={avatarUrl} />
                     <AvatarFallback>
-                      {user?.email?.substring(0, 2).toUpperCase() || 'TS'}
+                      {displayName.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {profileData.username && (
+                    <div className="text-sm font-normal text-muted-foreground">@{profileData.username}</div>
+                  )}
+                  <div>{profileData.full_name || displayName}</div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/app/profile">Perfil</Link>
