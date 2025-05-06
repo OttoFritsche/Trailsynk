@@ -58,9 +58,9 @@
   }
 }
 
-/* Reduced spacing for sections */
+/* Further reduced spacing for sections */
 section {
-  @apply py-6;
+  @apply py-5; /* Reduced from py-6 */
 }
 
 /* Better spacing between sections */
@@ -70,7 +70,7 @@ section + section {
 
 /* Reduced margin between section elements */
 section > div > div {
-  @apply mb-3;
+  @apply mb-2; /* Reduced from mb-3 */
 }
 
 /* Animation classes */

@@ -29,11 +29,13 @@ const Index = () => {
         
         <main className="flex-grow">
           <HeroSection />
-          <FeaturesSection />
-          <HowItWorksSection />
-          <TestimonialsSection />
-          <RoadmapSection />
-          <WaitlistSection />
+          <div className="space-y-6"> {/* Reduced spacing between sections */}
+            <FeaturesSection />
+            <HowItWorksSection />
+            <TestimonialsSection />
+            <RoadmapSection />
+            <WaitlistSection />
+          </div>
         </main>
         
         <FooterSection />

@@ -27,10 +27,10 @@ const roadmapItems = [
 
 const RoadmapSection: React.FC = () => {
   return (
-    <section id="roadmap" className="py-20 bg-gray-50">
+    <section id="roadmap" className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-secondary mb-4">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl sm:text-4xl font-bold text-secondary mb-3">
             A Evolução do TrailSynk Não Para!
           </h2>
           <p className="text-lg text-secondary/70 max-w-3xl mx-auto">
@@ -38,18 +38,18 @@ const RoadmapSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {roadmapItems.map((item, index) => (
             <div 
               key={index}
-              className="flex items-start mb-10 animate-on-scroll"
+              className="flex items-start animate-on-scroll"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className="flex-shrink-0 mr-4 bg-white p-2 rounded-full shadow-md">
                 {item.icon}
               </div>
-              <div className="flex-grow bg-white rounded-lg p-5 shadow-md hover:shadow-lg transition-all">
-                <h3 className="text-xl font-bold text-secondary mb-2">
+              <div className="flex-grow bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-all">
+                <h3 className="text-xl font-bold text-secondary mb-1">
                   {item.title}
                 </h3>
                 <p className="text-secondary/70">

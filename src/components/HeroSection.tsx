@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Bike, Navigation, Map } from 'lucide-react';
+import { ArrowDown, Bike, Navigation, Map, Activity } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
   const scrollToWaitlist = () => {
@@ -12,8 +12,8 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative flex items-center justify-center bg-gradient-to-br from-white to-gray-50 overflow-hidden pt-20 pb-12">
-      {/* New stylized background */}
+    <section className="relative flex items-center justify-center bg-gradient-to-br from-white to-gray-50 overflow-hidden pt-24 pb-12">
+      {/* Stylized background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-primary/10"></div>
         
@@ -35,7 +35,7 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 z-10">
+      <div className="container mx-auto px-4 py-6 z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in">
             Seu Copiloto Inteligente para Aventuras de Bicicleta Inesquecíveis
@@ -57,72 +57,122 @@ const HeroSection: React.FC = () => {
             </Button>
           </div>
 
-          <div className="mt-6 animate-bounce">
+          <div className="mt-4 animate-bounce">
             <a href="#features" className="text-primary hover:text-primary-dark">
               <ArrowDown className="mx-auto" size={32} />
             </a>
           </div>
           
-          {/* App showcase illustration */}
-          <div className="mt-10 md:mt-12 relative">
+          {/* App mockup showcase - Updated to show realistic app view */}
+          <div className="mt-8 md:mt-10 relative">
             <div className="bg-white rounded-xl shadow-2xl overflow-hidden transition-all hover:shadow-3xl">
               <div className="p-1 bg-gradient-to-r from-primary to-primary-dark">
                 <div className="p-2 bg-white rounded-lg">
-                  <div className="relative aspect-video md:aspect-[16/9] w-full bg-gray-50 rounded-lg overflow-hidden">
-                    {/* Main visualization - cyclist with app interface */}
+                  {/* Realistic app mockup */}
+                  <div className="relative aspect-[5/3] md:aspect-[16/9] w-full bg-gray-50 rounded-lg overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-primary/10"></div>
-                      
-                      {/* Stylized cyclist silhouette */}
-                      <div className="absolute bottom-0 left-1/4 transform -translate-x-1/2 h-full flex items-end">
-                        <div className="relative h-4/5 w-64">
-                          <Bike className="absolute bottom-20 left-10 text-secondary/60" size={80} />
-                          <div className="absolute bottom-28 left-24 w-12 h-20 rounded-full bg-secondary/60"></div>
-                        </div>
-                      </div>
-                      
-                      {/* App interface mockup */}
-                      <div className="absolute top-1/2 right-1/4 transform translate-x-1/2 -translate-y-1/2">
-                        <div className="w-64 h-96 bg-white rounded-3xl shadow-xl border-4 border-gray-100 overflow-hidden">
-                          <div className="h-10 bg-primary w-full flex items-center px-4">
-                            <div className="bg-white/25 w-24 h-4 rounded-full"></div>
-                            <div className="ml-auto flex space-x-1">
-                              <div className="bg-white/25 w-4 h-4 rounded-full"></div>
-                              <div className="bg-white/25 w-4 h-4 rounded-full"></div>
+                      {/* Realistic TrailSynk app mockup */}
+                      <div className="flex items-center justify-center w-full h-full">
+                        <div className="relative w-full max-w-lg">
+                          {/* Device frame */}
+                          <div className="relative mx-auto bg-secondary rounded-[3rem] overflow-hidden shadow-xl border-8 border-gray-900" style={{maxWidth: "280px", height: "560px"}}>
+                            {/* Top notch bar */}
+                            <div className="absolute top-0 left-0 right-0 h-6 bg-gray-900 flex justify-center items-end z-20">
+                              <div className="w-16 h-4 rounded-b-xl bg-gray-900"></div>
                             </div>
-                          </div>
-                          <div className="p-3 bg-gray-50 h-full">
-                            <div className="bg-white rounded-lg shadow-sm h-40 mb-3 p-2">
-                              <div className="bg-gray-100 h-full rounded-md flex items-center justify-center">
-                                <Map className="text-primary opacity-50" size={32} />
-                              </div>
-                            </div>
-                            <div className="flex space-x-2">
-                              <div className="bg-white rounded-lg shadow-sm flex-1 h-20 p-2">
-                                <div className="bg-gray-100 h-full rounded-md flex items-center justify-center">
-                                  <Navigation className="text-primary opacity-50" size={24} />
+                            
+                            {/* App screen */}
+                            <div className="h-full rounded-xl overflow-hidden bg-white">
+                              {/* App header */}
+                              <div className="h-12 bg-primary flex items-center px-4 justify-between">
+                                <div className="flex items-center">
+                                  <Map className="h-5 w-5 text-white mr-2" />
+                                  <div className="text-white font-medium">TrailSynk</div>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                  <div className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center">
+                                    <Navigation className="h-3 w-3 text-white" />
+                                  </div>
+                                  <div className="h-6 w-6 bg-white/20 rounded-full flex items-center justify-center">
+                                    <Activity className="h-3 w-3 text-white" />
+                                  </div>
                                 </div>
                               </div>
-                              <div className="bg-white rounded-lg shadow-sm flex-1 h-20 p-2">
-                                <div className="bg-gray-100 h-full rounded-md flex items-center justify-center">
-                                  <Bike className="text-primary opacity-50" size={24} />
+                              
+                              {/* App map view */}
+                              <div className="h-[calc(100%-12rem)] bg-gray-100 relative">
+                                {/* Map background */}
+                                <div className="absolute inset-0 opacity-90" style={{
+                                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='%23e5e5e5' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                                  backgroundSize: '50px 50px'
+                                }}></div>
+                                
+                                {/* Roads */}
+                                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                  <path d="M10,30 L30,30 L30,60 L70,60 L70,80" stroke="#d4d4d4" strokeWidth="4" fill="none" />
+                                  <path d="M20,10 L20,40 L50,40 L50,90" stroke="#d4d4d4" strokeWidth="4" fill="none" />
+                                  <path d="M80,20 L80,50 L40,50 L40,70 L60,70 L60,90" stroke="#d4d4d4" strokeWidth="4" fill="none" />
+                                </svg>
+                                
+                                {/* Active route */}
+                                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                  <path d="M20,10 L20,40 L50,40 L50,90" stroke="#2ECC71" strokeWidth="3" fill="none" />
+                                  <circle cx="20" cy="10" r="3" fill="#2C3E50" />
+                                  <circle cx="50" cy="90" r="3" fill="#2ECC71" />
+                                  <circle cx="20" cy="40" r="1.5" fill="#2ECC71" />
+                                  <circle cx="50" cy="40" r="1.5" fill="#2ECC71" />
+                                </svg>
+                                
+                                {/* POI markers */}
+                                <div className="absolute top-1/4 left-[20%] bg-green-500 h-2 w-2 rounded-full"></div>
+                                <div className="absolute bottom-1/3 right-1/3 bg-green-500 h-2 w-2 rounded-full"></div>
+                                <div className="absolute top-1/3 right-1/5 bg-red-500 h-2 w-2 rounded-full"></div>
+                                
+                                {/* User location */}
+                                <div className="absolute top-[40%] left-[20%] h-4 w-4 bg-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">
+                                  <Bike className="h-2 w-2 text-white" />
                                 </div>
                               </div>
-                            </div>
-                            <div className="mt-3 space-y-2">
-                              <div className="bg-white h-4 rounded-full w-full"></div>
-                              <div className="bg-white h-4 rounded-full w-3/4"></div>
-                              <div className="bg-white h-4 rounded-full w-5/6"></div>
+                              
+                              {/* App stats area */}
+                              <div className="h-28 bg-white p-2 space-y-2">
+                                <div className="grid grid-cols-3 gap-2">
+                                  <div className="bg-gray-50 p-2 rounded-md">
+                                    <div className="text-xs text-gray-500">Velocidade</div>
+                                    <div className="text-sm font-semibold flex items-center">
+                                      <Activity className="h-3 w-3 text-primary mr-1" /> 18.5 km/h
+                                    </div>
+                                  </div>
+                                  <div className="bg-gray-50 p-2 rounded-md">
+                                    <div className="text-xs text-gray-500">Distância</div>
+                                    <div className="text-sm font-semibold">4.7 km</div>
+                                  </div>
+                                  <div className="bg-gray-50 p-2 rounded-md">
+                                    <div className="text-xs text-gray-500">Tempo</div>
+                                    <div className="text-sm font-semibold">24 min</div>
+                                  </div>
+                                </div>
+                                <div className="flex space-x-2">
+                                  <div className="flex-grow bg-gray-50 p-2 rounded-md flex items-center space-x-1">
+                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <div className="text-xs">Rota segura recomendada</div>
+                                  </div>
+                                  <div className="bg-primary text-white rounded-md w-8 flex items-center justify-center">
+                                    <Navigation className="h-4 w-4" />
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Bottom navigation bar */}
+                              <div className="h-12 bg-white border-t border-gray-100 flex justify-around items-center px-4">
+                                <Map className="h-6 w-6 text-primary" />
+                                <Bike className="h-6 w-6 text-gray-400" />
+                                <Activity className="h-6 w-6 text-gray-400" />
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* Route lines */}
-                      <svg className="absolute inset-0 h-full w-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path d="M10,50 Q30,30 50,70 T90,50" stroke="#2ECC71" strokeWidth="2" fill="none" strokeDasharray="5,5" />
-                        <path d="M20,80 Q40,20 60,60 T90,40" stroke="#1A1F2C" strokeWidth="1" fill="none" />
-                      </svg>
                     </div>
                   </div>
                 </div>
