@@ -14,10 +14,20 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative flex items-center justify-center bg-gradient-to-br from-white to-gray-50 overflow-hidden pt-20 pb-10">
-      {/* Stylized background */}
+    <section className="relative flex items-center justify-center overflow-hidden pt-20 pb-10">
+      {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-primary/10"></div>
+        {/* Image background */}
+        <div className="absolute inset-0 opacity-20">
+          <img 
+            src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" 
+            alt="TrailSynk App Background" 
+            className="w-full h-full object-cover object-center"
+          />
+        </div>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-gray-50/95"></div>
         
         {/* Map-like pattern overlay */}
         <div className="absolute inset-0 opacity-10" style={{
@@ -26,50 +36,41 @@ const HeroSection: React.FC = () => {
         }}>
         </div>
         
-        {/* Stylized cycling routes */}
-        <div className="absolute inset-0 opacity-20">
+        {/* Stylized cycling routes that pass through the image */}
+        <div className="absolute inset-0 opacity-40">
           <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0,50 Q25,30 50,50 T100,50" stroke="#2ECC71" strokeWidth="0.5" fill="none" />
-            <path d="M0,60 Q30,40 60,70 T100,60" stroke="#1A1F2C" strokeWidth="0.5" fill="none" />
-            <path d="M0,40 Q40,60 70,30 T100,40" stroke="#2ECC71" strokeWidth="0.5" fill="none" />
+            <path d="M0,50 Q25,30 50,50 T100,50" stroke="#2ECC71" strokeWidth="1" fill="none" />
+            <path d="M0,60 Q30,40 60,70 T100,60" stroke="#1A1F2C" strokeWidth="1" fill="none" />
+            <path d="M0,40 Q40,60 70,30 T100,40" stroke="#2ECC71" strokeWidth="1" fill="none" />
           </svg>
         </div>
       </div>
 
       <div className="container mx-auto z-10 py-10 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-          {/* Left column - Text content */}
-          <div className="text-center lg:text-left">
+        <div className="flex flex-col items-center text-center">
+          {/* Text content centered */}
+          <div className="max-w-2xl mx-auto">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in">
               Seu Copiloto Inteligente para Aventuras de Bicicleta Inesquecíveis
             </h1>
             
-            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">
+            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto animate-fade-in">
               Descubra um novo jeito de pedalar com o TrailSynk. Nossa IA analisa rotas em tempo real 
               para sua segurança, sugere percursos personalizados para seus objetivos, lembra da manutenção 
               da sua bike e conecta você a uma comunidade vibrante.
             </h2>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 animate-fade-in">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 animate-fade-in">
               <Button onClick={scrollToWaitlist} size="lg" className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
                 Quero Meu Assessor Ciclista!
               </Button>
             </div>
 
-            <div className="mt-4 animate-bounce lg:hidden">
+            <div className="mt-8 animate-bounce">
               <a href="#features" className="text-primary hover:text-primary-dark">
                 <ArrowDown className="mx-auto" size={32} />
               </a>
             </div>
-          </div>
-          
-          {/* Right column - App mockup image */}
-          <div className="flex justify-center lg:justify-end items-center animate-fade-in">
-            <img 
-              src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" 
-              alt="TrailSynk App Mockup com Mapa de Ciclismo" 
-              className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-none lg:w-[95%] h-auto object-contain"
-            />
           </div>
         </div>
       </div>
