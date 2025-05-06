@@ -1,5 +1,8 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
 const Navbar: React.FC = () => {
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById('waitlist');
@@ -9,7 +12,9 @@ const Navbar: React.FC = () => {
       });
     }
   };
-  return <nav className="fixed top-0 left-0 w-full z-40 bg-white/90 backdrop-blur-md shadow-sm py-0 px-0 mx-0 my-0">
+
+  return (
+    <nav className="fixed top-0 left-0 w-full z-40 bg-white/90 backdrop-blur-md shadow-sm py-0 px-0 mx-0 my-0">
       <div className="container mx-auto flex items-center justify-between py-0 px-[15px]">
         <div className="flex items-center">
           <a href="#" className="flex items-center">
@@ -22,12 +27,15 @@ const Navbar: React.FC = () => {
           <a href="#how-it-works" className="hover:text-primary transition-colors">Como Funciona</a>
           <a href="#testimonials" className="hover:text-primary transition-colors">Depoimentos</a>
           <a href="#roadmap" className="hover:text-primary transition-colors">Roadmap</a>
+          <Link to="/admin" className="hover:text-primary transition-colors">Admin</Link>
         </div>
 
         <Button onClick={scrollToWaitlist} className="bg-primary hover:bg-primary-dark text-white px-4 py-2">
           Entrar na Lista VIP
         </Button>
       </div>
-    </nav>;
+    </nav>
+  );
 };
+
 export default Navbar;
