@@ -51,18 +51,29 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-bold;
   }
+  
+  /* Force smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Reduced spacing for sections */
 section {
-  @apply py-8;
+  @apply py-6;
+}
+
+/* Better spacing between sections */
+section + section {
+  @apply pt-0;
 }
 
 /* Reduced margin between section elements */
 section > div > div {
-  @apply mb-4;
+  @apply mb-3;
 }
 
+/* Animation classes */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(20px);
@@ -81,4 +92,9 @@ section > div > div {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Small text utility */
+.text-2xs {
+  font-size: 0.65rem;
 }
