@@ -45,6 +45,15 @@ const Auth: React.FC = () => {
     setPassword('');
   };
 
+  const handleStravaLogin = () => {
+    // Placeholder for Strava OAuth flow
+    // This would typically redirect to a backend endpoint like /auth/strava
+    console.log("Iniciando fluxo de autenticação do Strava");
+    // Exemplo de redirecionamento para um endpoint backend (comentado)
+    // window.location.href = "/api/auth/strava";
+    alert("Função de login com Strava será implementada no backend");
+  };
+
   return (
     <>
       <Helmet>
@@ -140,13 +149,20 @@ const Auth: React.FC = () => {
               
               {/* Social login buttons */}
               <div className="grid gap-2">
-                <Button variant="outline" className="w-full">
-                  <Github className="mr-2 h-4 w-4" />
-                  Login com Strava {/* Placeholder - will be real Strava icon in future */}
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-[#FC4C02] hover:bg-[#FB5B1F] text-white hover:text-white border-0"
+                  onClick={handleStravaLogin}
+                >
+                  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                          fill="currentColor"/>
+                  </svg>
+                  Login com Strava
                 </Button>
                 <Button variant="outline" className="w-full" disabled>
                   <Mail className="mr-2 h-4 w-4" />
-                  Login com Google {/* For future expansion */}
+                  Login com Google
                 </Button>
               </div>
             </CardContent>

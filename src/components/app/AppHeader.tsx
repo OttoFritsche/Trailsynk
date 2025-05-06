@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 interface AppHeaderProps {
   user: User | null;
@@ -20,6 +21,10 @@ interface AppHeaderProps {
 
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const { signOut } = useAuth();
+  
+  // Estado de exemplo para simular conexão com Strava
+  // Num app real, isso viria de uma API ou contexto
+  const isConnectedToStrava = false;
   
   return (
     <header className="sticky top-0 border-b bg-white/95 backdrop-blur z-10">
@@ -33,6 +38,16 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
         </Link>
         
         <div className="flex items-center space-x-4">
+          {isConnectedToStrava && (
+            <Badge variant="outline" className="bg-[#FC4C02]/10 text-[#FC4C02] border-[#FC4C02]/20">
+              <svg className="mr-1 h-3 w-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                      fill="currentColor"/>
+              </svg>
+              Strava
+            </Badge>
+          )}
+          
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -54,6 +69,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
                 <DropdownMenuItem asChild>
                   <Link to="/app/routes">Minhas Rotas</Link>
                 </DropdownMenuItem>
+                {!isConnectedToStrava && (
+                  <DropdownMenuItem>
+                    <span className="flex items-center">
+                      <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                              fill="#FC4C02"/>
+                      </svg>
+                      Conectar ao Strava
+                    </span>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
                   Sair

@@ -1,7 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import ActivityFeedItem, { Activity } from '@/components/app/ActivityFeedItem';
+import RouteMap from '@/components/app/RouteMap';
 import { Helmet } from 'react-helmet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 // Dados fictícios para o feed inicial
 const mockActivities: Activity[] = [
@@ -66,21 +70,123 @@ const mockActivities: Activity[] = [
   },
 ];
 
+// Rotas de exemplo para a demonstração
+const exampleRoutes = [
+  {
+    id: 'route-1',
+    title: 'Circuito da Lagoa',
+    distance: 15.8,
+    elevation: 125,
+    type: 'Asfalto'
+  },
+  {
+    id: 'route-2',
+    title: 'Trilha da Serra',
+    distance: 8.4,
+    elevation: 450,
+    type: 'Mountain Bike'
+  },
+  {
+    id: 'route-3',
+    title: 'Vuelta da Cidade',
+    distance: 22.3,
+    elevation: 210,
+    type: 'Urbano'
+  }
+];
+
 const AppHome: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("feed");
+  const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>();
+  const { user } = useAuth();
+  
+  // Estado de exemplo para simular conexão com Strava
+  const [isConnectedToStrava, setIsConnectedToStrava] = useState(false);
+  
+  const handleConnectStrava = () => {
+    // Simulação de conexão com Strava
+    console.log("Solicitando conexão com Strava...");
+    alert("Função de conexão com Strava será implementada no backend");
+    setIsConnectedToStrava(true);
+  };
+  
   return (
     <>
       <Helmet>
-        <title>Feed de Atividades | TrailSynk</title>
+        <title>TrailSynk | Início</title>
       </Helmet>
 
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Feed de Atividades</h1>
+      <div className="space-y-6">
+        {!isConnectedToStrava && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-medium text-yellow-800">Conecte-se ao Strava</h3>
+              <p className="text-yellow-700 text-sm">Conecte sua conta ao Strava para sincronizar suas atividades e rotas.</p>
+            </div>
+            <Button onClick={handleConnectStrava} className="bg-[#FC4C02] hover:bg-[#FB5B1F] text-white border-0">
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                      fill="currentColor"/>
+              </svg>
+              Conectar Strava
+            </Button>
+          </div>
+        )}
         
-        <div className="space-y-4">
-          {mockActivities.map((activity) => (
-            <ActivityFeedItem key={activity.id} activity={activity} />
-          ))}
-        </div>
+        <Tabs defaultValue="feed" value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="feed">Feed</TabsTrigger>
+            <TabsTrigger value="routes">Rotas</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="feed" className="space-y-6">
+            <h1 className="text-2xl font-bold">Feed de Atividades</h1>
+            
+            <div className="space-y-4">
+              {mockActivities.map((activity) => (
+                <ActivityFeedItem key={activity.id} activity={activity} />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="routes" className="space-y-6">
+            <h1 className="text-2xl font-bold">Rotas</h1>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <RouteMap routeId={selectedRouteId} className="h-full" />
+              </div>
+              
+              <div className="space-y-2">
+                {exampleRoutes.map(route => (
+                  <div 
+                    key={route.id}
+                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                      selectedRouteId === route.id ? 'bg-primary/10 border-primary' : 'hover:bg-gray-50'
+                    }`}
+                    onClick={() => setSelectedRouteId(route.id)}
+                  >
+                    <h3 className="font-medium">{route.title}</h3>
+                    <div className="text-sm text-gray-600 flex space-x-3">
+                      <span>{route.distance} km</span>
+                      <span>•</span>
+                      <span>{route.elevation} m</span>
+                      <span>•</span>
+                      <span>{route.type}</span>
+                    </div>
+                  </div>
+                ))}
+                
+                <Button variant="outline" className="w-full mt-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Nova Rota
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );
