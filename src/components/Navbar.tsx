@@ -14,9 +14,13 @@ const Navbar: React.FC = () => {
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center">
-          <span className="text-xl font-bold text-primary">
-            Trail<span className="text-secondary">Synk</span>
-          </span>
+          <a href="#" className="flex items-center">
+            <img 
+              src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" 
+              alt="TrailSynk Logo" 
+              className="h-10 w-auto"
+            />
+          </a>
         </div>
 
         <div className="hidden md:flex space-x-6 text-secondary text-sm">
