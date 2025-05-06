@@ -68,7 +68,7 @@ const HeroSection: React.FC = () => {
           {/* Right column - App mockup image */}
           <div className="flex justify-center lg:justify-end items-center animate-fade-in">
             <div className="relative">
-              <img src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" alt="TrailSynk App Mockup" className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-none lg:w-[85%] h-auto object-contain z-10 relative" />
+              <img src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" alt="TrailSynk App Mockup" className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-none lg:w-[95%] h-auto object-contain z-10 relative" />
               {/* Decorative glow effect */}
               <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur-xl -z-10"></div>
             </div>
