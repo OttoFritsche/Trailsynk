@@ -19,6 +19,9 @@ export const config = {
     redirectUri: import.meta.env.VITE_STRAVA_REDIRECT_URI || `${window.location.origin}/app`
   },
   
+  // Mapbox token para visualização de mapas
+  mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
+  
   // Opções para desenvolvimento
   isDevelopment: import.meta.env.DEV === true,
   isProduction: import.meta.env.PROD === true,
