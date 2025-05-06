@@ -1,25 +1,19 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
-
 const Navbar: React.FC = () => {
   const scrollToWaitlist = () => {
     const waitlistSection = document.getElementById('waitlist');
     if (waitlistSection) {
-      waitlistSection.scrollIntoView({ behavior: 'smooth' });
+      waitlistSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+  return <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
+      <div className="container mx-auto px-4 flex items-center justify-between py-0">
         <div className="flex items-center">
           <a href="#" className="flex items-center">
-            <img 
-              src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" 
-              alt="TrailSynk Logo" 
-              className="h-10 w-auto"
-            />
+            <img src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" alt="TrailSynk Logo" className="h-40 w-auto" />
           </a>
         </div>
 
@@ -30,15 +24,10 @@ const Navbar: React.FC = () => {
           <a href="#roadmap" className="hover:text-primary transition-colors">Roadmap</a>
         </div>
 
-        <Button 
-          onClick={scrollToWaitlist} 
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2"
-        >
+        <Button onClick={scrollToWaitlist} className="bg-primary hover:bg-primary-dark text-white px-4 py-2">
           Entrar na Lista VIP
         </Button>
       </div>
-    </nav>
-  );
+    </nav>;
 };
-
 export default Navbar;
