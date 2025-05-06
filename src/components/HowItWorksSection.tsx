@@ -1,11 +1,8 @@
-
 import React from 'react';
 import { StepItem } from './how-it-works/StepItem';
 import { stepsData } from './how-it-works/StepsData';
-
 const HowItWorksSection: React.FC = () => {
-  return (
-    <section id="how-it-works" className="py-10 bg-gray-50">
+  return <section id="how-it-works" className="bg-gray-50 py-[50px]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-secondary mb-3">
@@ -20,20 +17,9 @@ const HowItWorksSection: React.FC = () => {
           {/* Connector Line (Only visible on large screens) */}
           <div className="absolute top-24 left-0 w-full h-0.5 bg-primary/30 hidden lg:block"></div>
 
-          {stepsData.map((step, index) => (
-            <StepItem 
-              key={index}
-              icon={step.icon}
-              title={step.title}
-              description={step.description}
-              mockupContent={step.mockupContent}
-              index={index}
-            />
-          ))}
+          {stepsData.map((step, index) => <StepItem key={index} icon={step.icon} title={step.title} description={step.description} mockupContent={step.mockupContent} index={index} />)}
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HowItWorksSection;
