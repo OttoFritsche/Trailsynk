@@ -44,11 +44,7 @@ const HeroSection: React.FC = () => {
           <div className="text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[40px] px-[45px] md:text-6xl">Pedale Mais Longe, Mais Seguro. Com a Inteligência TrailSynk.</h1>
             
-            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">
-              Descubra um novo jeito de pedalar com o TrailSynk. Nossa IA analisa rotas em tempo real 
-              para sua segurança, sugere percursos personalizados para seus objetivos, lembra da manutenção 
-              da sua bike e conecta você a uma comunidade vibrante.
-            </h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">Desbloqueie novas aventuras com rotas otimizadas por IA para seu estilo de pedal, receba insights de manutenção e conecte-se com ciclistas que compartilham sua paixão.</h2>
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 animate-fade-in">
               <Button onClick={scrollToWaitlist} size="lg" className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
