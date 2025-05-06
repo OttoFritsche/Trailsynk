@@ -27,6 +27,7 @@ export interface Activity {
   likes: number;
   comments: number;
   hasLiked?: boolean;
+  stravaActivityId?: string; // ID da atividade no Strava para referência
 }
 
 interface ActivityFeedItemProps {
@@ -60,10 +61,41 @@ const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({
   
   const handleLikeClick = () => {
     if (onLike) onLike(activity.id);
+    
+    // Exemplo de como chamar uma API quando implementada:
+    /*
+    try {
+      fetch(`${import.meta.env.VITE_API_URL}/api/activities/${activity.id}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao registrar like:', error);
+    }
+    */
   };
   
   const handleCommentClick = () => {
     if (onComment) onComment(activity.id);
+    
+    // Exemplo de como chamar uma API quando implementada:
+    /*
+    try {
+      // Aqui poderia abrir um modal de comentário ou redirecionar para página de comentários
+      // E depois enviar para API
+      fetch(`${import.meta.env.VITE_API_URL}/api/activities/${activity.id}/comments`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao carregar comentários:', error);
+    }
+    */
   };
   
   return (
@@ -130,6 +162,23 @@ const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({
               loading="lazy"
               className="w-full h-full object-cover transition-transform hover:scale-105"
             />
+          </div>
+        )}
+        
+        {activity.stravaActivityId && (
+          <div className="mt-2 text-xs text-muted-foreground">
+            <a 
+              href={`https://www.strava.com/activities/${activity.stravaActivityId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:text-primary transition-colors"
+            >
+              <svg className="mr-1 h-3 w-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                      fill="currentColor"/>
+              </svg>
+              Ver no Strava
+            </a>
           </div>
         )}
       </CardContent>

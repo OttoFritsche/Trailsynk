@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
 import { toast } from 'sonner';
+import { stravaService } from '@/api/apiService';
 
 interface SocialAuthButtonsProps {
   loading?: boolean;
@@ -10,19 +11,10 @@ interface SocialAuthButtonsProps {
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ loading }) => {
   const handleStravaLogin = () => {
-    // In a real application, this would be your backend endpoint that
-    // handles the OAuth flow initiation
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://your-backend-url.com';
-    const endpoint = `${backendUrl}/auth/strava`;
-    
-    // Using window.location to redirect to the backend endpoint
     toast.info('Redirecionando para autenticação do Strava...');
     
-    // In a production environment, we would uncomment this line:
-    window.location.href = endpoint;
-    
-    // For development, show a toast with information
-    // toast.info('Em ambiente de produção, você seria redirecionado para autenticação do Strava');
+    // Usando o novo serviço de API para iniciar o processo de autenticação do Strava
+    stravaService.initiateStravaAuth();
   };
 
   return (
