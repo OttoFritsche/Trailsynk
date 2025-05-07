@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -36,6 +37,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface AppNavigationProps {
   isMobile?: boolean;
@@ -56,6 +66,14 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
     { to: '/app/events', icon: CalendarCheck, label: 'Eventos', activePath: '/app/events' },
   ];
 
+  // Training submenu items
+  const trainingItems = [
+    { to: '/app/training/calendar', icon: Calendar, label: 'Calendário', activePath: '/app/training/calendar' },
+    { to: '/app/training/activities', icon: Activity, label: 'Minhas Atividades', activePath: '/app/training/activities' },
+    { to: '/app/training/weekly', icon: BarChart2, label: 'Controle Semanal', activePath: '/app/training/weekly' },
+    { to: '/app/training/performance', icon: LineChart, label: 'Performance e Prontidão', activePath: '/app/training/performance' },
+  ];
+
   // Nav items that will be available in the "More" dropdown menu
   const moreNavItems = [
     { to: '/app/statistics', icon: BarChart2, label: 'Estatísticas', activePath: '/app/statistics' },
@@ -67,14 +85,6 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
     { to: '/app/ai-assistant', icon: Bot, label: 'Assessor IA', activePath: '/app/ai-assistant' },
     { to: '/app/subscription', icon: BadgeDollarSign, label: 'Planos', activePath: '/app/subscription' },
     { to: '/app/settings', icon: Settings, label: 'Configurações', activePath: '/app/settings' },
-  ];
-
-  // Training submenu items
-  const trainingItems = [
-    { to: '/app/training/calendar', icon: Calendar, label: 'Calendário', activePath: '/app/training/calendar' },
-    { to: '/app/training/activities', icon: Activity, label: 'Minhas Atividades', activePath: '/app/training/activities' },
-    { to: '/app/training/weekly', icon: BarChart2, label: 'Controle Semanal', activePath: '/app/training/weekly' },
-    { to: '/app/training/performance', icon: LineChart, label: 'Performance e Prontidão', activePath: '/app/training/performance' },
   ];
 
   // Action button that brings attention to creating new content
@@ -211,35 +221,41 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
       ))}
       
       {/* Training Dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button 
-            className={cn(
-              "px-3 py-1.5 border-b-2 transition-colors flex items-center text-sm",
-              getActiveStyles(isActive('/app/training'))
-            )}
-          >
-            <BarChart2 className="h-4 w-4 mr-1.5" />
-            Treinamento
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-56">
-          {trainingItems.map((item) => (
-            <DropdownMenuItem key={item.to} asChild>
-              <Link 
-                to={item.to} 
-                className={cn(
-                  "flex items-center gap-2",
-                  isActive(item.activePath) ? "text-primary font-medium" : ""
-                )}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger 
+              className={cn(
+                "px-3 py-1.5 border-b-2 transition-colors flex items-center text-sm h-auto",
+                getActiveStyles(isActive('/app/training'))
+              )}
+            >
+              <BarChart2 className="h-4 w-4 mr-1.5" />
+              Treinamento
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[200px] gap-2 p-2">
+                {trainingItems.map((item) => (
+                  <li key={item.to}>
+                    <NavigationMenuLink asChild>
+                      <Link 
+                        to={item.to} 
+                        className={cn(
+                          "flex items-center gap-2 p-2 hover:bg-accent rounded-md",
+                          isActive(item.activePath) ? "text-primary font-medium" : ""
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       
       {/* Action Button */}
       <Link 
