@@ -1,27 +1,16 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { formatDate, formatDuration, handleStravaConnect } from '@/utils/profileUtils';
 import LoadingState from '@/components/profile/LoadingState';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Activity } from '@/components/app/ActivityFeedItem';
-
-// Importando os componentes recém-criados
 import ProfilePhotoCarousel from '@/components/profile/ProfilePhotoCarousel';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ActivitySummary from '@/components/profile/ActivitySummary';
-import StravaConnection from '@/components/profile/StravaConnection';
-import HeatmapPlaceholder from '@/components/profile/HeatmapPlaceholder';
-import AchievementsPlaceholder from '@/components/profile/AchievementsPlaceholder';
-import RecentActivitiesList from '@/components/profile/RecentActivitiesList';
-import RoutesGrid from '@/components/profile/RoutesGrid';
-import TrailsList from '@/components/profile/TrailsList';
-import GroupsGrid from '@/components/profile/GroupsGrid';
+import ProfileTabs from '@/components/profile/ProfileTabs';
 
 // Mock data para o carrossel de fotos
 const recentPhotos = [
@@ -207,107 +196,19 @@ const Profile = () => {
             />
           </div>
           
-          {/* Navegação por abas */}
-          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="border-b">
-              <div className="px-4 md:px-8">
-                <TabsList className="bg-transparent grid grid-cols-7 md:w-auto w-full">
-                  <TabsTrigger value="overview" className="text-sm">Visão Geral</TabsTrigger>
-                  <TabsTrigger value="activities" className="text-sm">Atividades</TabsTrigger>
-                  <TabsTrigger value="routes" className="text-sm">Rotas</TabsTrigger>
-                  <TabsTrigger value="trails" className="text-sm">Trails</TabsTrigger>
-                  <TabsTrigger value="stats" className="text-sm">Estatísticas</TabsTrigger>
-                  <TabsTrigger value="badges" className="text-sm">Badges</TabsTrigger>
-                  <TabsTrigger value="groups" className="text-sm">Grupos</TabsTrigger>
-                </TabsList>
-              </div>
-            </div>
-            
-            <div className="p-4 md:p-8">
-              <TabsContent value="overview" className="space-y-6 m-0">
-                <StravaConnection 
-                  isConnectedToStrava={isConnectedToStrava}
-                  handleStravaConnect={handleStravaConnect}
-                />
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <HeatmapPlaceholder />
-                  <AchievementsPlaceholder />
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Atividades Recentes</h3>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to="/app/activity">
-                        Ver todas
-                        <ArrowUpRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                  <RecentActivitiesList 
-                    activities={recentActivities.slice(0, 1)}
-                    onLike={handleLike}
-                    onComment={handleComment}
-                  />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="activities" className="m-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-4">Minhas Atividades</h3>
-                  <RecentActivitiesList 
-                    activities={recentActivities}
-                    onLike={handleLike}
-                    onComment={handleComment}
-                  />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="routes" className="m-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-4">Minhas Rotas</h3>
-                  <RoutesGrid routes={savedRoutes} />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="trails" className="m-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-4">Meus Trails</h3>
-                  <TrailsList trails={trails} />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="stats" className="m-0 text-center">
-                <div className="py-12">
-                  <Button asChild>
-                    <Link to="/app/statistics">
-                      Ver Estatísticas Completas
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="badges" className="m-0 text-center">
-                <div className="py-12">
-                  <Button asChild>
-                    <Link to="/app/badges">
-                      Ver Todos os Badges
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="groups" className="m-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-4">Meus Grupos</h3>
-                  <GroupsGrid groups={groups} />
-                </div>
-              </TabsContent>
-            </div>
-          </Tabs>
+          {/* Sistema de Navegação por Abas */}
+          <ProfileTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            isConnectedToStrava={isConnectedToStrava}
+            handleStravaConnect={handleStravaConnect}
+            recentActivities={recentActivities}
+            savedRoutes={savedRoutes}
+            trails={trails}
+            groups={groups}
+            onLike={handleLike}
+            onComment={handleComment}
+          />
         </div>
       </div>
     </>
