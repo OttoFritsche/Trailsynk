@@ -23,7 +23,7 @@ const TrainingCalendar = () => {
   }));
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-8 pb-16 pt-6 px-4 md:px-0">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Calendário de Treinamento</h1>
@@ -106,7 +106,7 @@ const TrainingCalendar = () => {
       />
 
       {/* Yearly Chart */}
-      <Card>
+      <Card className="mt-8">
         <CardHeader>
           <CardTitle>Volume de Treinamento ({year})</CardTitle>
           <CardDescription>Distribuição mensal de distância e atividades</CardDescription>
@@ -129,24 +129,26 @@ const TrainingCalendar = () => {
                 }
               }}
             >
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="distância" fill="var(--color-distance)" name="Distância (km)" />
-                <Bar dataKey="atividades" fill="var(--color-activities)" name="Atividades" />
-                <Bar dataKey="elevação" fill="var(--color-elevation)" name="Elevação (x100m)" />
-              </BarChart>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="distância" fill="var(--color-distance)" name="Distância (km)" />
+                  <Bar dataKey="atividades" fill="var(--color-activities)" name="Atividades" />
+                  <Bar dataKey="elevação" fill="var(--color-elevation)" name="Elevação (x100m)" />
+                </BarChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </div>
         </CardContent>
       </Card>
 
       {/* Monthly Summary Cards */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Resumo Mensal</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold mb-6">Resumo Mensal</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {mockMonthlySummaries.map((month) => (
             <Card key={month.month}>
               <CardHeader className="pb-2">
