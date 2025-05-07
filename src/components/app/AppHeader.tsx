@@ -4,7 +4,7 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileData } from '@/types/profile';
 import { AppLogo } from './AppLogo';
-import { AppNavigation } from './AppNavigation';
+import AppNavigation from './AppNavigation'; // Changed from named import to default import
 import { UserProfileMenu } from './UserProfileMenu';
 import { ProfileCompletionButton } from './ProfileCompletionButton';
 
