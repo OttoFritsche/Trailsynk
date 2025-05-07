@@ -26,6 +26,9 @@ import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import Messages from "./pages/Messages";
 import ChatDetail from "./pages/ChatDetail";
+import Subscription from "./pages/Subscription";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
+import AIAssistant from "./pages/AIAssistant";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -64,6 +67,9 @@ const App = () => (
             <Route path="groups" element={<Groups />} />
             <Route path="groups/:groupId" element={<GroupDetail />} />
             <Route path="assistant" element={<Assistant />} />
+            <Route path="ai-assistant" element={<AIAssistant />} />
+            <Route path="subscription" element={<Subscription />} />
+            <Route path="subscription-success" element={<SubscriptionSuccess />} />
             <Route path="messages" element={<Messages />} />
             <Route path="messages/:chatId" element={<ChatDetail />} />
           </Route>

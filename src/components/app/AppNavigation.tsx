@@ -12,7 +12,8 @@ import {
   UserPlus,
   Settings as SettingsIcon,
   Bot,
-  MessageCircle
+  MessageCircle,
+  BadgeDollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -39,8 +40,9 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
     { to: '/app/trails', icon: MapPin, label: 'Trails', activePath: '/app/trails' },
     { to: '/app/find-cyclists', icon: UserPlus, label: 'Encontrar', activePath: '/app/find-cyclists' },
     { to: '/app/messages', icon: MessageCircle, label: 'Mensagens', activePath: '/app/messages' },
+    { to: '/app/ai-assistant', icon: Bot, label: 'Assessor IA', activePath: '/app/ai-assistant' },
+    { to: '/app/subscription', icon: BadgeDollarSign, label: 'Planos', activePath: '/app/subscription' },
     { to: '/app/settings', icon: SettingsIcon, label: 'Configurações', activePath: '/app/settings' },
-    { to: '/app/assistant', icon: Bot, label: 'Assessor IA', activePath: '/app/assistant' },
   ];
 
   const isActive = (path: string) => {
