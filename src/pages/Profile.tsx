@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
 import { formatDate, formatDuration, handleStravaConnect } from '@/utils/profileUtils';
