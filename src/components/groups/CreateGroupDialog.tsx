@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import { 
   Dialog, 
   DialogContent, 
@@ -40,6 +40,7 @@ interface CreateGroupDialogProps {
 export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({ open, onOpenChange }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -71,10 +72,18 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({ open, onOp
       // Simular um delay para demonstrar o estado de carregamento
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
+      // Simular ID do grupo recém-criado - em uma implementação real, seria retornado pela API
+      const newGroupId = `group-${Date.now()}`;
+      
       toast.success('Grupo criado com sucesso!');
+      
+      // Fechar o modal e limpar o formulário
       onOpenChange(false);
       form.reset();
       setCoverImageUrl(null);
+      
+      // Redirecionar para a página de detalhes do grupo recém-criado
+      navigate(`/app/groups/${newGroupId}`);
     } catch (error: any) {
       console.error('Erro ao criar grupo:', error);
       toast.error(`Erro ao criar grupo: ${error.message}`);

@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Bot, MessageCircle, Zap, Route, Settings, Award, BadgeDollarSign } from 'lucide-react';
 import AIChat from '@/components/app/AIChat';
+import { Link } from 'react-router-dom';
 
 const suggestedQuestions = [
   "Qual rota você recomenda para hoje?",
@@ -71,46 +72,50 @@ const AIAssistant: React.FC = () => {
           </p>
         </div>
 
-        {/* Container principal com layout responsivo */}
+        {/* Container principal com layout responsivo refinado */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Coluna principal - Chat AI */}
           <div className="lg:col-span-2 space-y-4">
-            <Card className="h-[70vh] md:h-[80vh]">
+            <Card className="overflow-hidden border shadow-sm">
               <CardContent className="p-0">
                 <AIChat />
               </CardContent>
             </Card>
 
             {/* Seção de perguntas sugeridas */}
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="font-medium text-sm mb-3 text-gray-500 flex items-center">
-                <MessageCircle className="h-4 w-4 mr-1" />
-                Experimente perguntar
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {suggestedQuestions.map((question, index) => (
-                  <Button 
-                    key={index} 
-                    variant="outline" 
-                    className="justify-start text-left h-auto py-2 px-3"
-                    onClick={() => handleQuestionClick(question)}
-                  >
-                    {question}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <Card className="border shadow-sm">
+              <CardContent className="p-4">
+                <h3 className="font-medium text-sm mb-3 text-gray-500 flex items-center">
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Experimente perguntar
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {suggestedQuestions.map((question, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="justify-start text-left h-auto py-2 px-3"
+                      onClick={() => handleQuestionClick(question)}
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Coluna lateral - Sugestões e upgrade */}
           <div className="space-y-4">
             {/* Sugestões recentes */}
-            <Card>
-              <CardContent className="py-4">
-                <h3 className="font-semibold text-lg mb-3 flex items-center">
-                  <Zap className="h-5 w-5 mr-1 text-primary" />
+            <Card className="border shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center">
+                  <Zap className="h-5 w-5 mr-2 text-primary" />
                   Sugestões Recentes da IA
-                </h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
                 <div className="space-y-3">
                   {recentSuggestions.map((suggestion) => (
                     <div 
@@ -138,8 +143,8 @@ const AIAssistant: React.FC = () => {
 
             {/* Banner de upgrade - somente para usuários não premium */}
             {!isPremium && (
-              <Card className="border-primary/30 bg-primary/5">
-                <CardContent className="py-4">
+              <Card className="border-primary/30 bg-primary/5 shadow-sm">
+                <CardContent className="p-4">
                   <div className="flex items-center mb-3">
                     <BadgeDollarSign className="h-6 w-6 mr-2 text-primary" />
                     <h3 className="font-semibold">TrailSynk Pro</h3>
@@ -148,30 +153,32 @@ const AIAssistant: React.FC = () => {
                     Desbloqueie insights ilimitados, sugestões personalizadas e análises avançadas com o TrailSynk Pro.
                   </p>
                   <Button className="w-full bg-primary hover:bg-primary/90" size="sm" asChild>
-                    <a href="/app/subscription">
+                    <Link to="/app/subscription">
                       Conhecer Planos Pro
-                    </a>
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
             )}
 
             {/* Card de dicas de uso */}
-            <Card>
-              <CardContent className="py-4">
-                <h3 className="font-semibold mb-2">Como aproveitar seu Assessor IA</h3>
-                <ul className="text-sm text-gray-600 space-y-2">
+            <Card className="border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Como aproveitar seu Assessor IA</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <ul className="text-sm text-gray-600 space-y-3">
                   <li className="flex items-start">
                     <Bot className="h-4 w-4 mr-2 mt-0.5 text-primary" />
-                    Pergunte sobre treinamentos específicos para seus objetivos
+                    <span>Pergunte sobre treinamentos específicos para seus objetivos</span>
                   </li>
                   <li className="flex items-start">
                     <Bot className="h-4 w-4 mr-2 mt-0.5 text-primary" />
-                    Peça recomendações de rotas baseadas em sua localização
+                    <span>Peça recomendações de rotas baseadas em sua localização</span>
                   </li>
                   <li className="flex items-start">
                     <Bot className="h-4 w-4 mr-2 mt-0.5 text-primary" />
-                    Solicite dicas de manutenção preventiva
+                    <span>Solicite dicas de manutenção preventiva</span>
                   </li>
                 </ul>
               </CardContent>
