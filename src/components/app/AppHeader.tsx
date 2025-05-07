@@ -4,9 +4,10 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileData } from '@/types/profile';
 import { AppLogo } from './AppLogo';
-import AppNavigation from './AppNavigation'; // Changed from named import to default import
 import { UserProfileMenu } from './UserProfileMenu';
-import { ProfileCompletionButton } from './ProfileCompletionButton';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { MessageCircle, Plus } from 'lucide-react';
 
 interface AppHeaderProps {
   user: User | null;
@@ -50,16 +51,44 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
         <AppLogo />
         
         <div className="flex items-center space-x-2 md:space-x-4">
-          {/* Desktop Navigation */}
-          <AppNavigation />
+          {/* Main Navigation Links - Simplified */}
+          <nav className="hidden md:flex items-center space-x-1">
+            <Link 
+              to="/app"
+              className="px-3 py-1.5 border-b-2 transition-colors flex items-center text-sm border-primary text-primary"
+            >
+              Feed
+            </Link>
+            <Link 
+              to="/app/routes"
+              className="px-3 py-1.5 border-b-2 transition-colors flex items-center text-sm text-muted-foreground border-transparent hover:text-foreground hover:border-gray-300"
+            >
+              Rotas
+            </Link>
+          </nav>
           
-          {/* Mobile Navigation */}
-          <AppNavigation isMobile={true} />
+          {/* Messages Link */}
+          <Link 
+            to="/app/messages"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors relative"
+            aria-label="Messages"
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </Link>
           
-          {/* Profile Completion Button */}
-          <ProfileCompletionButton profileData={profileData} />
+          {/* Main Action Button - Subscription or Quick Create */}
+          <Button 
+            variant="default" 
+            size="sm"
+            asChild
+          >
+            <Link to="/app/subscription">
+              Assinar Pro
+            </Link>
+          </Button>
           
-          {/* User Profile Menu */}
+          {/* User Profile Menu - Enhanced */}
           {user && <UserProfileMenu user={user} profileData={profileData} />}
         </div>
       </div>

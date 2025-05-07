@@ -14,6 +14,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { 
+  User as UserIcon, 
+  BarChart2, 
+  Medal, 
+  Users, 
+  Bot, 
+  BadgeDollarSign, 
+  Settings,
+  MapPin,
+  LogOut
+} from 'lucide-react';
 
 interface UserProfileMenuProps {
   user: User | null;
@@ -48,27 +59,58 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ user, profileD
           <div>{profileData.full_name || displayName}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        
+        {/* Main user-related links */}
         <DropdownMenuItem asChild>
-          <Link to="/app/profile">Perfil</Link>
+          <Link to="/app/profile" className="flex items-center">
+            <UserIcon className="mr-2 h-4 w-4" />
+            Meu Perfil
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/statistics">Estatísticas</Link>
+          <Link to="/app/statistics" className="flex items-center">
+            <BarChart2 className="mr-2 h-4 w-4" />
+            Estatísticas
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/badges">Badges</Link>
+          <Link to="/app/badges" className="flex items-center">
+            <Medal className="mr-2 h-4 w-4" />
+            Badges
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/routes">Minhas Rotas</Link>
+          <Link to="/app/trails" className="flex items-center">
+            <MapPin className="mr-2 h-4 w-4" />
+            Trails
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/trails">Meus Trails</Link>
+          <Link to="/app/groups" className="flex items-center">
+            <Users className="mr-2 h-4 w-4" />
+            Grupos
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/groups">Meus Grupos</Link>
+          <Link to="/app/assistant" className="flex items-center">
+            <Bot className="mr-2 h-4 w-4" />
+            Assessor IA
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/app/assistant">Assessor IA</Link>
+          <Link to="/app/subscription" className="flex items-center">
+            <BadgeDollarSign className="mr-2 h-4 w-4" />
+            Planos
+          </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/app/settings" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            Configurações
+          </Link>
+        </DropdownMenuItem>
+        
+        {/* Strava integration */}
         <DropdownMenuItem asChild>
           <Link to="/app/profile" className="flex items-center">
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -78,9 +120,13 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ user, profileD
             Conectar ao Strava
           </Link>
         </DropdownMenuItem>
+        
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
-          Sair
+        
+        {/* Logout option */}
+        <DropdownMenuItem onClick={() => signOut()} className="flex items-center text-red-500 focus:text-red-500">
+          <LogOut className="mr-2 h-4 w-4" />
+          Sair da Conta
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

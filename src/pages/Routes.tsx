@@ -84,6 +84,7 @@ const Routes: React.FC = () => {
           <Button 
             className="bg-[#2ECC71] hover:bg-[#27ae60]"
             onClick={handleNewRoute}
+            size="sm"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
             Nova Rota
