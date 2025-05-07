@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,16 +15,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { supabase } from '@/integrations/supabase/client';
 import { Home, Map, User as UserIcon, BarChart3, Award, Users } from 'lucide-react';
+import { ProfileData } from '@/types/profile';
 
 interface AppHeaderProps {
   user: User | null;
-}
-
-interface ProfileData {
-  username?: string;
-  full_name?: string;
-  avatar_url?: string;
-  is_profile_complete?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {

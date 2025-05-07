@@ -1,0 +1,8 @@
+
+-- Add new columns to the profiles table
+ALTER TABLE profiles 
+ADD COLUMN IF NOT EXISTS is_profile_complete BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS weight NUMERIC,
+ADD COLUMN IF NOT EXISTS height NUMERIC,
+ADD COLUMN IF NOT EXISTS age INTEGER,
+ADD COLUMN IF NOT EXISTS riding_preferences TEXT[];
