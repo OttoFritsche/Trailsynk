@@ -9,12 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { ArrowLeft } from 'lucide-react';
 import { ProfileForm, ProfileFormValues } from '@/components/profile/ProfileForm';
 import { fetchProfileData, uploadAvatarToStorage, updateUserProfile } from '@/utils/profileUtils';
+import { ProfileData } from '@/types/profile';
 
 const CompleteProfile: React.FC = () => {
   const { user, updateUserProfile: updateAuthProfile } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [initialProfileData, setInitialProfileData] = useState({});
+  const [initialProfileData, setInitialProfileData] = useState<ProfileData>({});
 
   // Load existing profile data
   useEffect(() => {
