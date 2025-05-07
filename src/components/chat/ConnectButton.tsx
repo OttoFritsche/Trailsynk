@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 interface ConnectButtonProps {
   userId: string;
   userName: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'default' | 'lg' | 'icon';
   variant?: 'default' | 'ghost' | 'outline';
 }
 
