@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -23,6 +22,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { CheckCircle, AlertCircle, Upload, Loader2, ArrowLeft } from 'lucide-react';
+import { ProfileData } from '@/types/profile';
 
 // Definindo schema de validação do formulário com zod
 const profileSchema = z.object({
@@ -81,19 +81,22 @@ const CompleteProfile: React.FC = () => {
         if (error) throw error;
         
         if (data) {
+          // Cast the data to ProfileData to handle the new fields
+          const profileData = data as unknown as ProfileData;
+          
           form.reset({
-            full_name: data.full_name || '',
-            username: data.username || '',
-            weight: data.weight || undefined,
-            height: data.height || undefined,
-            age: data.age || undefined,
+            full_name: profileData.full_name || '',
+            username: profileData.username || '',
+            weight: profileData.weight || undefined,
+            height: profileData.height || undefined,
+            age: profileData.age || undefined,
           });
           
-          setAvatarUrl(data.avatar_url || null);
+          setAvatarUrl(profileData.avatar_url || null);
           
           // Carregar preferências se existirem
-          if (data.riding_preferences && Array.isArray(data.riding_preferences)) {
-            setSelectedPreferences(data.riding_preferences);
+          if (profileData.riding_preferences && Array.isArray(profileData.riding_preferences)) {
+            setSelectedPreferences(profileData.riding_preferences);
           }
         }
       } catch (error) {

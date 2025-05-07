@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -43,7 +44,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
           }
           
           if (data) {
-            setProfileData(data);
+            // Make sure we're handling the returned data as a ProfileData object
+            setProfileData(data as ProfileData);
           }
         } catch (error) {
           console.error('Error in profile data fetch:', error);

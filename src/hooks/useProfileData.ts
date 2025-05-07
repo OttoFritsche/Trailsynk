@@ -59,7 +59,9 @@ export const useProfileData = (user: User | null) => {
 
         if (error) throw error;
         
-        setProfileData(data || {});
+        // Make sure we're handling the returned data as a ProfileData object
+        const profileInfo: ProfileData = data || {};
+        setProfileData(profileInfo);
         
         // Mock statistics for profile overview
         setUserStats({
