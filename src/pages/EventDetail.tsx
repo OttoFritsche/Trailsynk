@@ -105,7 +105,8 @@ const EventDetail = () => {
         toast({
           title: "Inscrição confirmada!",
           description: "Você está oficialmente inscrito neste evento.",
-          variant: "success",
+          // Changed from variant: "success" to use default variant with different styling
+          variant: "default",
         });
       }, 2000);
     }
@@ -154,7 +155,8 @@ const EventDetail = () => {
       toast({
         title: "Plano de treino gerado",
         description: "A IA criou um plano personalizado para este evento baseado no seu perfil.",
-        variant: "success",
+        // Changed from variant: "success" to use default variant
+        variant: "default",
       });
     }, 3000);
   };
