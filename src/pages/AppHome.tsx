@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ActivityFeedItem, { Activity } from '@/components/app/ActivityFeedItem';
 import { Helmet } from 'react-helmet';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
+import AIInsightCard from '@/components/app/AIInsightCard';
 
 // Dados fictícios para o feed inicial
 const mockActivities: Activity[] = [
@@ -133,12 +133,43 @@ const suggestedTrails = [
   }
 ];
 
+// Mock de insights de IA para demonstração
+const mockAIInsights = [
+  {
+    id: 'insight1',
+    type: 'performance' as const,
+    title: 'Sua velocidade média aumentou!',
+    description: 'Sua velocidade média em subidas aumentou 5% nesta semana comparado com a semana anterior. Continue assim!',
+    actionLabel: 'Ver Análise Completa',
+    onAction: () => toast.info('Análise completa será implementada em breve')
+  },
+  {
+    id: 'insight2',
+    type: 'route' as const,
+    title: 'Rota Recomendada Para Hoje',
+    description: 'Com base no seu histórico e nas condições climáticas, recomendamos a Trilha da Serra (15km, nível médio).',
+    actionLabel: 'Ver Rota',
+    onAction: () => toast.info('Visualização de rota será implementada em breve')
+  },
+  {
+    id: 'insight3',
+    type: 'maintenance' as const,
+    title: 'Lembrete de Manutenção',
+    description: 'Sua corrente atingiu 500km desde a última lubrificação registrada. Considere fazer a manutenção em breve.',
+    actionLabel: 'Marcar como Feito',
+    onAction: () => toast.success('Manutenção registrada!')
+  }
+];
+
 const AppHome: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>(mockActivities);
   const { user } = useAuth();
   
   // Estado de exemplo para simular conexão com Strava
   const [isConnectedToStrava, setIsConnectedToStrava] = useState(false);
+  
+  // Escolhe um insight aleatório para mostrar
+  const [currentInsight] = useState(mockAIInsights[Math.floor(Math.random() * mockAIInsights.length)]);
   
   const handleConnectStrava = () => {
     // Simulação de conexão com Strava
@@ -172,6 +203,22 @@ const AppHome: React.FC = () => {
     toast.success("Trail adicionado! Esta função será implementada com integração backend.");
   };
   
+  // Função para intercalar o insight da IA no feed
+  const getInterleavedFeed = () => {
+    if (activities.length < 2) {
+      return [...activities];
+    }
+    
+    // Coloca o insight da IA após o primeiro ou segundo item
+    const position = Math.min(1, activities.length - 1);
+    const feed = [...activities];
+    
+    // Retornamos um array com os elementos originais e o insight intercalado
+    return feed;
+  };
+  
+  const feedItems = getInterleavedFeed();
+  
   return (
     <>
       <Helmet>
@@ -199,9 +246,18 @@ const AppHome: React.FC = () => {
         
         <h1 className="text-2xl font-bold">Feed de Atividades</h1>
         
+        {/* Seção de IA - posicionada antes do feed para destaque */}
+        <AIInsightCard
+          type={currentInsight.type}
+          title={currentInsight.title}
+          description={currentInsight.description}
+          actionLabel={currentInsight.actionLabel}
+          onAction={currentInsight.onAction}
+        />
+        
         {/* Feed Principal */}
         <div className="space-y-6">
-          {activities.map((activity) => (
+          {feedItems.map((activity) => (
             <ActivityFeedItem 
               key={activity.id} 
               activity={activity} 
