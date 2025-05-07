@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Calendar, Clock, MapPin, Users, PlusCircle, ChevronRight } from 'lucide-react';
@@ -197,10 +196,12 @@ const Events = () => {
     <div className="container mx-auto p-4 max-w-7xl">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold tracking-tight mb-4 md:mb-0">Próximos Pedais e Eventos</h1>
-        <Button className="bg-primary hover:bg-primary-dark">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Criar Evento
-        </Button>
+        <Link to="/app/events/new">
+          <Button className="bg-primary hover:bg-primary-dark">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Criar Evento
+          </Button>
+        </Link>
       </div>
       
       <div className="bg-white rounded-lg shadow p-4 mb-6">

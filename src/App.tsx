@@ -41,6 +41,7 @@ import CreateMarketplaceItem from "./pages/CreateMarketplaceItem";
 import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
+import CreateEvent from "./pages/CreateEvent";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -98,6 +99,7 @@ const App = () => (
             
             {/* Events Routes */}
             <Route path="events" element={<Events />} />
+            <Route path="events/new" element={<CreateEvent />} />
             <Route path="events/:eventId" element={<EventDetail />} />
             
             {/* Training Routes */}
