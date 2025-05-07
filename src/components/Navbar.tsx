@@ -29,6 +29,7 @@ const Navbar: React.FC = () => {
           <a href="#roadmap" className="hover:text-primary transition-colors">Roadmap</a>
           <Link to="/admin" className="hover:text-primary transition-colors">Admin</Link>
           <Link to="/app" className="hover:text-primary transition-colors">App</Link>
+          <Link to="/app/training/calendar" className="hover:text-primary transition-colors">Treinamento</Link>
         </div>
 
         <Button onClick={scrollToWaitlist} className="bg-primary hover:bg-primary-dark text-white px-4 py-2">

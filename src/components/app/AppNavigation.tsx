@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -15,7 +15,10 @@ import {
   MessageCircle,
   BadgeDollarSign,
   MoreHorizontal,
-  Plus
+  Plus,
+  Calendar,
+  Activity,
+  LineChart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -27,6 +30,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 
 interface AppNavigationProps {
@@ -57,6 +64,14 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
     { to: '/app/ai-assistant', icon: Bot, label: 'Assessor IA', activePath: '/app/ai-assistant' },
     { to: '/app/subscription', icon: BadgeDollarSign, label: 'Planos', activePath: '/app/subscription' },
     { to: '/app/settings', icon: Settings, label: 'Configurações', activePath: '/app/settings' },
+  ];
+
+  // Training submenu items
+  const trainingItems = [
+    { to: '/app/training/calendar', icon: Calendar, label: 'Calendário', activePath: '/app/training/calendar' },
+    { to: '/app/training/activities', icon: Activity, label: 'Minhas Atividades', activePath: '/app/training/activities' },
+    { to: '/app/training/weekly', icon: BarChart2, label: 'Controle Semanal', activePath: '/app/training/weekly' },
+    { to: '/app/training/performance', icon: LineChart, label: 'Performance e Prontidão', activePath: '/app/training/performance' },
   ];
 
   // Action button that brings attention to creating new content
@@ -92,6 +107,31 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
             <span className="text-xs mt-1">{item.label}</span>
           </Link>
         ))}
+        
+        {/* Training Button */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className={cn(
+              "flex flex-col items-center justify-center px-2",
+              isActive('/app/training') ? "text-primary" : "text-muted-foreground"
+            )}>
+              <BarChart2 className="h-5 w-5" />
+              <span className="text-xs mt-1">Treinamento</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-56">
+            <DropdownMenuLabel>Treinamento</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {trainingItems.map((item) => (
+              <DropdownMenuItem key={item.to} asChild>
+                <Link to={item.to} className="flex items-center gap-2">
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         
         {/* Action Button (e.g. New Route) */}
         <Link
@@ -158,6 +198,37 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
           {item.label}
         </Link>
       ))}
+      
+      {/* Training Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className={cn(
+              "px-3 py-1.5 border-b-2 transition-colors flex items-center text-sm",
+              getActiveStyles(isActive('/app/training'))
+            )}
+          >
+            <BarChart2 className="h-4 w-4 mr-1.5" />
+            Treinamento
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {trainingItems.map((item) => (
+            <DropdownMenuItem key={item.to} asChild>
+              <Link 
+                to={item.to} 
+                className={cn(
+                  "flex items-center gap-2",
+                  isActive(item.activePath) ? "text-primary font-medium" : ""
+                )}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
       
       {/* Action Button */}
       <Link 

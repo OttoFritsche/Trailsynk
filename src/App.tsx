@@ -31,6 +31,10 @@ import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import AIAssistant from "./pages/AIAssistant";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import TrainingCalendar from "./pages/training/TrainingCalendar";
+import MyActivities from "./pages/training/MyActivities";
+import WeeklyControl from "./pages/training/WeeklyControl";
+import PerformanceReadiness from "./pages/training/PerformanceReadiness";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +76,14 @@ const App = () => (
             <Route path="subscription-success" element={<SubscriptionSuccess />} />
             <Route path="messages" element={<Messages />} />
             <Route path="messages/:chatId" element={<ChatDetail />} />
+            
+            {/* New Training Routes */}
+            <Route path="training">
+              <Route path="calendar" element={<TrainingCalendar />} />
+              <Route path="activities" element={<MyActivities />} />
+              <Route path="weekly" element={<WeeklyControl />} />
+              <Route path="performance" element={<PerformanceReadiness />} />
+            </Route>
           </Route>
           
           <Route path="*" element={<NotFound />} />
