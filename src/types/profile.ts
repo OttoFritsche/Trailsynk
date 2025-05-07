@@ -33,6 +33,9 @@ export interface ProfilePhoto {
   url: string;
   caption?: string;
   albumId?: string;
+  activityId?: string;
+  isActivityPhoto?: boolean;
+  date?: Date;
 }
 
 export interface PhotoAlbum {

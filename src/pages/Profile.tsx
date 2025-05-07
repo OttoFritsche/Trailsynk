@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -7,7 +6,7 @@ import { formatDate, formatDuration, handleStravaConnect } from '@/utils/profile
 import LoadingState from '@/components/profile/LoadingState';
 import { toast } from 'sonner';
 import { Activity } from '@/components/app/ActivityFeedItem';
-import ProfilePhotoCarousel from '@/components/profile/ProfilePhotoCarousel';
+import EnhancedPhotoCarousel from '@/components/profile/EnhancedPhotoCarousel';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ActivitySummary from '@/components/profile/ActivitySummary';
 import ProfileTabs from '@/components/profile/ProfileTabs';
@@ -161,6 +160,7 @@ const Profile = () => {
   
   const [activeTab, setActiveTab] = useState("overview");
   const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
+  const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
 
   const handleLike = (activityId: string) => {
     toast.info("Função de curtir será implementada em breve");
@@ -170,15 +170,20 @@ const Profile = () => {
     toast.info("Função de comentários será implementada em breve");
   };
 
-  // Função para adicionar nova foto
-  const handleAddPhoto = (photoUrl: string, caption?: string) => {
+  // Function to add new photo
+  const handleAddPhoto = useCallback((photoUrl: string, caption?: string) => {
     const newPhoto: ProfilePhoto = { 
-      id: uuidv4(), // Gera um ID único
+      id: uuidv4(),
       url: photoUrl,
       caption: caption
     };
     addPhoto(newPhoto);
-  };
+  }, [addPhoto]);
+
+  // Function to open the edit profile modal
+  const handleEditProfileClick = useCallback(() => {
+    setIsProfileEditModalOpen(true);
+  }, []);
 
   if (loading) {
     return <LoadingState />;
@@ -190,6 +195,10 @@ const Profile = () => {
 
   const displayName = profileData.full_name || profileData.username || user?.email?.split('@')[0] || 'Ciclista';
   
+  // Filter photos that represent user activities for the banner carousel
+  // In a real app, these would come from the backend filtered appropriately
+  const activityPhotos = photos.slice(0, 5); // Using first 5 photos as activity photos for demo
+  
   return (
     <>
       <Helmet>
@@ -197,32 +206,28 @@ const Profile = () => {
       </Helmet>
 
       <div className="space-y-6 pb-12">
-        {/* Banner de Fotos */}
-        <div className="relative h-64 md:h-80 w-full overflow-hidden rounded-xl">
-          <ProfilePhotoCarousel 
-            photos={photos}
-            onDeletePhoto={deletePhoto}
-            onReorderPhotos={reorderPhotos}
-            onAddPhoto={() => setIsAddPhotoModalOpen(true)}
-          />
-          <EditProfileButton 
-            profileData={profileData} 
-            onProfileUpdate={refreshProfileData} 
-          />
-        </div>
-        
-        {/* Container com fundo branco para o cabeçalho do perfil e abas */}
+        {/* Reorganized Profile Header Section */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          {/* Cabeçalho do perfil */}
+          {/* Banner Photo Carousel - Now clearly separated from profile info */}
+          <div className="w-full">
+            <EnhancedPhotoCarousel 
+              photos={activityPhotos}
+              autoPlayInterval={6000}
+              className="rounded-t-xl"
+            />
+          </div>
+          
+          {/* Profile Header - Now positioned below the banner */}
           <ProfileHeader 
             profileData={profileData}
             displayName={displayName}
             joinDate={joinDate}
             isPro={true}
             location="Salvador, BA"
+            onEditProfile={handleEditProfileClick}
           />
           
-          {/* Resumo de atividades */}
+          {/* Activity Summary */}
           <div className="px-4 md:px-8 pb-6">
             <ActivitySummary 
               userStats={userStats}
@@ -231,7 +236,7 @@ const Profile = () => {
             />
           </div>
           
-          {/* Sistema de Navegação por Abas */}
+          {/* Profile Tabs */}
           <ProfileTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -243,7 +248,6 @@ const Profile = () => {
             groups={groups}
             onLike={handleLike}
             onComment={handleComment}
-            // Props para álbuns
             albums={albums}
             photos={photos}
             onAddAlbum={addAlbum}
@@ -257,11 +261,19 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Modal para adicionar fotos */}
+      {/* Modal for adding photos */}
       <AddPhotoModal 
         open={isAddPhotoModalOpen}
         onOpenChange={setIsAddPhotoModalOpen}
         onPhotoAdded={handleAddPhoto}
+      />
+      
+      {/* Edit Profile Modal */}
+      <EditProfileButton 
+        profileData={profileData} 
+        onProfileUpdate={refreshProfileData}
+        isModalOpen={isProfileEditModalOpen}
+        setIsModalOpen={setIsProfileEditModalOpen}
       />
     </>
   );

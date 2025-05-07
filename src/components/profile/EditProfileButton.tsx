@@ -2,112 +2,63 @@
 import React, { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ProfileData } from '@/types/profile';
+import ProfileForm from './ProfileForm';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { ProfileForm, ProfileFormValues } from '@/components/profile/ProfileForm';
-import { ProfileData } from '@/types/profile';
-import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'sonner';
-import { uploadAvatarToStorage, updateUserProfile } from '@/utils/profileUtils';
+} from "@/components/ui/dialog";
 
 interface EditProfileButtonProps {
   profileData: ProfileData;
-  onProfileUpdate?: () => void;
+  onProfileUpdate: () => void;
+  isModalOpen?: boolean;
+  setIsModalOpen?: (isOpen: boolean) => void;
 }
 
 const EditProfileButton: React.FC<EditProfileButtonProps> = ({ 
-  profileData,
-  onProfileUpdate
+  profileData, 
+  onProfileUpdate,
+  isModalOpen: externalIsOpen,
+  setIsModalOpen: externalSetIsOpen
 }) => {
-  const { user, updateUserProfile: updateAuthProfile } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const handleSubmit = async (
-    values: ProfileFormValues, 
-    avatarFile: File | null, 
-    selectedPreferences: string[]
-  ) => {
-    if (!user) return;
-
-    setIsSubmitting(true);
-    
-    try {
-      let uploadedAvatarUrl = profileData.avatar_url;
-      
-      // Upload avatar if there's a new file
-      if (avatarFile) {
-        const avatarUrl = await uploadAvatarToStorage(user.id, avatarFile);
-        if (avatarUrl) {
-          uploadedAvatarUrl = avatarUrl;
-        }
-      }
-      
-      // Update profile
-      const success = await updateUserProfile(
-        user.id, 
-        values, 
-        uploadedAvatarUrl, 
-        selectedPreferences
-      );
-      
-      if (!success) {
-        throw new Error('Failed to update profile');
-      }
-      
-      // Update avatar_url in user metadata if available
-      if (uploadedAvatarUrl) {
-        await updateAuthProfile({ avatar_url: uploadedAvatarUrl });
-      }
-      
-      toast.success('Perfil atualizado com sucesso!');
-      
-      // Close dialog and trigger refresh
-      setOpen(false);
-      if (onProfileUpdate) {
-        onProfileUpdate();
-      }
-      
-    } catch (error: any) {
-      console.error('Error saving profile:', error);
-      toast.error(`Erro ao salvar perfil: ${error.message}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalSetIsOpen || setInternalIsOpen;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <>
+      {/* Only render this button if external modal state control is not provided */}
+      {externalIsOpen === undefined && (
         <Button 
+          onClick={() => setIsOpen(true)} 
           variant="outline" 
           size="sm" 
-          className="gap-1 absolute top-4 right-4 z-20"
+          className="absolute top-4 right-4 bg-white/80 hover:bg-white z-10 flex items-center gap-1"
         >
-          <Pencil className="h-4 w-4" /> 
+          <Pencil className="h-3 w-3" />
           Editar Perfil
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-primary">Editar Perfil</DialogTitle>
-        </DialogHeader>
-        <div className="max-h-[70vh] overflow-y-auto py-4">
-          <ProfileForm
-            user={user}
-            initialData={profileData}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            onCancel={() => setOpen(false)}
+      )}
+      
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Editar Perfil</DialogTitle>
+          </DialogHeader>
+          <ProfileForm 
+            initialData={profileData} 
+            onSuccess={() => {
+              setIsOpen(false);
+              onProfileUpdate();
+            }} 
           />
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
