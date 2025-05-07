@@ -27,3 +27,9 @@ export interface UserBadge {
   dateEarned?: Date;
   status: "earned" | "locked";
 }
+
+export interface ProfilePhoto {
+  id: string;
+  url: string;
+  caption?: string;
+}

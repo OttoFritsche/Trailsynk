@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react';
-import { Plus, Upload, X } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -17,11 +16,16 @@ import { useAuth } from '@/hooks/useAuth';
 
 interface AddPhotoModalProps {
   onPhotoAdded: (photoUrl: string, caption?: string) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const AddPhotoModal: React.FC<AddPhotoModalProps> = ({ onPhotoAdded }) => {
+const AddPhotoModal: React.FC<AddPhotoModalProps> = ({ 
+  onPhotoAdded, 
+  open, 
+  onOpenChange 
+}) => {
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [caption, setCaption] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -69,10 +73,8 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({ onPhotoAdded }) => {
       toast.success('Foto adicionada com sucesso!');
       
       // Reset and close
-      setOpen(false);
-      setPreviewUrl(null);
-      setPhotoFile(null);
-      setCaption('');
+      onOpenChange(false);
+      resetForm();
     } catch (error: any) {
       toast.error(`Erro ao adicionar foto: ${error.message}`);
     } finally {
@@ -80,18 +82,19 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({ onPhotoAdded }) => {
     }
   };
 
+  const resetForm = () => {
+    setPreviewUrl(null);
+    setPhotoFile(null);
+    setCaption('');
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open) resetForm();
+    onOpenChange(open);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="gap-1 absolute top-4 left-4 z-20"
-        >
-          <Plus className="h-4 w-4" /> 
-          Adicionar Foto
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Adicionar Nova Foto</DialogTitle>
@@ -155,7 +158,7 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({ onPhotoAdded }) => {
         <DialogFooter>
           <Button 
             variant="outline" 
-            onClick={() => setOpen(false)}
+            onClick={() => handleDialogClose(false)}
             disabled={isUploading}
           >
             Cancelar

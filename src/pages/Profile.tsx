@@ -1,6 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileData } from '@/hooks/useProfileData';
@@ -14,34 +12,8 @@ import ActivitySummary from '@/components/profile/ActivitySummary';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import EditProfileButton from '@/components/profile/EditProfileButton';
 import AddPhotoModal from '@/components/profile/AddPhotoModal';
-
-// Interface para melhorar o tipo das fotos
-interface ProfilePhoto {
-  url: string;
-  caption?: string;
-}
-
-// Mock data para o carrossel de fotos
-const initialPhotos: ProfilePhoto[] = [
-  { 
-    url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=300&fit=crop',
-    caption: 'Pedalada matinal na orla'
-  },
-  { 
-    url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=800&h=300&fit=crop',
-    caption: 'Trilha no Parque da Serra'
-  },
-  { 
-    url: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&h=300&fit=crop',
-    caption: 'Encontro do grupo MTB Salvador'
-  },
-  { 
-    url: 'https://images.unsplash.com/photo-1571188654248-7a89213915f7?w=800&h=300&fit=crop' 
-  },
-  { 
-    url: 'https://images.unsplash.com/photo-1553007830-89e37b527205?w=800&h=300&fit=crop' 
-  }
-];
+import { v4 as uuidv4 } from 'uuid';
+import { ProfilePhoto } from '@/types/profile';
 
 // Mock data para atividades recentes
 const recentActivities: Activity[] = [
@@ -165,9 +137,21 @@ const groups = [
 
 const Profile = () => {
   const { user } = useAuth();
-  const { profileData, loading, userStats, highlightedBadges, isConnectedToStrava, refreshProfileData } = useProfileData(user);
+  const { 
+    profileData, 
+    loading, 
+    userStats, 
+    highlightedBadges, 
+    isConnectedToStrava, 
+    refreshProfileData,
+    photos,
+    addPhoto,
+    deletePhoto,
+    reorderPhotos
+  } = useProfileData(user);
+  
   const [activeTab, setActiveTab] = useState("overview");
-  const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
 
   const handleLike = (activityId: string) => {
     toast.info("Função de curtir será implementada em breve");
@@ -180,11 +164,11 @@ const Profile = () => {
   // Função para adicionar nova foto
   const handleAddPhoto = (photoUrl: string, caption?: string) => {
     const newPhoto: ProfilePhoto = { 
+      id: uuidv4(), // Gera um ID único
       url: photoUrl,
       caption: caption
     };
-    setPhotos(prev => [newPhoto, ...prev]);
-    toast.success("Nova foto adicionada!");
+    addPhoto(newPhoto);
   };
 
   if (loading) {
@@ -206,8 +190,12 @@ const Profile = () => {
       <div className="space-y-6 pb-12">
         {/* Banner de Fotos */}
         <div className="relative h-64 md:h-80 w-full overflow-hidden rounded-xl">
-          <ProfilePhotoCarousel photos={photos} />
-          <AddPhotoModal onPhotoAdded={handleAddPhoto} />
+          <ProfilePhotoCarousel 
+            photos={photos}
+            onDeletePhoto={deletePhoto}
+            onReorderPhotos={reorderPhotos}
+            onAddPhoto={() => setIsAddPhotoModalOpen(true)}
+          />
           <EditProfileButton 
             profileData={profileData} 
             onProfileUpdate={refreshProfileData} 
@@ -249,6 +237,13 @@ const Profile = () => {
           />
         </div>
       </div>
+
+      {/* Modal para adicionar fotos */}
+      <AddPhotoModal 
+        open={isAddPhotoModalOpen}
+        onOpenChange={setIsAddPhotoModalOpen}
+        onPhotoAdded={handleAddPhoto}
+      />
     </>
   );
 };
