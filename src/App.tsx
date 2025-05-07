@@ -41,7 +41,14 @@ import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -83,11 +90,11 @@ const App = () => (
             <Route path="messages" element={<Messages />} />
             <Route path="messages/:chatId" element={<ChatDetail />} />
             
-            {/* New Marketplace Routes */}
+            {/* Marketplace Routes */}
             <Route path="marketplace" element={<Marketplace />} />
             <Route path="marketplace/:itemId" element={<MarketplaceItemDetail />} />
             
-            {/* New Events Routes */}
+            {/* Events Routes */}
             <Route path="events" element={<Events />} />
             <Route path="events/:eventId" element={<EventDetail />} />
             
