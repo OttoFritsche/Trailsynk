@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Calendar } from 'lucide-react';
+import { Calendar, Plus } from 'lucide-react';
 import { GroupAgendaTab } from './tabs/GroupAgendaTab';
 import { GroupMembersTabContent } from './tabs/GroupMembersTabContent';
 import { GroupRoutesTabContent } from './tabs/GroupRoutesTabContent';
@@ -85,45 +85,9 @@ export const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
     setIsMapDialogOpen(true);
   };
 
+  // Main tabs
   return (
     <div className="space-y-6 py-4">
-      {/* Cabeçalho do Grupo */}
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/3 lg:w-1/4 aspect-video md:aspect-square rounded-md bg-gray-200 overflow-hidden">
-          <img 
-            src={group.image || '/placeholder.svg'} 
-            alt={group.name} 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold">{group.name}</h2>
-          <p className="text-muted-foreground mt-2">{group.description}</p>
-          
-          <div className="flex items-center mt-4 text-sm space-x-4">
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
-              <span>{group.memberCount} membros</span>
-            </div>
-            
-            {group.nextRideDate && (
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
-                <span>Próximo pedal: {formatDate(group.nextRideDate)}</span>
-              </div>
-            )}
-          </div>
-          
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Button>Convidar Amigos</Button>
-            {group.isAdmin && (
-              <Button variant="outline">Editar Grupo</Button>
-            )}
-          </div>
-        </div>
-      </div>
-      
       {/* Abas para diferentes seções */}
       <Tabs defaultValue="agenda" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
