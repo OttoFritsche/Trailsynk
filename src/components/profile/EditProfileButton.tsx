@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProfileData } from '@/types/profile';
-import ProfileForm from './ProfileForm';
+import { ProfileForm } from './ProfileForm';
 import {
   Dialog,
   DialogContent,

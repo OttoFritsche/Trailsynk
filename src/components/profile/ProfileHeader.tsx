@@ -4,7 +4,7 @@ import { MapPin, Award } from 'lucide-react';
 import { ProfileData } from '@/types/profile';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { EditProfileButton } from './EditProfileButton';
+import EditProfileButton from './EditProfileButton';
 
 interface ProfileHeaderProps {
   profileData: ProfileData;

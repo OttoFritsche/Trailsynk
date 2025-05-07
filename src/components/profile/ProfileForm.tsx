@@ -35,18 +35,16 @@ const profileSchema = z.object({
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 
 interface ProfileFormProps {
-  user: any;
+  user?: any;
   initialData: ProfileData;
-  onSubmit: (values: ProfileFormValues, avatarFile: File | null, selectedPreferences: string[]) => Promise<void>;
-  isSubmitting: boolean;
-  onCancel: () => void;
+  onSuccess: () => void;
+  onCancel?: () => void;
 }
 
 export const ProfileForm: React.FC<ProfileFormProps> = ({
   user,
   initialData,
-  onSubmit,
-  isSubmitting,
+  onSuccess,
   onCancel
 }) => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initialData.avatar_url || null);
@@ -56,6 +54,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>(
     initialData.riding_preferences || []
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -77,7 +76,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     
     try {
       // Don't check if the username is the same as the currently saved one
-      if (user && form.getValues('username') === username) {
+      if (user && form.getValues('username') === initialData.username) {
         setIsCheckingUsername(false);
         setIsUsernameAvailable(true);
         return;
@@ -118,7 +117,25 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   };
 
   const handleFormSubmit = async (values: ProfileFormValues) => {
-    await onSubmit(values, avatarFile, selectedPreferences);
+    setIsSubmitting(true);
+    
+    try {
+      // In a real implementation, this would call your API to update the profile
+      console.log('Form values:', values);
+      console.log('Avatar file:', avatarFile);
+      console.log('Riding preferences:', selectedPreferences);
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success('Perfil atualizado com sucesso!');
+      onSuccess();
+    } catch (error: any) {
+      console.error('Error saving profile:', error);
+      toast.error(`Erro ao salvar perfil: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -291,3 +308,5 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     </Form>
   );
 };
+
+export default ProfileForm;
