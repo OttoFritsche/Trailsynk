@@ -32,4 +32,14 @@ export interface ProfilePhoto {
   id: string;
   url: string;
   caption?: string;
+  albumId?: string;
+}
+
+export interface PhotoAlbum {
+  id: string;
+  title: string;
+  description?: string;
+  coverPhotoId?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

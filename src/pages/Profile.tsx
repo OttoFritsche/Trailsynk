@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/hooks/useAuth';
@@ -147,7 +148,15 @@ const Profile = () => {
     photos,
     addPhoto,
     deletePhoto,
-    reorderPhotos
+    reorderPhotos,
+    albums,
+    addAlbum,
+    updateAlbum,
+    deleteAlbum,
+    assignPhotoToAlbum,
+    setAlbumCover,
+    getAlbumPhotos,
+    getAlbumById
   } = useProfileData(user);
   
   const [activeTab, setActiveTab] = useState("overview");
@@ -234,6 +243,16 @@ const Profile = () => {
             groups={groups}
             onLike={handleLike}
             onComment={handleComment}
+            // Props para álbuns
+            albums={albums}
+            photos={photos}
+            onAddAlbum={addAlbum}
+            onUpdateAlbum={updateAlbum}
+            onDeleteAlbum={deleteAlbum}
+            onDeletePhoto={deletePhoto}
+            onAssignPhotoToAlbum={assignPhotoToAlbum}
+            onSetAlbumCover={setAlbumCover}
+            getAlbumPhotos={getAlbumPhotos}
           />
         </div>
       </div>

@@ -9,6 +9,8 @@ import TrailsTab from './tabs/TrailsTab';
 import StatsTab from './tabs/StatsTab';
 import BadgesTab from './tabs/BadgesTab';
 import GroupsTab from './tabs/GroupsTab';
+import AlbumsTab from './tabs/AlbumsTab';
+import { PhotoAlbum, ProfilePhoto } from '@/types/profile';
 
 interface ProfileTabsProps {
   activeTab: string;
@@ -37,6 +39,16 @@ interface ProfileTabsProps {
   }>;
   onLike: (activityId: string) => void;
   onComment: (activityId: string) => void;
+  // Props para álbuns
+  albums: PhotoAlbum[];
+  photos: ProfilePhoto[];
+  onAddAlbum: (album: PhotoAlbum) => string;
+  onUpdateAlbum: (albumId: string, updates: Partial<PhotoAlbum>) => void;
+  onDeleteAlbum: (albumId: string) => void;
+  onDeletePhoto: (photoId: string) => void;
+  onAssignPhotoToAlbum: (photoId: string, albumId: string | undefined) => void;
+  onSetAlbumCover: (albumId: string, photoId: string) => void;
+  getAlbumPhotos: (albumId: string) => ProfilePhoto[];
 }
 
 const ProfileTabs: React.FC<ProfileTabsProps> = ({
@@ -49,16 +61,27 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
   trails,
   groups,
   onLike,
-  onComment
+  onComment,
+  // Props de álbuns
+  albums,
+  photos,
+  onAddAlbum,
+  onUpdateAlbum,
+  onDeleteAlbum,
+  onDeletePhoto,
+  onAssignPhotoToAlbum,
+  onSetAlbumCover,
+  getAlbumPhotos
 }) => {
   return (
     <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
       <div className="border-b">
         <div className="px-4 md:px-8">
-          <TabsList className="bg-transparent grid grid-cols-7 md:w-auto w-full">
+          <TabsList className="bg-transparent grid grid-cols-8 md:w-auto w-full">
             <TabsTrigger value="overview" className="text-sm">Visão Geral</TabsTrigger>
             <TabsTrigger value="activities" className="text-sm">Atividades</TabsTrigger>
             <TabsTrigger value="routes" className="text-sm">Rotas</TabsTrigger>
+            <TabsTrigger value="albums" className="text-sm">Álbuns</TabsTrigger>
             <TabsTrigger value="trails" className="text-sm">Trails</TabsTrigger>
             <TabsTrigger value="stats" className="text-sm">Estatísticas</TabsTrigger>
             <TabsTrigger value="badges" className="text-sm">Badges</TabsTrigger>
@@ -88,6 +111,20 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
         
         <TabsContent value="routes">
           <RoutesTab routes={savedRoutes} />
+        </TabsContent>
+        
+        <TabsContent value="albums">
+          <AlbumsTab
+            albums={albums}
+            photos={photos}
+            onAddAlbum={onAddAlbum}
+            onUpdateAlbum={onUpdateAlbum}
+            onDeleteAlbum={onDeleteAlbum}
+            onDeletePhoto={onDeletePhoto}
+            onAssignPhotoToAlbum={onAssignPhotoToAlbum}
+            onSetAlbumCover={onSetAlbumCover}
+            getAlbumPhotos={getAlbumPhotos}
+          />
         </TabsContent>
         
         <TabsContent value="trails">

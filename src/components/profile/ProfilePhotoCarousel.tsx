@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Trash2, Maximize2, MoveVertical } from 'lucide-react';
+import { Trash2, Maximize2, MoveVertical, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProfilePhoto } from '@/types/profile';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
@@ -24,6 +24,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+
+interface CustomAction {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}
 
 interface ProfilePhotoCarouselProps {
   photos: ProfilePhoto[];
@@ -31,6 +44,7 @@ interface ProfilePhotoCarouselProps {
   onReorderPhotos?: (photos: ProfilePhoto[]) => void;
   onAddPhoto?: () => void;
   isEditable?: boolean;
+  customActions?: (photoId: string) => CustomAction[];
 }
 
 const ProfilePhotoCarousel: React.FC<ProfilePhotoCarouselProps> = ({ 
@@ -38,7 +52,8 @@ const ProfilePhotoCarousel: React.FC<ProfilePhotoCarouselProps> = ({
   onDeletePhoto, 
   onReorderPhotos,
   onAddPhoto,
-  isEditable = true
+  isEditable = true,
+  customActions
 }) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -126,6 +141,8 @@ const ProfilePhotoCarousel: React.FC<ProfilePhotoCarouselProps> = ({
     );
   }
 
+  const currentPhoto = photos[current];
+
   return (
     <>
       <div className="relative">
@@ -194,14 +211,44 @@ const ProfilePhotoCarousel: React.FC<ProfilePhotoCarouselProps> = ({
                         >
                           <Maximize2 className="h-4 w-4 text-gray-700" />
                         </Button>
-                        <Button 
-                          size="icon" 
-                          variant="secondary" 
-                          className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                          onClick={() => setPhotoToDelete(photo)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
+                        
+                        {/* Se temos ações personalizadas, usamos dropdown */}
+                        {customActions ? (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button 
+                                size="icon" 
+                                variant="secondary" 
+                                className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                              >
+                                <MoreVertical className="h-4 w-4 text-gray-700" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {customActions(photo.id).map((action, i) => (
+                                <React.Fragment key={i}>
+                                  <DropdownMenuItem 
+                                    onClick={action.onClick}
+                                    className="cursor-pointer flex items-center gap-2"
+                                  >
+                                    {action.icon}
+                                    {action.label}
+                                  </DropdownMenuItem>
+                                  {i < customActions(photo.id).length - 1 && <DropdownMenuSeparator />}
+                                </React.Fragment>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        ) : (
+                          <Button 
+                            size="icon" 
+                            variant="secondary" 
+                            className="h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                            onClick={() => setPhotoToDelete(photo)}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>
