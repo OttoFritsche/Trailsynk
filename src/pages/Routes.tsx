@@ -1,12 +1,14 @@
 
-import React from 'react';
-import { Bike, Mountain, PlusCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bike, Mountain, PlusCircle, Map, Zap, Layers } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import RouteMap from '@/components/app/RouteMap';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Input } from '@/components/ui/input';
 
 // Mock data for route examples
 const mockRoutes = [
@@ -55,7 +57,9 @@ const mockRoutes = [
 const Routes: React.FC = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const [selectedRouteId, setSelectedRouteId] = React.useState<string | undefined>(undefined);
+  const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(false);
   
   const handleRouteSelection = (routeId: string) => {
     setSelectedRouteId(routeId);
@@ -75,12 +79,24 @@ const Routes: React.FC = () => {
   const handleNewRoute = () => {
     navigate('/app/routes/new');
   };
+
+  const filteredRoutes = mockRoutes.filter(route => 
+    route.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col space-y-2">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold tracking-tight">Rotas Sugeridas e Exploradas</h1>
+    <div className="h-[calc(100vh-4rem)]">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold tracking-tight">Rotas Sugeridas e Exploradas</h1>
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline"
+            size="sm"
+            className="hidden md:flex"
+          >
+            <Layers className="h-4 w-4 mr-2" />
+            Heatmap
+          </Button>
           <Button 
             className="bg-[#2ECC71] hover:bg-[#27ae60]"
             onClick={handleNewRoute}
@@ -90,61 +106,174 @@ const Routes: React.FC = () => {
             Nova Rota
           </Button>
         </div>
-        <p className="text-muted-foreground">
-          Visualize, explore e crie suas rotas de ciclismo personalizadas.
-        </p>
       </div>
-      
-      <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-3 gap-6'}`}>
-        {/* Map area - takes 2/3 of space on desktop */}
-        <div className={isMobile ? '' : 'col-span-2'}>
-          <RouteMap 
-            routeId={selectedRouteId} 
-            className="w-full h-[350px] md:h-[500px]" 
-          />
-        </div>
-        
-        {/* Routes list - takes 1/3 of space on desktop */}
-        <div>
-          <Card className="overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
-              <h3 className="font-medium">Rotas Disponíveis</h3>
-              <span className="text-xs text-muted-foreground">{mockRoutes.length} rotas</span>
-            </div>
-            
-            <ScrollArea className="h-[300px] md:h-[450px]">
-              <div className="p-2">
-                {mockRoutes.map(route => (
-                  <div
-                    key={route.id}
-                    onClick={() => handleRouteSelection(route.id)}
-                    className={`p-3 rounded-md mb-2 cursor-pointer transition-colors ${
-                      selectedRouteId === route.id
-                        ? 'bg-primary/10 border border-primary/20'
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <h4 className="font-medium">{route.name}</h4>
-                      {getRouteTypeIcon(route.type)}
-                    </div>
-                    <div className="flex mt-2 text-xs text-gray-600 space-x-4">
-                      <div className="flex items-center">
-                        <span className="font-medium">{route.distance}</span>
-                        <span className="ml-1">km</span>
+
+      <div className="h-[calc(100%-3rem)] rounded-lg overflow-hidden border border-border bg-card">
+        {isMobile ? (
+          // Mobile layout with stacked components
+          <div className="flex flex-col h-full">
+            {!isPanelCollapsed && (
+              <div className="p-2 border-b">
+                <Input
+                  placeholder="Buscar rotas..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="mb-2"
+                />
+                <ScrollArea className="h-48">
+                  <div className="p-2 space-y-2">
+                    {filteredRoutes.map(route => (
+                      <div
+                        key={route.id}
+                        onClick={() => handleRouteSelection(route.id)}
+                        className={`p-3 rounded-md cursor-pointer transition-colors ${
+                          selectedRouteId === route.id
+                            ? 'bg-primary/10 border border-primary/20'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-medium">{route.name}</h4>
+                          {getRouteTypeIcon(route.type)}
+                        </div>
+                        <div className="flex mt-2 text-xs text-gray-600 space-x-4">
+                          <div className="flex items-center">
+                            <span className="font-medium">{route.distance}</span>
+                            <span className="ml-1">km</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="font-medium">{route.elevation}</span>
+                            <span className="ml-1">m</span>
+                            <span className="ml-1">↑</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <span className="font-medium">{route.elevation}</span>
-                        <span className="ml-1">m</span>
-                        <span className="ml-1">↑</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                </ScrollArea>
+                <div className="flex justify-center mt-2">
+                  <Button variant="ghost" size="sm" onClick={() => setIsPanelCollapsed(true)}>
+                    Ocultar Lista
+                  </Button>
+                </div>
               </div>
-            </ScrollArea>
-          </Card>
-        </div>
+            )}
+            
+            <div className="flex-1 relative">
+              <RouteMap
+                routeId={selectedRouteId}
+                className="w-full h-full"
+              />
+              
+              {isPanelCollapsed && (
+                <div className="absolute top-4 left-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-white"
+                    onClick={() => setIsPanelCollapsed(false)}
+                  >
+                    Mostrar Lista
+                  </Button>
+                </div>
+              )}
+
+              <div className="absolute bottom-4 left-4 space-y-2">
+                <Button size="sm" variant="outline" className="bg-white/90 w-full">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Sugerir Rota com IA
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Desktop layout with resizable panels
+          <ResizablePanelGroup 
+            direction="horizontal" 
+            className="h-full"
+          >
+            <ResizablePanel 
+              defaultSize={25} 
+              minSize={20} 
+              maxSize={40}
+              className="bg-white"
+            >
+              <div className="p-4 border-b">
+                <Input
+                  placeholder="Buscar rotas..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="flex justify-between items-center px-4 py-2 border-b">
+                <span className="text-sm font-medium">Rotas Disponíveis</span>
+                <span className="text-xs text-muted-foreground">{filteredRoutes.length} rotas</span>
+              </div>
+
+              <ScrollArea className="h-[calc(100%-6rem)]">
+                <div className="p-2 space-y-2">
+                  {filteredRoutes.map(route => (
+                    <div
+                      key={route.id}
+                      onClick={() => handleRouteSelection(route.id)}
+                      className={`p-3 rounded-md cursor-pointer transition-colors ${
+                        selectedRouteId === route.id
+                          ? 'bg-primary/10 border border-primary/20'
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium">{route.name}</h4>
+                        {getRouteTypeIcon(route.type)}
+                      </div>
+                      <div className="flex mt-2 text-xs text-gray-600 space-x-4">
+                        <div className="flex items-center">
+                          <span className="font-medium">{route.distance}</span>
+                          <span className="ml-1">km</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="font-medium">{route.elevation}</span>
+                          <span className="ml-1">m</span>
+                          <span className="ml-1">↑</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              <div className="p-4 border-t">
+                <Button variant="outline" size="sm" className="w-full">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Sugerir Rota com IA
+                </Button>
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle />
+
+            <ResizablePanel defaultSize={75}>
+              <div className="relative w-full h-full">
+                <RouteMap
+                  routeId={selectedRouteId}
+                  className="w-full h-full"
+                />
+                
+                <div className="absolute top-4 right-4 space-x-2">
+                  <Button variant="outline" size="sm" className="bg-white/90">
+                    <Layers className="h-4 w-4 mr-2" />
+                    Heatmap
+                  </Button>
+                  <Button variant="outline" size="sm" className="bg-white/90">
+                    <Map className="h-4 w-4 mr-2" />
+                    Segmentos
+                  </Button>
+                </div>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )}
       </div>
     </div>
   );
