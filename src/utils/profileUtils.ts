@@ -85,3 +85,35 @@ export const fetchProfileData = async (userId: string): Promise<ProfileData | nu
     return null;
   }
 };
+
+// Format a date string to a more readable format
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('pt-BR', { 
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+};
+
+// Format duration in minutes to a readable format (e.g. "2h 30m")
+export const formatDuration = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  
+  if (hours === 0) {
+    return `${mins}m`;
+  } else if (mins === 0) {
+    return `${hours}h`;
+  } else {
+    return `${hours}h ${mins}m`;
+  }
+};
+
+// Handler for Strava connection
+export const handleStravaConnect = () => {
+  // This is a placeholder for the actual Strava connection logic
+  // In a real implementation, this would redirect to Strava OAuth flow
+  console.log('Connecting to Strava...');
+  alert('Esta funcionalidade será implementada em breve!');
+};
