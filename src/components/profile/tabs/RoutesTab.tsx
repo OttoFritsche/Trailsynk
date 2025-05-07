@@ -42,7 +42,7 @@ const RoutesTab: React.FC<RoutesTabProps> = ({ routes }) => {
             <MapPin className="h-4 w-4 mr-2" />
             Mapa
           </Button>
-          <Link to="/app/routes">
+          <Link to="/app/routes/new">
             <Button 
               className="bg-[#2ECC71] hover:bg-[#27ae60]"
               size="sm"

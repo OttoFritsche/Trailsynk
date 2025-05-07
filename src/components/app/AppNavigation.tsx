@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -18,7 +17,9 @@ import {
   Plus,
   Calendar,
   Activity,
-  LineChart
+  LineChart,
+  ShoppingBag,
+  CalendarCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -51,6 +52,8 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
   const essentialNavItems = [
     { to: '/app', icon: Home, label: 'Início', activePath: '/app' },
     { to: '/app/routes', icon: Route, label: 'Rotas', activePath: '/app/routes' },
+    { to: '/app/marketplace', icon: ShoppingBag, label: 'Marketplace', activePath: '/app/marketplace' },
+    { to: '/app/events', icon: CalendarCheck, label: 'Eventos', activePath: '/app/events' },
   ];
 
   // Nav items that will be available in the "More" dropdown menu
@@ -94,7 +97,8 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
     // Mobile Navigation - Simplified bottom bar with most essential items
     return (
       <div className="flex md:hidden justify-between w-full px-1">
-        {essentialNavItems.map((item) => (
+        {/* Keep just the first 3 essential items for mobile to avoid overcrowding */}
+        {essentialNavItems.slice(0, 3).map((item) => (
           <Link 
             key={item.to}
             to={item.to}
@@ -167,6 +171,13 @@ const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Menu</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {/* Add Events item to the dropdown */}
+            <DropdownMenuItem asChild>
+              <Link to="/app/events" className="flex items-center gap-2">
+                <CalendarCheck className="h-4 w-4" />
+                Eventos
+              </Link>
+            </DropdownMenuItem>
             {moreNavItems.map((item) => (
               <DropdownMenuItem key={item.to} asChild>
                 <Link to={item.to} className="flex items-center gap-2">

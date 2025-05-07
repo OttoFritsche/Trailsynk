@@ -35,6 +35,11 @@ import TrainingCalendar from "./pages/training/TrainingCalendar";
 import MyActivities from "./pages/training/MyActivities";
 import WeeklyControl from "./pages/training/WeeklyControl";
 import PerformanceReadiness from "./pages/training/PerformanceReadiness";
+import VerifyEmail from "./pages/VerifyEmail";
+import Marketplace from "./pages/Marketplace";
+import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
+import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +52,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/admin" element={<Admin />} />
           
           {/* Protected App Routes */}
@@ -77,7 +83,15 @@ const App = () => (
             <Route path="messages" element={<Messages />} />
             <Route path="messages/:chatId" element={<ChatDetail />} />
             
-            {/* New Training Routes */}
+            {/* New Marketplace Routes */}
+            <Route path="marketplace" element={<Marketplace />} />
+            <Route path="marketplace/:itemId" element={<MarketplaceItemDetail />} />
+            
+            {/* New Events Routes */}
+            <Route path="events" element={<Events />} />
+            <Route path="events/:eventId" element={<EventDetail />} />
+            
+            {/* Training Routes */}
             <Route path="training">
               <Route path="calendar" element={<TrainingCalendar />} />
               <Route path="activities" element={<MyActivities />} />
