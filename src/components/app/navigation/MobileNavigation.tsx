@@ -11,7 +11,6 @@ import {
 import { cn } from '@/lib/utils';
 import MobileTrainingMenu from './MobileTrainingMenu';
 import MoreMenu from './MoreMenu';
-import ThemeToggle from '@/components/theme/ThemeToggle';
 
 interface MobileNavigationProps {
   currentPath: string;
@@ -78,7 +77,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ currentPath }) => {
         <span className="text-xs mt-1">Mensagens</span>
       </Link>
       
-      {/* More Menu Dropdown (now includes theme toggle) */}
+      {/* More Menu Dropdown */}
       <MoreMenu currentPath={currentPath} mobileView={true} />
     </div>
   );

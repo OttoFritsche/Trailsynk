@@ -11,8 +11,6 @@ import {
   Bot,
   MessageCircle,
   BadgeDollarSign,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -25,7 +23,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTheme } from '@/components/theme/ThemeProvider';
 
 interface MoreMenuProps {
   currentPath: string;
@@ -33,8 +30,6 @@ interface MoreMenuProps {
 }
 
 const MoreMenu: React.FC<MoreMenuProps> = ({ currentPath, mobileView = false }) => {
-  const { theme, toggleTheme } = useTheme();
-  
   const moreNavItems = [
     { to: '/app/statistics', icon: BarChart2, label: 'Estatísticas', activePath: '/app/statistics' },
     { to: '/app/badges', icon: Medal, label: 'Conquistas', activePath: '/app/badges' },
@@ -87,23 +82,6 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ currentPath, mobileView = false }) 
             </Link>
           </DropdownMenuItem>
         ))}
-        
-        <DropdownMenuSeparator />
-        
-        {/* Theme Toggle Option */}
-        <DropdownMenuItem onClick={toggleTheme} className="flex items-center gap-2">
-          {theme === 'dark' ? (
-            <>
-              <Sun className="h-4 w-4" />
-              <span>Modo Claro</span>
-            </>
-          ) : (
-            <>
-              <Moon className="h-4 w-4" />
-              <span>Modo Escuro</span>
-            </>
-          )}
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

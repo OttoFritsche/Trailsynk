@@ -11,7 +11,6 @@ import {
 import { cn } from '@/lib/utils';
 import TrainingMenu from './TrainingMenu';
 import MoreMenu from './MoreMenu';
-import ThemeToggle from '@/components/theme/ThemeToggle';
 
 interface DesktopNavigationProps {
   currentPath: string;
@@ -73,9 +72,6 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ currentPath }) =>
         <actionButton.icon className="h-4 w-4 mr-1.5" />
         {actionButton.label}
       </Link>
-      
-      {/* Theme Toggle */}
-      <ThemeToggle size="sm" />
       
       {/* More dropdown menu */}
       <MoreMenu currentPath={currentPath} />
