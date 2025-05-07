@@ -11,33 +11,13 @@ const AppLayout: React.FC = () => {
   const { user } = useAuth();
   const location = useLocation();
   
-  // Check if we're on a page that should use the single-column layout
-  const isSingleColumnPage = [
-    '/app/assistant', 
-    '/app/ai-assistant', 
-    '/app/messages',
-    '/app/subscription',
-    '/app/subscription-success',
-    '/app/profile',
-    '/app/routes',
-    '/app/routes/new',
-    '/app/activity',
-    '/app/statistics',
-    '/app/badges',
-    '/app/trails',
-    '/app/groups',
-    '/app/find-cyclists',
-    '/app/notifications',
-    '/app/settings'
-  ].some(path => location.pathname.startsWith(path));
-  
-  // Only the main feed page will have the 3-column layout
+  // Agora apenas a página principal do feed terá o layout de 3 colunas
   const isThreeColumnPage = location.pathname === '/app' || location.pathname === '/app/';
 
   return (
     <div className="min-h-screen bg-gray-50">
       <AppHeader user={user} />
-      <div className={`container mx-auto px-4 py-4 ${isSingleColumnPage ? 'max-w-4xl' : 'max-w-7xl'}`}>
+      <div className="container mx-auto px-4 py-4 max-w-7xl">
         {isThreeColumnPage ? (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="hidden md:block md:col-span-3">
