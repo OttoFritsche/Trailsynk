@@ -5,14 +5,14 @@ import './App.css';
 import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './components/theme/ThemeProvider';
-import AppLayout from './components/app/AppLayout'; // Updated import path
+import AppLayout from './components/app/AppLayout'; 
 import Auth from './pages/Auth';
 import Settings from './pages/Settings';
 import VerifyEmail from './pages/VerifyEmail';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import Trails from './pages/Trails';
 import RouteDetail from './pages/RouteDetail';
-import { Index as LandingPage } from './pages/Index'; // Updated import for LandingPage
+import LandingPage from './pages/Index'; // Fixed import for LandingPage
 
 const queryClient = new QueryClient();
 
