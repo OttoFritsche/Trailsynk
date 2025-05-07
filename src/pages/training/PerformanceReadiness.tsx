@@ -54,7 +54,7 @@ const PerformanceReadiness = () => {
   const readinessStatus = getReadinessStatus();
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-6 pb-10 px-4 md:px-0">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Performance e Prontidão</h1>
         <p className="text-muted-foreground">
@@ -94,7 +94,7 @@ const PerformanceReadiness = () => {
           </CardContent>
         </Card>
 
-        {/* Power Curve Card */}
+        {/* Power Curve Card - Improved layout */}
         <Card className="md:col-span-2">
           <CardHeader className="flex flex-row items-start justify-between">
             <div>
@@ -126,22 +126,43 @@ const PerformanceReadiness = () => {
                   }
                 }}
               >
-                <LineChart data={powerCurveFormatted}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="time" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="power" 
-                    stroke="var(--color-power)" 
-                    name="Potência (watts)"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart 
+                    data={powerCurveFormatted}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis 
+                      dataKey="time" 
+                      tick={{ fontSize: 12 }}
+                      height={50}
+                      padding={{ left: 10, right: 10 }}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12 }}
+                      width={50}
+                      tickFormatter={(value) => `${value}`}
+                    />
+                    <Tooltip 
+                      contentStyle={{ fontSize: '12px' }}
+                      itemStyle={{ padding: '2px 0' }}
+                    />
+                    <Legend 
+                      verticalAlign="top" 
+                      height={36}
+                      wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="power" 
+                      stroke="var(--color-power)" 
+                      name="Potência (watts)"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </ChartContainer>
             </div>
           </CardContent>
@@ -155,7 +176,7 @@ const PerformanceReadiness = () => {
         type="info"
       />
 
-      {/* Metrics Trends */}
+      {/* Metrics Trends - Improved layout */}
       <Card>
         <CardHeader>
           <CardTitle>Tendência de Carga e Recuperação</CardTitle>
@@ -175,29 +196,52 @@ const PerformanceReadiness = () => {
                 }
               }}
             >
-              <LineChart data={mockTrainingMetricsHistory}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="load" 
-                  stroke="var(--color-load)" 
-                  name="Carga de Treinamento"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="recovery" 
-                  stroke="var(--color-recovery)" 
-                  name="Recuperação"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-              </LineChart>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart 
+                  data={mockTrainingMetricsHistory}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 12 }}
+                    height={50}
+                    padding={{ left: 10, right: 10 }}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    width={50}
+                    tickFormatter={(value) => `${value}`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ fontSize: '12px' }}
+                    itemStyle={{ padding: '2px 0' }}
+                  />
+                  <Legend 
+                    verticalAlign="top" 
+                    height={36}
+                    wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="load" 
+                    stroke="var(--color-load)" 
+                    name="Carga de Treinamento"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="recovery" 
+                    stroke="var(--color-recovery)" 
+                    name="Recuperação"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </div>
         </CardContent>
