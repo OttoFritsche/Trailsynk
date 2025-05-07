@@ -53,7 +53,7 @@ export const useProfileData = (user: User | null) => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, full_name, avatar_url, created_at, is_profile_complete')
+          .select('username, full_name, avatar_url, created_at, is_profile_complete, weight, height, age, riding_preferences')
           .eq('id', user.id)
           .single();
 

@@ -5,6 +5,10 @@ export interface ProfileData {
   avatar_url?: string;
   created_at?: string;
   is_profile_complete?: boolean;
+  weight?: number;
+  height?: number;
+  age?: number;
+  riding_preferences?: string[];
 }
 
 export interface UserStats {
