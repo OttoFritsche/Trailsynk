@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProfileData } from '@/types/profile';
-import { ProfileForm } from './ProfileForm';
+import ProfileForm from './ProfileForm';
 import {
   Dialog,
   DialogContent,
@@ -45,7 +45,7 @@ const EditProfileButton: React.FC<EditProfileButtonProps> = ({
       )}
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Editar Perfil</DialogTitle>
           </DialogHeader>
@@ -54,7 +54,8 @@ const EditProfileButton: React.FC<EditProfileButtonProps> = ({
             onSuccess={() => {
               setIsOpen(false);
               onProfileUpdate();
-            }} 
+            }}
+            onCancel={() => setIsOpen(false)}
           />
         </DialogContent>
       </Dialog>

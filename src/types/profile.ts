@@ -9,6 +9,10 @@ export interface ProfileData {
   height?: number;
   age?: number;
   riding_preferences?: string[];
+  ride_frequency?: string;
+  goals?: string[];
+  other_goal?: string;
+  bicycles?: Bicycle[];
 }
 
 export interface UserStats {
@@ -45,4 +49,15 @@ export interface PhotoAlbum {
   coverPhotoId?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Bicycle {
+  id: string;
+  name: string;
+  brand?: string;
+  model?: string;
+  type?: string;
+  image_url?: string;
+  initial_odometer?: number;
+  purchase_date?: string;
 }

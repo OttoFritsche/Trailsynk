@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,9 +17,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, Plus, Edit, Trash } from 'lucide-react';
 import { RidingPreferenceSelector } from './RidingPreferenceSelector';
 import { ProfileAvatar } from './ProfileAvatar';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Bicycle } from '@/types/profile';
 
 // Validation schema for the form using zod
 const profileSchema = z.object({
@@ -27,10 +39,42 @@ const profileSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, "Username deve conter apenas letras, números e _"),
   weight: z.coerce.number().optional(),
   height: z.coerce.number().optional(),
-  age: z.coerce.number().int().optional(),
+  age: z.coerce.number().optional(),
+  ride_frequency: z.string().optional(),
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
+
+// Cycling goals options
+const cyclingGoals = [
+  { id: "fitness", label: "Melhorar Condicionamento Físico / Resistência" },
+  { id: "compete", label: "Competir em Provas / Segmentos" },
+  { id: "weight_loss", label: "Perder Peso / Emagrecer" },
+  { id: "explore", label: "Explorar Novas Rotas / Lugares" },
+  { id: "skills", label: "Melhorar Habilidades Específicas (Subida, Descida, Técnico)" },
+  { id: "social", label: "Conectar com Outros Ciclistas / Grupos" },
+  { id: "tracking", label: "Rastrear Minhas Atividades" },
+  { id: "maintenance", label: "Manter Minhas Bicicletas em Dia" },
+  { id: "other", label: "Outro" },
+];
+
+// Bicycle types
+const bikeTypes = [
+  { value: "mtb", label: "Mountain Bike (MTB)" },
+  { value: "road", label: "Speed" },
+  { value: "gravel", label: "Gravel" },
+  { value: "urban", label: "Urbana" },
+  { value: "ebike", label: "E-Bike" },
+  { value: "other", label: "Outra" }
+];
+
+// Ride frequency options
+const rideFrequencyOptions = [
+  { value: "1-2", label: "1-2 vezes por semana" },
+  { value: "3-4", label: "3-4 vezes por semana" },
+  { value: "5+", label: "5 ou mais vezes por semana" },
+  { value: "occasional", label: "Ocasionalmente" },
+];
 
 export interface ProfileFormProps {
   user?: any;
@@ -52,6 +96,15 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>(
     initialData.riding_preferences || []
   );
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(
+    initialData.goals || []
+  );
+  const [bicycles, setBicycles] = useState<Bicycle[]>(
+    initialData.bicycles || []
+  );
+  const [isBicycleDialogOpen, setIsBicycleDialogOpen] = useState(false);
+  const [currentBicycle, setCurrentBicycle] = useState<Bicycle | null>(null);
+  const [otherGoal, setOtherGoal] = useState(initialData.other_goal || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<ProfileFormValues>({
@@ -62,7 +115,20 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
       weight: initialData.weight,
       height: initialData.height,
       age: initialData.age,
+      ride_frequency: initialData.ride_frequency || '',
     },
+  });
+
+  // Bicycle form state
+  const [bikeForm, setBikeForm] = useState({
+    id: '',
+    name: '',
+    brand: '',
+    model: '',
+    type: '',
+    image_url: '',
+    initial_odometer: 0,
+    purchase_date: '',
   });
 
   // Verify username availability
@@ -114,6 +180,76 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     setAvatarFile(file);
   };
 
+  // Handle bicycle form changes
+  const handleBikeFormChange = (field: string, value: any) => {
+    setBikeForm({
+      ...bikeForm,
+      [field]: value
+    });
+  };
+
+  // Open bicycle form dialog in create mode
+  const handleAddBicycle = () => {
+    setCurrentBicycle(null);
+    setBikeForm({
+      id: '',
+      name: '',
+      brand: '',
+      model: '',
+      type: '',
+      image_url: '',
+      initial_odometer: 0,
+      purchase_date: '',
+    });
+    setIsBicycleDialogOpen(true);
+  };
+
+  // Open bicycle form dialog in edit mode
+  const handleEditBicycle = (bike: Bicycle) => {
+    setCurrentBicycle(bike);
+    setBikeForm({
+      id: bike.id,
+      name: bike.name,
+      brand: bike.brand || '',
+      model: bike.model || '',
+      type: bike.type || '',
+      image_url: bike.image_url || '',
+      initial_odometer: bike.initial_odometer || 0,
+      purchase_date: bike.purchase_date || '',
+    });
+    setIsBicycleDialogOpen(true);
+  };
+
+  // Save bicycle and close dialog
+  const handleSaveBicycle = () => {
+    const newBike: Bicycle = {
+      id: bikeForm.id || `bike-${Date.now()}`, // Generate an ID if new
+      name: bikeForm.name,
+      brand: bikeForm.brand,
+      model: bikeForm.model,
+      type: bikeForm.type,
+      image_url: bikeForm.image_url,
+      initial_odometer: bikeForm.initial_odometer,
+      purchase_date: bikeForm.purchase_date,
+    };
+
+    // Update existing or add new
+    if (currentBicycle) {
+      setBicycles(prev => prev.map(b => b.id === newBike.id ? newBike : b));
+    } else {
+      setBicycles(prev => [...prev, newBike]);
+    }
+    
+    setIsBicycleDialogOpen(false);
+    toast.success(currentBicycle ? 'Bicicleta atualizada!' : 'Bicicleta adicionada!');
+  };
+
+  // Delete a bicycle
+  const handleDeleteBicycle = (bikeId: string) => {
+    setBicycles(prev => prev.filter(b => b.id !== bikeId));
+    toast.success('Bicicleta removida!');
+  };
+
   const handleFormSubmit = async (values: ProfileFormValues) => {
     setIsSubmitting(true);
     
@@ -122,6 +258,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
       console.log('Form values:', values);
       console.log('Avatar file:', avatarFile);
       console.log('Riding preferences:', selectedPreferences);
+      console.log('User goals:', selectedGoals);
+      console.log('Other goal:', otherGoal);
+      console.log('Bicycles:', bicycles);
       
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -257,6 +396,35 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             )}
           />
         </div>
+
+        {/* Ride Frequency - New Field */}
+        <FormField
+          control={form.control}
+          name="ride_frequency"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Frequência de Pedal</FormLabel>
+              <Select 
+                value={field.value} 
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Quantas vezes por semana você pedala?" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {rideFrequencyOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
         {/* Riding Preferences */}
         <RidingPreferenceSelector 
@@ -269,11 +437,135 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
             });
           }} 
         />
+
+        {/* User Goals - New Section */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Meus Objetivos</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {cyclingGoals.map((goal) => (
+              <div key={goal.id} className="flex items-start space-x-2">
+                <Checkbox
+                  id={`goal-${goal.id}`}
+                  checked={selectedGoals.includes(goal.id)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedGoals([...selectedGoals, goal.id]);
+                    } else {
+                      setSelectedGoals(selectedGoals.filter(g => g !== goal.id));
+                    }
+                  }}
+                />
+                <label
+                  htmlFor={`goal-${goal.id}`}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {goal.label}
+                </label>
+              </div>
+            ))}
+          </div>
+          
+          {selectedGoals.includes('other') && (
+            <div className="mt-2">
+              <Label htmlFor="other-goal">Especifique outro objetivo:</Label>
+              <Input 
+                id="other-goal" 
+                value={otherGoal} 
+                onChange={e => setOtherGoal(e.target.value)}
+                className="mt-1"
+                placeholder="Descreva seu objetivo..."
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Bicycles Section - New */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium">Minhas Bicicletas</h3>
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              onClick={handleAddBicycle}
+              className="flex items-center gap-1"
+            >
+              <Plus className="h-4 w-4" /> Adicionar Nova Bicicleta
+            </Button>
+          </div>
+
+          {bicycles.length === 0 ? (
+            <div className="text-center py-8 border border-dashed rounded-md">
+              <p className="text-muted-foreground">Você ainda não adicionou nenhuma bicicleta</p>
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleAddBicycle} 
+                className="mt-2"
+              >
+                <Plus className="h-4 w-4 mr-1" /> Adicionar Agora
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {bicycles.map((bike) => (
+                <div 
+                  key={bike.id} 
+                  className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0 h-12 w-12 bg-gray-100 rounded-md flex items-center justify-center">
+                      {bike.image_url ? (
+                        <img 
+                          src={bike.image_url} 
+                          alt={bike.name} 
+                          className="h-full w-full object-cover rounded-md" 
+                        />
+                      ) : (
+                        <div className="text-gray-400">🚲</div>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-medium">{bike.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {[bike.brand, bike.model].filter(Boolean).join(" • ")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-1">
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleEditBicycle(bike)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleDeleteBicycle(bike.id)}
+                      className="text-red-400 hover:text-red-600" 
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         
         {/* AI Analysis Placeholder */}
         <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-          <h4 className="font-medium text-sm text-gray-700">Análise de Performance Baseada nos Dados do Perfil</h4>
-          <p className="text-xs text-gray-500 mt-1">Esta funcionalidade utilizará IA para analisar seu perfil e fornecer recomendações personalizadas (Implementação Futura).</p>
+          <h4 className="font-medium text-sm text-gray-700">Análise de Performance Baseada nos Dados do Perfil e Bicicletas</h4>
+          <p className="text-xs text-gray-500 mt-1">
+            Seus dados de perfil (Peso, Altura, Idade, Frequência, Preferências, Objetivos) e informações sobre suas bicicletas 
+            serão utilizados pela IA para fornecer recomendações personalizadas de treinos, rotas e manutenções.
+          </p>
         </div>
         
         {/* Form buttons */}
@@ -303,6 +595,129 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           </Button>
         </div>
       </form>
+
+      {/* Bicycle Add/Edit Dialog */}
+      <Dialog open={isBicycleDialogOpen} onOpenChange={setIsBicycleDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{currentBicycle ? 'Editar Bicicleta' : 'Adicionar Nova Bicicleta'}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            {/* Bike Name */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-name" className="text-right">
+                Nome
+              </Label>
+              <Input
+                id="bike-name"
+                value={bikeForm.name}
+                onChange={(e) => handleBikeFormChange('name', e.target.value)}
+                placeholder="Ex: Minha MTB"
+                className="col-span-3"
+              />
+            </div>
+            
+            {/* Brand */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-brand" className="text-right">
+                Marca
+              </Label>
+              <Input
+                id="bike-brand"
+                value={bikeForm.brand}
+                onChange={(e) => handleBikeFormChange('brand', e.target.value)}
+                placeholder="Ex: Scott, Specialized, etc"
+                className="col-span-3"
+              />
+            </div>
+            
+            {/* Model */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-model" className="text-right">
+                Modelo
+              </Label>
+              <Input
+                id="bike-model"
+                value={bikeForm.model}
+                onChange={(e) => handleBikeFormChange('model', e.target.value)}
+                placeholder="Ex: Scale, Rockhopper, etc"
+                className="col-span-3"
+              />
+            </div>
+            
+            {/* Type */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-type" className="text-right">
+                Tipo
+              </Label>
+              <Select 
+                value={bikeForm.type} 
+                onValueChange={(value) => handleBikeFormChange('type', value)}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Selecione o tipo de bicicleta" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bikeTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Initial Odometer */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-odometer" className="text-right">
+                Odômetro (km)
+              </Label>
+              <Input
+                id="bike-odometer"
+                type="number"
+                value={bikeForm.initial_odometer}
+                onChange={(e) => handleBikeFormChange('initial_odometer', parseFloat(e.target.value) || 0)}
+                placeholder="0"
+                className="col-span-3"
+              />
+            </div>
+            
+            {/* Purchase Date */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-date" className="text-right">
+                Data de Compra
+              </Label>
+              <Input
+                id="bike-date"
+                type="date"
+                value={bikeForm.purchase_date}
+                onChange={(e) => handleBikeFormChange('purchase_date', e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            
+            {/* Image Upload - Placeholder */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bike-image" className="text-right">
+                Imagem
+              </Label>
+              <div className="col-span-3">
+                <div className="h-[100px] w-full border-2 border-dashed rounded-md flex items-center justify-center bg-gray-50">
+                  <span className="text-sm text-muted-foreground">Função de upload de imagem em breve</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button onClick={handleSaveBicycle} disabled={!bikeForm.name}>Salvar Bicicleta</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Form>
   );
 };

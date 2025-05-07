@@ -1,7 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { ProfileFormValues } from '@/components/profile/ProfileForm';
-import { ProfileData } from '@/types/profile';
+import { ProfileData, Bicycle } from '@/types/profile';
 
 export const uploadAvatarToStorage = async (
   userId: string,
@@ -43,7 +43,10 @@ export const updateUserProfile = async (
   userId: string,
   formValues: ProfileFormValues,
   avatarUrl: string | null,
-  selectedPreferences: string[]
+  selectedPreferences: string[],
+  selectedGoals: string[] = [],
+  otherGoal: string = '',
+  bicycles: Bicycle[] = []
 ): Promise<boolean> => {
   try {
     const { error } = await supabase
@@ -54,8 +57,12 @@ export const updateUserProfile = async (
         weight: formValues.weight || null,
         height: formValues.height || null,
         age: formValues.age || null,
+        ride_frequency: formValues.ride_frequency || null,
         avatar_url: avatarUrl,
         riding_preferences: selectedPreferences,
+        goals: selectedGoals,
+        other_goal: otherGoal,
+        bicycles: bicycles,
         is_profile_complete: true,
         updated_at: new Date().toISOString()
       })

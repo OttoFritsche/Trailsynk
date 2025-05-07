@@ -7,9 +7,9 @@ import { Helmet } from 'react-helmet';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
-import { ProfileForm, ProfileFormValues } from '@/components/profile/ProfileForm';
+import { ProfileForm } from '@/components/profile/ProfileForm';
 import { fetchProfileData, uploadAvatarToStorage, updateUserProfile } from '@/utils/profileUtils';
-import { ProfileData } from '@/types/profile';
+import { ProfileData, Bicycle } from '@/types/profile';
 
 const CompleteProfile: React.FC = () => {
   const { user, updateUserProfile: updateAuthProfile } = useAuth();
@@ -36,55 +36,7 @@ const CompleteProfile: React.FC = () => {
     loadProfileData();
   }, [user]);
 
-  // Handle form submission
-  const handleSubmit = async (
-    values: ProfileFormValues, 
-    avatarFile: File | null, 
-    selectedPreferences: string[]
-  ) => {
-    if (!user) return;
-
-    setIsSubmitting(true);
-    
-    try {
-      let uploadedAvatarUrl = initialProfileData.avatar_url;
-      
-      // Upload avatar if there's a new file
-      if (avatarFile) {
-        const avatarUrl = await uploadAvatarToStorage(user.id, avatarFile);
-        if (avatarUrl) {
-          uploadedAvatarUrl = avatarUrl;
-        }
-      }
-      
-      // Update profile
-      const success = await updateUserProfile(
-        user.id, 
-        values, 
-        uploadedAvatarUrl, 
-        selectedPreferences
-      );
-      
-      if (!success) {
-        throw new Error('Failed to update profile');
-      }
-      
-      // Update avatar_url in user metadata
-      if (uploadedAvatarUrl) {
-        await updateAuthProfile({ avatar_url: uploadedAvatarUrl });
-      }
-      
-      toast.success('Perfil atualizado com sucesso!');
-      navigate('/app/profile');
-    } catch (error: any) {
-      console.error('Error saving profile:', error);
-      toast.error(`Erro ao salvar perfil: ${error.message}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Function to handle the onSuccess callback from ProfileForm
+  // Handle profile update success
   const handleProfileUpdateSuccess = () => {
     navigate('/app/profile');
   };
