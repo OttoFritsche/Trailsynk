@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Map } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const scrollToWaitlist = () => {
@@ -29,12 +28,7 @@ const Navbar: React.FC = () => {
           <a href="#testimonials" className="hover:text-primary transition-colors">Depoimentos</a>
           <a href="#roadmap" className="hover:text-primary transition-colors">Roadmap</a>
           <Link to="/admin" className="hover:text-primary transition-colors">Admin</Link>
-          <Link to="/app" className="hover:text-primary transition-colors">App</Link>
-          <Link to="/app/routes" className="hover:text-primary flex items-center transition-colors">
-            <Map className="h-4 w-4 mr-1" />
-            Rotas
-          </Link>
-          <Link to="/app/training/calendar" className="hover:text-primary transition-colors">Treinamento</Link>
+          <Link to="/auth" className="hover:text-primary transition-colors">Login</Link>
         </div>
 
         <Button onClick={scrollToWaitlist} className="bg-primary hover:bg-primary-dark text-white px-4 py-2">
