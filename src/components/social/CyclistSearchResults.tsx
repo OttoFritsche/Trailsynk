@@ -3,6 +3,7 @@ import React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
+import { ConnectButton } from '@/components/chat/ConnectButton';
 
 interface Cyclist {
   id: string;
@@ -63,15 +64,24 @@ export const CyclistSearchResults: React.FC<CyclistSearchResultsProps> = ({
               </div>
             </div>
             
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="whitespace-nowrap"
-              onClick={() => onConnectClick(cyclist)}
-            >
-              <UserPlus className="mr-1 h-4 w-4" />
-              Conectar
-            </Button>
+            <div className="flex gap-2">
+              <ConnectButton 
+                userId={cyclist.id} 
+                userName={cyclist.name}
+                variant="ghost"
+                size="sm"
+              />
+              
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="whitespace-nowrap"
+                onClick={() => onConnectClick(cyclist)}
+              >
+                <UserPlus className="mr-1 h-4 w-4" />
+                Conectar
+              </Button>
+            </div>
           </div>
         ))}
       </div>

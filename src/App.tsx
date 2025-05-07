@@ -24,6 +24,8 @@ import Assistant from "./pages/Assistant";
 import FindCyclists from "./pages/FindCyclists";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
+import Messages from "./pages/Messages";
+import ChatDetail from "./pages/ChatDetail";
 import AppLayout from "./components/app/AppLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -62,6 +64,8 @@ const App = () => (
             <Route path="groups" element={<Groups />} />
             <Route path="groups/:groupId" element={<GroupDetail />} />
             <Route path="assistant" element={<Assistant />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="messages/:chatId" element={<ChatDetail />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
