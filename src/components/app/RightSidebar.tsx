@@ -2,7 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { Trophy, Users, Route, Calendar } from 'lucide-react';
+import { Trophy, Users, Calendar } from 'lucide-react';
+import TrailSuggestions from './TrailSuggestions';
 
 // Mock data for demonstration
 const upcomingRides = [
@@ -90,6 +91,9 @@ const RightSidebar: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Trail Suggestions - New Component */}
+      <TrailSuggestions />
       
       {/* My Groups */}
       <Card>

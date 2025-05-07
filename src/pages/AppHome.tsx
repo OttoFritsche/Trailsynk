@@ -1,9 +1,7 @@
 
 import React, { useState } from 'react';
 import ActivityFeedItem, { Activity } from '@/components/app/ActivityFeedItem';
-import RouteMap from '@/components/app/RouteMap';
 import { Helmet } from 'react-helmet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent } from '@/components/ui/card';
@@ -91,37 +89,52 @@ const mockActivities: Activity[] = [
     likes: 17,
     comments: 5,
   },
+  {
+    id: '5',
+    user: {
+      id: 'user5',
+      name: 'Rafael Mendes',
+      avatar: 'https://i.pravatar.cc/150?img=15',
+    },
+    type: 'pedal',
+    title: 'Pedal de fim de semana',
+    description: 'Aproveitando o dia ensolarado para explorar novas rotas. Vista incrível no topo da colina!',
+    metrics: {
+      distance: 24.7,
+      duration: 95,
+      elevation: 350,
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+    createdAt: new Date('2023-05-12T10:30:00'),
+    likes: 31,
+    comments: 7,
+  },
 ];
 
-// Rotas de exemplo para a demonstração
-const exampleRoutes = [
+// Sugestões de trails (ciclistas para seguir)
+const suggestedTrails = [
   {
-    id: 'route-1',
-    title: 'Circuito da Lagoa',
-    distance: 15.8,
-    elevation: 125,
-    type: 'Asfalto'
+    id: 'trail1',
+    name: 'Carlos Lima',
+    avatar: 'https://i.pravatar.cc/150?img=20',
+    bio: 'Ciclista urbano e de montanha',
   },
   {
-    id: 'route-2',
-    title: 'Trilha da Serra',
-    distance: 8.4,
-    elevation: 450,
-    type: 'Mountain Bike'
+    id: 'trail2',
+    name: 'Fernanda Santos',
+    avatar: 'https://i.pravatar.cc/150?img=29',
+    bio: 'Competidora MTB - 3x campeã estadual',
   },
   {
-    id: 'route-3',
-    title: 'Vuelta da Cidade',
-    distance: 22.3,
-    elevation: 210,
-    type: 'Urbano'
+    id: 'trail3',
+    name: 'Grupo Pedal Noturno',
+    avatar: 'https://i.pravatar.cc/150?img=33',
+    bio: 'Grupo oficial de pedais noturnos na cidade',
   }
 ];
 
 const AppHome: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>(mockActivities);
-  const [activeTab, setActiveTab] = useState("feed");
-  const [selectedRouteId, setSelectedRouteId] = useState<string | undefined>();
   const { user } = useAuth();
   
   // Estado de exemplo para simular conexão com Strava
@@ -154,11 +167,15 @@ const AppHome: React.FC = () => {
   const handleComment = (activityId: string) => {
     toast.info("Função de comentários será implementada em breve");
   };
+
+  const handleFollowTrail = (trailId: string) => {
+    toast.success("Trail adicionado! Esta função será implementada com integração backend.");
+  };
   
   return (
     <>
       <Helmet>
-        <title>TrailSynk | Início</title>
+        <title>TrailSynk | Feed</title>
       </Helmet>
 
       <div className="space-y-6">
@@ -180,65 +197,59 @@ const AppHome: React.FC = () => {
           </Card>
         )}
         
-        <Tabs defaultValue="feed" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="feed">Feed</TabsTrigger>
-            <TabsTrigger value="routes">Rotas</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="feed" className="space-y-6 animate-fade-in">
-            <h1 className="text-2xl font-bold">Feed de Atividades</h1>
-            
-            <div className="space-y-4">
-              {activities.map((activity) => (
-                <ActivityFeedItem 
-                  key={activity.id} 
-                  activity={activity} 
-                  onLike={handleLike}
-                  onComment={handleComment}
-                />
-              ))}
+        <h1 className="text-2xl font-bold">Feed de Atividades</h1>
+        
+        {/* Feed Principal */}
+        <div className="space-y-6">
+          {activities.map((activity) => (
+            <ActivityFeedItem 
+              key={activity.id} 
+              activity={activity} 
+              onLike={handleLike}
+              onComment={handleComment}
+            />
+          ))}
+        </div>
+
+        {/* Card Sugestões Trails - Este card normalmente estaria na sidebar direita,
+            mas adicionamos aqui para visualização na versão mobile quando as sidebars
+            se tornam responsivas */}
+        <Card className="md:hidden mt-8">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-medium">Sugestões de Trails</h4>
+              <Button variant="link" className="text-xs text-primary p-0 h-auto">Ver todos</Button>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="routes" className="space-y-6 animate-fade-in">
-            <h1 className="text-2xl font-bold">Rotas</h1>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <RouteMap routeId={selectedRouteId} className="h-[400px] w-full rounded-lg border" />
-              </div>
-              
-              <div className="space-y-2">
-                {exampleRoutes.map(route => (
-                  <div 
-                    key={route.id}
-                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                      selectedRouteId === route.id ? 'bg-primary/10 border-primary' : 'hover:bg-gray-50'
-                    }`}
-                    onClick={() => setSelectedRouteId(route.id)}
-                  >
-                    <h3 className="font-medium">{route.title}</h3>
-                    <div className="text-sm text-gray-600 flex space-x-3">
-                      <span>{route.distance} km</span>
-                      <span>•</span>
-                      <span>{route.elevation} m</span>
-                      <span>•</span>
-                      <span>{route.type}</span>
+            <div className="space-y-3">
+              {suggestedTrails.map(trail => (
+                <div key={trail.id} className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                      <img 
+                        src={trail.avatar} 
+                        alt={trail.name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{trail.name}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{trail.bio}</p>
                     </div>
                   </div>
-                ))}
-                
-                <Button variant="outline" className="w-full mt-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                  Nova Rota
-                </Button>
-              </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="ml-2 text-xs"
+                    onClick={() => handleFollowTrail(trail.id)}
+                  >
+                    Seguir
+                  </Button>
+                </div>
+              ))}
             </div>
-          </TabsContent>
-        </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
