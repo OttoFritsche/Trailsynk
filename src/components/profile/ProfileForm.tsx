@@ -257,7 +257,12 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     
     if (error) throw error;
     
-    return data?.signed_url;
+    // Get public URL after successful upload
+    const { data: publicUrlData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(data.path);
+    
+    return publicUrlData.publicUrl;
   };
 
   // Update user profile in Supabase
@@ -270,7 +275,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     otherGoal: string,
     bicycles: Bicycle[]
   ) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({
         full_name: formValues.full_name,
@@ -289,7 +294,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     
     if (error) throw error;
     
-    return data?.id !== null;
+    return true; // Return success instead of relying on data
   };
 
   const onSubmit = async (formValues: ProfileFormValues) => {
