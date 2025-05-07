@@ -25,6 +25,7 @@ interface ProfileData {
   username?: string;
   full_name?: string;
   avatar_url?: string;
+  is_profile_complete?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
@@ -39,7 +40,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
         try {
           const { data, error } = await supabase
             .from('profiles')
-            .select('username, full_name, avatar_url')
+            .select('username, full_name, avatar_url, is_profile_complete')
             .eq('id', user.id)
             .single();
             
@@ -63,13 +64,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   const displayName = profileData.username || profileData.full_name || user?.email?.split('@')[0] || 'TS';
   const avatarUrl = profileData.avatar_url || user?.user_metadata?.avatar_url;
   
-  // Navigation items - Updated with Trails page
+  // Navigation items - Updated with Groups page
   const navItems = [
     { name: 'Feed', path: '/app', icon: Home },
     { name: 'Rotas', path: '/app/routes', icon: Map },
     { name: 'Estatísticas', path: '/app/statistics', icon: BarChart3 },
     { name: 'Badges', path: '/app/badges', icon: Award },
     { name: 'Trails', path: '/app/trails', icon: Users },
+    { name: 'Grupos', path: '/app/groups', icon: Users },
     { name: 'Perfil', path: '/app/profile', icon: UserIcon }
   ];
   
@@ -128,7 +130,16 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
             ))}
           </div>
           
-          {/* We'll add Strava badge later once the database is updated */}
+          {/* Botão de perfil incompleto, se aplicável */}
+          {profileData.is_profile_complete === false && (
+            <Link to="/app/profile/complete">
+              <Button size="sm" variant="outline" className="gap-2 text-amber-600 border-amber-200 bg-amber-50 hover:bg-amber-100">
+                <UserIcon className="h-3 w-3" />
+                <span className="hidden sm:inline">Complete seu perfil</span>
+                <span className="sm:hidden">Perfil</span>
+              </Button>
+            </Link>
+          )}
           
           {user && (
             <DropdownMenu>
@@ -164,6 +175,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/app/trails">Meus Trails</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/app/groups">Meus Grupos</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/app/assistant">Assessor IA</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/app/profile" className="flex items-center">

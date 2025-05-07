@@ -10,10 +10,12 @@ import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import AppHome from "./pages/AppHome";
 import Profile from "./pages/Profile";
+import CompleteProfile from "./pages/CompleteProfile";
 import RoutesPage from "./pages/Routes";
 import Statistics from "./pages/Statistics";
 import Badges from "./pages/Badges";
 import Trails from "./pages/Trails";
+import Groups from "./pages/Groups";
 import NewRoute from "./pages/NewRoute";
 import Assistant from "./pages/Assistant";
 import AppLayout from "./components/app/AppLayout";
@@ -40,11 +42,13 @@ const App = () => (
           }>
             <Route index element={<AppHome />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="profile/complete" element={<CompleteProfile />} />
             <Route path="routes" element={<RoutesPage />} />
             <Route path="routes/new" element={<NewRoute />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="badges" element={<Badges />} />
             <Route path="trails" element={<Trails />} />
+            <Route path="groups" element={<Groups />} />
             <Route path="assistant" element={<Assistant />} />
             {/* Future routes will be added here */}
           </Route>

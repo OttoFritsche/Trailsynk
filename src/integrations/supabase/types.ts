@@ -39,6 +39,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_connections: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          other_details: Json | null
+          provider: string
+          provider_user_id: string
+          refresh_token: string | null
+          scopes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          other_details?: Json | null
+          provider: string
+          provider_user_id: string
+          refresh_token?: string | null
+          scopes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          other_details?: Json | null
+          provider?: string
+          provider_user_id?: string
+          refresh_token?: string | null
+          scopes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       waitlist_leads: {
         Row: {
           created_at: string
