@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -250,26 +249,81 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     toast.success('Bicicleta removida!');
   };
 
-  const handleFormSubmit = async (values: ProfileFormValues) => {
+  // Upload avatar to storage
+  const uploadAvatarToStorage = async (userId: string, file: File) => {
+    const { data, error } = await supabase.storage
+      .from('avatars')
+      .upload(`avatars/${userId}`, file);
+    
+    if (error) throw error;
+    
+    return data?.signed_url;
+  };
+
+  // Update user profile in Supabase
+  const updateUserProfile = async (
+    userId: string,
+    formValues: ProfileFormValues,
+    avatarUrl: string | null,
+    ridingPreferences: string[],
+    goals: string[],
+    otherGoal: string,
+    bicycles: Bicycle[]
+  ) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: formValues.full_name,
+        username: formValues.username,
+        weight: formValues.weight,
+        height: formValues.height,
+        age: formValues.age,
+        ride_frequency: formValues.ride_frequency,
+        riding_preferences: ridingPreferences,
+        goals: goals,
+        other_goal: otherGoal,
+        bicycles: bicycles,
+        is_profile_complete: true, // Set is_profile_complete to true
+      })
+      .eq('id', userId);
+    
+    if (error) throw error;
+    
+    return data?.id !== null;
+  };
+
+  const onSubmit = async (formValues: ProfileFormValues) => {
     setIsSubmitting(true);
     
     try {
-      // In a real implementation, this would call your API to update the profile
-      console.log('Form values:', values);
-      console.log('Avatar file:', avatarFile);
-      console.log('Riding preferences:', selectedPreferences);
-      console.log('User goals:', selectedGoals);
-      console.log('Other goal:', otherGoal);
-      console.log('Bicycles:', bicycles);
+      // Upload avatar if changed
+      let avatarUrl = initialData?.avatar_url || null;
+      if (avatarFile) {
+        avatarUrl = await uploadAvatarToStorage(user.id, avatarFile);
+      }
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Update user profile in Supabase
+      const success = await updateUserProfile(
+        user.id,
+        formValues,
+        avatarUrl,
+        selectedPreferences,
+        selectedGoals,
+        otherGoal,
+        bicycles
+      );
       
-      toast.success('Perfil atualizado com sucesso!');
-      onSuccess();
-    } catch (error: any) {
-      console.error('Error saving profile:', error);
-      toast.error(`Erro ao salvar perfil: ${error.message}`);
+      if (success) {
+        toast.success('Perfil atualizado com sucesso!');
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        toast.error('Erro ao atualizar perfil');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Erro ao atualizar perfil');
     } finally {
       setIsSubmitting(false);
     }
@@ -277,7 +331,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Avatar Upload */}
         <ProfileAvatar 
           avatarUrl={avatarUrl} 

@@ -63,7 +63,7 @@ export const updateUserProfile = async (
         goals: selectedGoals,
         other_goal: otherGoal,
         bicycles: bicycles,
-        is_profile_complete: true,
+        is_profile_complete: true, // Always mark as complete when profile is updated
         updated_at: new Date().toISOString()
       })
       .eq('id', userId);
