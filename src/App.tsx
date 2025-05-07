@@ -16,6 +16,7 @@ import Statistics from "./pages/Statistics";
 import Badges from "./pages/Badges";
 import Trails from "./pages/Trails";
 import Groups from "./pages/Groups";
+import GroupDetail from "./pages/GroupDetail";
 import NewRoute from "./pages/NewRoute";
 import Assistant from "./pages/Assistant";
 import AppLayout from "./components/app/AppLayout";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="badges" element={<Badges />} />
             <Route path="trails" element={<Trails />} />
             <Route path="groups" element={<Groups />} />
+            <Route path="groups/:groupId" element={<GroupDetail />} />
             <Route path="assistant" element={<Assistant />} />
             {/* Future routes will be added here */}
           </Route>

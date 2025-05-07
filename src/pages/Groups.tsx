@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { GroupDetails } from '@/components/groups/GroupDetails';
 import { CreateGroupDialog } from '@/components/groups/CreateGroupDialog';
 import { Search, Users, Plus, Calendar } from 'lucide-react';
 
@@ -66,14 +65,18 @@ const formatDate = (date: Date) => {
 };
 
 const Groups: React.FC = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGroup, setSelectedGroup] = useState<any | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const filteredGroups = mockGroups.filter(group => 
     group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     group.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleGroupClick = (groupId: string) => {
+    navigate(`/app/groups/${groupId}`);
+  };
 
   return (
     <>
@@ -140,7 +143,7 @@ const Groups: React.FC = () => {
                   <Card 
                     key={group.id} 
                     className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => setSelectedGroup(group)}
+                    onClick={() => handleGroupClick(group.id)}
                   >
                     <CardContent className="p-0">
                       <div className="flex flex-col h-full">
@@ -182,7 +185,7 @@ const Groups: React.FC = () => {
                 <Card 
                   key={group.id} 
                   className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => setSelectedGroup(group)}
+                  onClick={() => handleGroupClick(group.id)}
                 >
                   <CardContent className="p-0">
                     <div className="flex flex-col h-full">
@@ -214,19 +217,6 @@ const Groups: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Dialog para detalhes do grupo */}
-      <Dialog open={!!selectedGroup} onOpenChange={(open) => !open && setSelectedGroup(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Detalhes do Grupo</DialogTitle>
-            <DialogDescription>
-              Visualize informações e atividades deste grupo.
-            </DialogDescription>
-          </DialogHeader>
-          {selectedGroup && <GroupDetails group={selectedGroup} />}
-        </DialogContent>
-      </Dialog>
 
       {/* Dialog para criar novo grupo */}
       <CreateGroupDialog 
