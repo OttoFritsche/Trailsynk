@@ -118,10 +118,12 @@ const Marketplace = () => {
     <div className="container mx-auto p-4 max-w-7xl">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold tracking-tight mb-4 md:mb-0">Marketplace TrailSynk</h1>
-        <Button className="bg-primary hover:bg-primary-dark">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Criar Anúncio
-        </Button>
+        <Link to="/app/marketplace/new">
+          <Button className="bg-primary hover:bg-primary-dark">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Criar Anúncio
+          </Button>
+        </Link>
       </div>
       
       <div className="bg-white rounded-lg shadow p-4 mb-6">

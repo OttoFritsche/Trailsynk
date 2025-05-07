@@ -37,6 +37,7 @@ import WeeklyControl from "./pages/training/WeeklyControl";
 import PerformanceReadiness from "./pages/training/PerformanceReadiness";
 import VerifyEmail from "./pages/VerifyEmail";
 import Marketplace from "./pages/Marketplace";
+import CreateMarketplaceItem from "./pages/CreateMarketplaceItem";
 import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
@@ -92,6 +93,7 @@ const App = () => (
             
             {/* Marketplace Routes */}
             <Route path="marketplace" element={<Marketplace />} />
+            <Route path="marketplace/new" element={<CreateMarketplaceItem />} />
             <Route path="marketplace/:itemId" element={<MarketplaceItemDetail />} />
             
             {/* Events Routes */}
