@@ -56,7 +56,7 @@ const EnhancedPhotoCarousel: React.FC<EnhancedPhotoCarouselProps> = ({
       if (current === count - 1) {
         api.scrollTo(0);
       } else {
-        api.scrollToIdx(current + 1);
+        api.scrollTo(current + 1);
       }
     }, autoPlayInterval);
     

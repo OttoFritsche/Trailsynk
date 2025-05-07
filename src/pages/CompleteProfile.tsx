@@ -84,6 +84,11 @@ const CompleteProfile: React.FC = () => {
     }
   };
 
+  // Function to handle the onSuccess callback from ProfileForm
+  const handleProfileUpdateSuccess = () => {
+    navigate('/app/profile');
+  };
+
   return (
     <>
       <Helmet>
@@ -113,8 +118,7 @@ const CompleteProfile: React.FC = () => {
             <ProfileForm
               user={user}
               initialData={initialProfileData}
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
+              onSuccess={handleProfileUpdateSuccess}
               onCancel={() => navigate('/app/profile')}
             />
           </CardContent>
