@@ -46,7 +46,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ user }) => {
   
   return (
     <header className="sticky top-0 border-b bg-white/95 backdrop-blur z-10">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-3xl">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-7xl">
         <AppLogo />
         
         <div className="flex items-center space-x-2 md:space-x-4">
