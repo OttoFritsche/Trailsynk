@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Calendar, Map, Route, Check, Users, Plus, MapPin, Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import { GroupAgendaTab } from './tabs/GroupAgendaTab';
+import { GroupMembersTabContent } from './tabs/GroupMembersTabContent';
+import { GroupRoutesTabContent } from './tabs/GroupRoutesTabContent';
+import { GroupChecklistTab } from './tabs/GroupChecklistTab';
+import { RideMapDialog } from './RideMapDialog';
 import { ScheduleRideDialog } from './ScheduleRideDialog';
 
 // Mock data para demonstração
@@ -103,7 +103,7 @@ export const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
           
           <div className="flex items-center mt-4 text-sm space-x-4">
             <div className="flex items-center">
-              <Users className="h-4 w-4 mr-1 text-muted-foreground" />
+              <Calendar className="h-4 w-4 mr-1 text-muted-foreground" />
               <span>{group.memberCount} membros</span>
             </div>
             
@@ -134,105 +134,18 @@ export const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
         </TabsList>
         
         {/* Aba: Agenda de Pedais */}
-        <TabsContent value="agenda" className="space-y-4 pt-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Próximos Pedais</h3>
-            <Button 
-              onClick={() => setIsScheduleDialogOpen(true)}
-              size="sm"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Agendar Pedal
-            </Button>
-          </div>
-          
-          <div className="space-y-3">
-            {mockUpcomingRides.map((ride) => (
-              <Card key={ride.id} className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="p-4 flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{ride.name}</h4>
-                        <Badge className="bg-primary/80">
-                          <CalendarIcon className="mr-1 h-3 w-3" />
-                          {formatDate(ride.date)}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">{ride.description}</p>
-                      <div className="mt-3 flex items-center text-sm">
-                        <MapPin className="h-4 w-4 mr-1 text-gray-500" />
-                        <span>{ride.location}</span>
-                      </div>
-                      <div className="mt-3 flex gap-2">
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => openRideMapDialog(ride)}
-                        >
-                          <Map className="mr-2 h-4 w-4" />
-                          Ver no Mapa
-                        </Button>
-                        <Button size="sm">Confirmar Presença</Button>
-                      </div>
-                    </div>
-                    <div className="w-full md:w-1/3 bg-gray-100 min-h-[120px] relative hidden md:block">
-                      {/* Placeholder para o mapa */}
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <Map className="h-8 w-8" />
-                      </div>
-                      <div className="absolute bottom-2 right-2 z-10">
-                        <Badge variant="outline" className="bg-white">
-                          Ponto de Encontro
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            
-            {mockUpcomingRides.length === 0 && (
-              <div className="text-center py-8 bg-gray-50 rounded-md">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-4 text-lg font-medium">Nenhum pedal agendado</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Seja o primeiro a agendar um pedal para este grupo!
-                </p>
-                <Button 
-                  onClick={() => setIsScheduleDialogOpen(true)} 
-                  className="mt-4"
-                >
-                  Agendar Pedal
-                </Button>
-              </div>
-            )}
-          </div>
+        <TabsContent value="agenda">
+          <GroupAgendaTab 
+            upcomingRides={mockUpcomingRides} 
+            formatDate={formatDate}
+            openRideMapDialog={openRideMapDialog}
+            onScheduleClick={() => setIsScheduleDialogOpen(true)}
+          />
         </TabsContent>
         
         {/* Aba: Membros */}
         <TabsContent value="members" className="pt-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {mockMembers.map((member) => (
-              <div key={member.id} className="flex items-center space-x-3 p-3 rounded-md hover:bg-gray-50">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={member.avatar} />
-                  <AvatarFallback>{member.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium">{member.name}</div>
-                  <div className="text-sm text-muted-foreground">@{member.username}</div>
-                </div>
-              </div>
-            ))}
-            
-            <div className="flex items-center justify-center h-full aspect-square rounded-md border-2 border-dashed border-gray-300 p-4 hover:bg-gray-50 cursor-pointer">
-              <div className="text-center">
-                <Plus className="h-8 w-8 mx-auto text-gray-400" />
-                <span className="text-sm text-muted-foreground mt-1 block">Convidar</span>
-              </div>
-            </div>
-          </div>
+          <GroupMembersTabContent members={mockMembers} />
         </TabsContent>
         
         {/* Aba: Rotas */}
@@ -245,113 +158,25 @@ export const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {mockGroupRoutes.map((route) => (
-              <Card key={route.id} className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="flex flex-col h-full">
-                    <div className="h-32 bg-gray-200 relative">
-                      {/* Placeholder para o traçado da rota */}
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <Route className="h-8 w-8" />
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h4 className="font-medium">{route.name}</h4>
-                      <div className="flex items-center justify-between mt-2 text-sm text-muted-foreground">
-                        <span>{route.distance} km</span>
-                        <span>↑ {route.elevation} m</span>
-                      </div>
-                      <Button variant="outline" className="w-full mt-3">
-                        Ver Detalhes
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            
-            <Card className="overflow-hidden h-full">
-              <CardContent className="p-0 h-full">
-                <div className="flex flex-col justify-center items-center h-full p-8 text-center cursor-pointer hover:bg-gray-50">
-                  <Plus className="h-12 w-12 text-gray-400 mb-2" />
-                  <h4 className="font-medium">Criar Nova Rota para o Grupo</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Compartilhe suas trilhas favoritas com o grupo
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <GroupRoutesTabContent routes={mockGroupRoutes} />
         </TabsContent>
         
         {/* Aba: Checklist */}
-        <TabsContent value="checklist" className="space-y-4 pt-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Checklist para Pedal</h3>
-            <Button size="sm" variant="outline">
-              <Plus className="mr-2 h-4 w-4" />
-              Adicionar Item
-            </Button>
-          </div>
-          
-          <Card>
-            <CardContent className="divide-y">
-              {checklist.map((item) => (
-                <div key={item.id} className="flex items-center py-3">
-                  <Checkbox 
-                    id={`item-${item.id}`} 
-                    checked={item.checked}
-                    onCheckedChange={() => toggleChecklistItem(item.id)}
-                    className="mr-3"
-                  />
-                  <label 
-                    htmlFor={`item-${item.id}`}
-                    className={`flex-1 ${item.checked ? 'line-through text-muted-foreground' : ''}`}
-                  >
-                    {item.name}
-                  </label>
-                  {item.checked && <Check className="h-4 w-4 text-green-500" />}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          
-          <div className="bg-blue-50 p-4 rounded-md border border-blue-200 mt-6">
-            <h4 className="text-blue-800 font-medium flex items-center">
-              <Users className="mr-2 h-4 w-4" />
-              Localização em Tempo Real
-            </h4>
-            <p className="text-sm text-blue-700 mt-1">
-              Durante pedais agendados, você poderá ver a localização dos membros do grupo em tempo real nesta área.
-              <br />
-              <span className="italic">(Funcionalidade em desenvolvimento)</span>
-            </p>
-          </div>
+        <TabsContent value="checklist">
+          <GroupChecklistTab 
+            checklist={checklist}
+            toggleChecklistItem={toggleChecklistItem}
+          />
         </TabsContent>
       </Tabs>
       
       {/* Dialog para exibir o mapa de um pedal */}
-      <Dialog open={isMapDialogOpen} onOpenChange={setIsMapDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{selectedRide?.name} - Ponto de Encontro</DialogTitle>
-            <DialogDescription>
-              {selectedRide?.location} • {selectedRide && formatDate(selectedRide.date)}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="h-[300px] bg-gray-200 rounded-md relative">
-            {/* Placeholder para o mapa real */}
-            <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 mx-auto" />
-                <p className="mt-2 text-sm">Ponto de Encontro</p>
-                <p className="text-xs">{selectedRide?.location}</p>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <RideMapDialog 
+        open={isMapDialogOpen}
+        onOpenChange={setIsMapDialogOpen}
+        ride={selectedRide}
+        formatDate={formatDate}
+      />
 
       {/* Dialog para agendar um novo pedal */}
       <ScheduleRideDialog 
