@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -54,7 +53,7 @@ const PerformanceReadiness = () => {
   const readinessStatus = getReadinessStatus();
 
   return (
-    <div className="space-y-6 pb-10 px-4 md:px-0">
+    <div className="space-y-10 pb-10 px-4 md:px-0">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Performance e Prontidão</h1>
         <p className="text-muted-foreground">
@@ -62,9 +61,9 @@ const PerformanceReadiness = () => {
         </p>
       </div>
 
-      {/* Readiness Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="md:col-span-1">
+      {/* Readiness Cards - Improved grid with consistent height */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="md:col-span-1 h-full">
           <CardHeader>
             <CardTitle>Prontidão para Treinar</CardTitle>
             <CardDescription>Seu estado atual de recuperação</CardDescription>
@@ -94,8 +93,8 @@ const PerformanceReadiness = () => {
           </CardContent>
         </Card>
 
-        {/* Power Curve Card - Improved layout */}
-        <Card className="md:col-span-2">
+        {/* Power Curve Card - Keeping height consistent with left card */}
+        <Card className="md:col-span-2 h-full">
           <CardHeader className="flex flex-row items-start justify-between">
             <div>
               <CardTitle>Curva de Potência</CardTitle>
@@ -169,85 +168,87 @@ const PerformanceReadiness = () => {
         </Card>
       </div>
 
-      {/* AI Analysis on Power Curve */}
+      {/* AI Analysis on Power Curve - Added better spacing */}
       <AIInsightCard 
         title="Interpretação da IA sobre sua Curva de Potência"
         content="Seu perfil de potência indica que você tem boa capacidade de sprint e capacidade aeróbica, mas há oportunidades de melhoria nas durações entre 5 e 20 minutos. Recomendamos adicionar treinos com intervalos específicos de 6-8 minutos em intensidade de limiar para melhorar sua curva nessa faixa. Sua potência máxima está dentro dos 15% superiores para seu grupo de idade e peso."
         type="info"
       />
 
-      {/* Metrics Trends - Improved layout */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Tendência de Carga e Recuperação</CardTitle>
-          <CardDescription>Evolução dos seus índices de treinamento ao longo do tempo</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ChartContainer
-              config={{
-                load: {
-                  label: "Carga de Treinamento",
-                  color: "#D946EF"
-                },
-                recovery: {
-                  label: "Recuperação",
-                  color: "#0EA5E9"
-                }
-              }}
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart 
-                  data={mockTrainingMetricsHistory}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis 
-                    dataKey="date" 
-                    tick={{ fontSize: 12 }}
-                    height={50}
-                    padding={{ left: 10, right: 10 }}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 12 }}
-                    width={50}
-                    tickFormatter={(value) => `${value}`}
-                  />
-                  <Tooltip 
-                    contentStyle={{ fontSize: '12px' }}
-                    itemStyle={{ padding: '2px 0' }}
-                  />
-                  <Legend 
-                    verticalAlign="top" 
-                    height={36}
-                    wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="load" 
-                    stroke="var(--color-load)" 
-                    name="Carga de Treinamento"
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="recovery" 
-                    stroke="var(--color-recovery)" 
-                    name="Recuperação"
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Metrics Trends - Added clear visual separation */}
+      <div className="mt-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>Tendência de Carga e Recuperação</CardTitle>
+            <CardDescription>Evolução dos seus índices de treinamento ao longo do tempo</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <ChartContainer
+                config={{
+                  load: {
+                    label: "Carga de Treinamento",
+                    color: "#D946EF"
+                  },
+                  recovery: {
+                    label: "Recuperação",
+                    color: "#0EA5E9"
+                  }
+                }}
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart 
+                    data={mockTrainingMetricsHistory}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 12 }}
+                      height={50}
+                      padding={{ left: 10, right: 10 }}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12 }}
+                      width={50}
+                      tickFormatter={(value) => `${value}`}
+                    />
+                    <Tooltip 
+                      contentStyle={{ fontSize: '12px' }}
+                      itemStyle={{ padding: '2px 0' }}
+                    />
+                    <Legend 
+                      verticalAlign="top" 
+                      height={36}
+                      wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="load" 
+                      stroke="var(--color-load)" 
+                      name="Carga de Treinamento"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="recovery" 
+                      stroke="var(--color-recovery)" 
+                      name="Recuperação"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* AI Interpretation */}
+      {/* AI Interpretation - Better spacing */}
       <AIInsightCard 
         title="Interpretação da IA sobre sua Carga e Recuperação"
         content="Estamos observando um padrão de aumento gradual da sua carga de treinamento nas últimas 3 semanas, enquanto seus níveis de recuperação apresentam uma tendência de queda. Seu corpo está respondendo ao estímulo aumentado, mas está se aproximando do limite ideal de treinamento. Recomendamos uma semana mais leve (redução de 20-30% no volume) para permitir uma recuperação completa antes de iniciar o próximo bloco de treino. Isso ajudará a prevenir overtraining e potencializar seus ganhos de performance."
