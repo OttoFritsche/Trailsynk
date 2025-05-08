@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TrainingMenu from './TrainingMenu';
-import MoreMenu from './MoreMenu';
 
 interface DesktopNavigationProps {
   currentPath: string;
@@ -72,9 +71,6 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ currentPath }) =>
         <actionButton.icon className="h-4 w-4 mr-1.5" />
         {actionButton.label}
       </Link>
-      
-      {/* More dropdown menu */}
-      <MoreMenu currentPath={currentPath} />
     </nav>
   );
 };

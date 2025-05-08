@@ -13,6 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { 
   User as UserIcon, 
@@ -23,7 +24,9 @@ import {
   BadgeDollarSign, 
   Settings,
   MapPin,
-  LogOut
+  LogOut,
+  UserPlus,
+  MessageCircle
 } from 'lucide-react';
 
 interface UserProfileMenuProps {
@@ -60,74 +63,105 @@ export const UserProfileMenu: React.FC<UserProfileMenuProps> = ({ user, profileD
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         
-        {/* Main user-related links */}
-        <DropdownMenuItem asChild>
-          <Link to="/app/profile" className="flex items-center">
-            <UserIcon className="mr-2 h-4 w-4" />
-            Meu Perfil
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/statistics" className="flex items-center">
-            <BarChart2 className="mr-2 h-4 w-4" />
-            Estatísticas
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/badges" className="flex items-center">
-            <Medal className="mr-2 h-4 w-4" />
-            Badges
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/trails" className="flex items-center">
-            <MapPin className="mr-2 h-4 w-4" />
-            Trails
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/groups" className="flex items-center">
-            <Users className="mr-2 h-4 w-4" />
-            Grupos
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/assistant" className="flex items-center">
-            <Bot className="mr-2 h-4 w-4" />
-            Assessor IA
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/subscription" className="flex items-center">
-            <BadgeDollarSign className="mr-2 h-4 w-4" />
-            Planos
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/app/settings" className="flex items-center">
-            <Settings className="mr-2 h-4 w-4" />
-            Configurações
-          </Link>
-        </DropdownMenuItem>
-        
-        {/* Strava integration */}
-        <DropdownMenuItem asChild>
-          <Link to="/app/profile" className="flex items-center">
-            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
-                    fill="#FC4C02"/>
-            </svg>
-            Conectar ao Strava
-          </Link>
-        </DropdownMenuItem>
-        
+        {/* Profile Group */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/app/profile" className="flex items-center">
+              <UserIcon className="mr-2 h-4 w-4" />
+              Meu Perfil
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         
-        {/* Logout option */}
-        <DropdownMenuItem onClick={() => signOut()} className="flex items-center text-red-500 focus:text-red-500">
-          <LogOut className="mr-2 h-4 w-4" />
-          Sair da Conta
-        </DropdownMenuItem>
+        {/* Performance & Stats Group */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/app/statistics" className="flex items-center">
+              <BarChart2 className="mr-2 h-4 w-4" />
+              Estatísticas
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/badges" className="flex items-center">
+              <Medal className="mr-2 h-4 w-4" />
+              Badges
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        
+        {/* Community & Social Group */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/app/trails" className="flex items-center">
+              <MapPin className="mr-2 h-4 w-4" />
+              Trails
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/groups" className="flex items-center">
+              <Users className="mr-2 h-4 w-4" />
+              Grupos
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/find-cyclists" className="flex items-center">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Encontrar Ciclistas
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/messages" className="flex items-center">
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Mensagens
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        
+        {/* Tools & Settings Group */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/app/ai-assistant" className="flex items-center">
+              <Bot className="mr-2 h-4 w-4" />
+              Assessor IA
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/subscription" className="flex items-center">
+              <BadgeDollarSign className="mr-2 h-4 w-4" />
+              Planos
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/app/settings" className="flex items-center">
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        
+        {/* Integrations & Account Actions */}
+        <DropdownMenuGroup>
+          {/* Strava Integration */}
+          <DropdownMenuItem asChild>
+            <Link to="/app/profile" className="flex items-center">
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" 
+                      fill="#FC4C02"/>
+              </svg>
+              Conectar ao Strava
+            </Link>
+          </DropdownMenuItem>
+        
+          {/* Logout option */}
+          <DropdownMenuItem onClick={() => signOut()} className="flex items-center text-red-500 focus:text-red-500">
+            <LogOut className="mr-2 h-4 w-4" />
+            Sair da Conta
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

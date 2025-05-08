@@ -6,11 +6,11 @@ import {
   Route, 
   ShoppingBag, 
   MessageCircle,
-  Plus
+  Plus,
+  User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MobileTrainingMenu from './MobileTrainingMenu';
-import MoreMenu from './MoreMenu';
 
 interface MobileNavigationProps {
   currentPath: string;
@@ -65,20 +65,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ currentPath }) => {
         <span className="text-xs mt-1">{actionButton.label}</span>
       </Link>
       
-      {/* Messages Button */}
+      {/* Profile Link - Direct link to profile instead of "More" dropdown */}
       <Link 
-        to="/app/messages" 
+        to="/app/profile" 
         className={cn(
           "flex flex-col items-center justify-center px-2",
-          isActive('/app/messages') ? "text-primary" : "text-muted-foreground"
+          isActive('/app/profile') ? "text-primary" : "text-muted-foreground"
         )}
       >
-        <MessageCircle className="h-5 w-5" />
-        <span className="text-xs mt-1">Mensagens</span>
+        <User className="h-5 w-5" />
+        <span className="text-xs mt-1">Perfil</span>
       </Link>
-      
-      {/* More Menu Dropdown */}
-      <MoreMenu currentPath={currentPath} mobileView={true} />
     </div>
   );
 };

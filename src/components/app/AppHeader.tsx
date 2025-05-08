@@ -5,9 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { ProfileData } from '@/types/profile';
 import { AppLogo } from './AppLogo';
 import { UserProfileMenu } from './UserProfileMenu';
-import { Button } from '@/components/ui/button';
+import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Bell, Plus } from 'lucide-react';
 import AppNavigation from './AppNavigation';
 
 interface AppHeaderProps {
