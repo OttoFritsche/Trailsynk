@@ -4,10 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AIInsightCard from '@/components/training/AIInsightCard';
-import { mockPowerCurve, mockTrainingMetrics, mockTrainingMetricsHistory } from '@/components/training/mockTrainingData';
-import { ChartContainer } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { BarChart, Bar } from 'recharts';
+import { mockTrainingMetrics, mockTrainingMetricsHistory } from '@/components/training/mockTrainingData';
 import { HelpCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,24 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const PerformanceReadiness = () => {
-  const [powerCurvePeriod, setPowerCurvePeriod] = useState('lastMonth');
   const [selectedTab, setSelectedTab] = useState('overview');
-
-  // Format the power curve data for the chart
-  const powerCurveFormatted = mockPowerCurve.map(point => {
-    let timeLabel;
-    if (point.timeInSeconds < 60) {
-      timeLabel = `${point.timeInSeconds}s`;
-    } else if (point.timeInSeconds < 3600) {
-      timeLabel = `${Math.floor(point.timeInSeconds / 60)}min`;
-    } else {
-      timeLabel = `${Math.floor(point.timeInSeconds / 3600)}h`;
-    }
-    return {
-      time: timeLabel,
-      power: point.power,
-    };
-  });
 
   // Get readiness status color and label
   const getReadinessStatus = () => {
@@ -177,54 +157,6 @@ const PerformanceReadiness = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Weekly readiness miniature chart */}
-              <div className="mt-6 pt-4 border-t">
-                <h3 className="text-sm font-medium mb-3">Histórico Semanal de Prontidão</h3>
-                <div className="h-32">
-                  <ChartContainer
-                    config={{
-                      readiness: {
-                        label: "Prontidão",
-                        color: "#2563EB"
-                      },
-                      carga: {
-                        label: "Carga de Treino",
-                        color: "#DC2626"
-                      }
-                    }}
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart 
-                        data={readinessHistory}
-                        margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
-                        <XAxis dataKey="day" tick={{ fontSize: 11 }} tickLine={false} />
-                        <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                        <Tooltip />
-                        <Bar 
-                          dataKey="readiness" 
-                          name="Prontidão" 
-                          fill="var(--color-readiness)" 
-                          radius={[4, 4, 0, 0]}
-                          barSize={8}
-                        />
-                        <Bar 
-                          dataKey="carga" 
-                          name="Carga de Treino" 
-                          fill="var(--color-carga)" 
-                          radius={[4, 4, 0, 0]}
-                          barSize={8}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </div>
-                <p className="text-xs text-muted-foreground text-center mt-1">
-                  Equilíbrio entre carga de treino e recuperação ao longo da semana
-                </p>
-              </div>
             </CardContent>
           </Card>
 
@@ -331,105 +263,50 @@ const PerformanceReadiness = () => {
         {/* Power Curve Tab */}
         <TabsContent value="power" className="mt-6">
           <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader>
               <div>
                 <CardTitle>Curva de Potência</CardTitle>
                 <CardDescription>Análise da sua produção de potência máxima por duração</CardDescription>
               </div>
-              <Select
-                value={powerCurvePeriod}
-                onValueChange={setPowerCurvePeriod}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Selecionar período" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="lastWeek">Última semana</SelectItem>
-                  <SelectItem value="lastMonth">Último mês</SelectItem>
-                  <SelectItem value="lastYear">Último ano</SelectItem>
-                  <SelectItem value="allTime">Todo o histórico</SelectItem>
-                </SelectContent>
-              </Select>
             </CardHeader>
             <CardContent>
-              <div className="h-72">
-                <ChartContainer
-                  config={{
-                    power: {
-                      label: "Potência (watts)",
-                      color: "#9b87f5"
-                    }
-                  }}
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart 
-                      data={powerCurveFormatted}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis 
-                        dataKey="time" 
-                        tick={{ fontSize: 12 }}
-                        height={50}
-                        padding={{ left: 10, right: 10 }}
-                      />
-                      <YAxis 
-                        tick={{ fontSize: 12 }}
-                        width={50}
-                        tickFormatter={(value) => `${value}`}
-                      />
-                      <Tooltip 
-                        contentStyle={{ fontSize: '12px' }}
-                        itemStyle={{ padding: '2px 0' }}
-                      />
-                      <Legend 
-                        verticalAlign="top" 
-                        height={36}
-                        wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="power" 
-                        stroke="var(--color-power)" 
-                        name="Potência (watts)"
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 5 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </div>
-              
-              {/* Added power zones indicators */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                <div className="rounded-lg bg-red-50 p-3 border border-red-100">
-                  <h4 className="text-xs text-red-400 font-medium mb-1">Neuromuscular</h4>
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-red-700">845W</span>
-                    <span className="text-xs text-red-400">10s</span>
+              <div className="mt-8">
+                <h3 className="text-base font-medium mb-4">Zonas de Potência</h3>
+                {/* Power zones indicators */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="rounded-lg bg-red-50 p-3 border border-red-100">
+                    <h4 className="text-xs text-red-400 font-medium mb-1">Neuromuscular</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-red-700">845W</span>
+                      <span className="text-xs text-red-400">10s</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-amber-50 p-3 border border-amber-100">
+                    <h4 className="text-xs text-amber-400 font-medium mb-1">Anaeróbico</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-amber-700">520W</span>
+                      <span className="text-xs text-amber-400">1min</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-green-50 p-3 border border-green-100">
+                    <h4 className="text-xs text-green-400 font-medium mb-1">VO2 Máx</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-green-700">370W</span>
+                      <span className="text-xs text-green-400">5min</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-blue-50 p-3 border border-blue-100">
+                    <h4 className="text-xs text-blue-400 font-medium mb-1">Limiar</h4>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-blue-700">290W</span>
+                      <span className="text-xs text-blue-400">20min</span>
+                    </div>
                   </div>
                 </div>
-                <div className="rounded-lg bg-amber-50 p-3 border border-amber-100">
-                  <h4 className="text-xs text-amber-400 font-medium mb-1">Anaeróbico</h4>
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-amber-700">520W</span>
-                    <span className="text-xs text-amber-400">1min</span>
-                  </div>
-                </div>
-                <div className="rounded-lg bg-green-50 p-3 border border-green-100">
-                  <h4 className="text-xs text-green-400 font-medium mb-1">VO2 Máx</h4>
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-green-700">370W</span>
-                    <span className="text-xs text-green-400">5min</span>
-                  </div>
-                </div>
-                <div className="rounded-lg bg-blue-50 p-3 border border-blue-100">
-                  <h4 className="text-xs text-blue-400 font-medium mb-1">Limiar</h4>
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-blue-700">290W</span>
-                    <span className="text-xs text-blue-400">20min</span>
-                  </div>
+
+                <div className="mt-6 text-center text-sm text-muted-foreground">
+                  <p>Consulte seus dados de potência no aplicativo Strava ou na página de estatísticas para uma análise completa.</p>
+                  <Button variant="outline" className="mt-4">Ver estatísticas detalhadas</Button>
                 </div>
               </div>
             </CardContent>
@@ -448,122 +325,92 @@ const PerformanceReadiness = () => {
           <Card>
             <CardHeader>
               <CardTitle>Tendência de Carga e Recuperação</CardTitle>
-              <CardDescription>Evolução dos seus índices de treinamento ao longo do tempo</CardDescription>
+              <CardDescription>Evolução dos seus índices de treinamento</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-80">
-                <ChartContainer
-                  config={{
-                    load: {
-                      label: "Carga de Treinamento",
-                      color: "#D946EF"
-                    },
-                    recovery: {
-                      label: "Recuperação",
-                      color: "#0EA5E9"
-                    }
-                  }}
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart 
-                      data={mockTrainingMetricsHistory}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis 
-                        dataKey="date" 
-                        tick={{ fontSize: 12 }}
-                        height={50}
-                        padding={{ left: 10, right: 10 }}
-                      />
-                      <YAxis 
-                        tick={{ fontSize: 12 }}
-                        width={50}
-                        tickFormatter={(value) => `${value}`}
-                      />
-                      <Tooltip 
-                        contentStyle={{ fontSize: '12px' }}
-                        itemStyle={{ padding: '2px 0' }}
-                      />
-                      <Legend 
-                        verticalAlign="top" 
-                        height={36}
-                        wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="load" 
-                        stroke="var(--color-load)" 
-                        name="Carga de Treinamento"
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 5 }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="recovery" 
-                        stroke="var(--color-recovery)" 
-                        name="Recuperação"
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 5 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </div>
-
-              {/* Added beneficial training zones section */}
-              <div className="mt-8 pt-6 border-t">
-                <h3 className="text-base font-medium mb-4">Zonas de Treino Recomendadas</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Por Frequência Cardíaca (bpm)</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 1 - Recuperação:</span>
-                        <span className="font-medium">120-130</span>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-base font-medium mb-4">Resumo de Tendências</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-100">
+                      <h4 className="text-sm font-medium text-blue-700 mb-2">Carga de Treinamento</h4>
+                      <p className="text-sm text-slate-600">
+                        Sua carga de treinamento aumentou 12% nas últimas 3 semanas, indicando uma progressão consistente.
+                      </p>
+                      <div className="flex items-center mt-2">
+                        <div className="w-full bg-blue-100 h-2 rounded-full">
+                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                        </div>
+                        <span className="text-xs font-medium text-blue-700 ml-2">75%</span>
                       </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 2 - Resistência:</span>
-                        <span className="font-medium">130-145</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 3 - Ritmo:</span>
-                        <span className="font-medium">145-160</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 4 - Limiar:</span>
-                        <span className="font-medium">160-170</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 5 - VO2max:</span>
-                        <span className="font-medium">170-185</span>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-blue-50 p-4 rounded-lg border border-green-100">
+                      <h4 className="text-sm font-medium text-green-700 mb-2">Recuperação</h4>
+                      <p className="text-sm text-slate-600">
+                        Sua capacidade de recuperação está boa, mas mostrando sinais de fadiga acumulada na última semana.
+                      </p>
+                      <div className="flex items-center mt-2">
+                        <div className="w-full bg-green-100 h-2 rounded-full">
+                          <div className="bg-green-500 h-2 rounded-full" style={{ width: '65%' }}></div>
+                        </div>
+                        <span className="text-xs font-medium text-green-700 ml-2">65%</span>
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Por Potência (watts)</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 1 - Recuperação:</span>
-                        <span className="font-medium">até 160W</span>
+                </div>
+
+                {/* Added beneficial training zones section */}
+                <div className="mt-8 pt-6 border-t">
+                  <h3 className="text-base font-medium mb-4">Zonas de Treino Recomendadas</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">Por Frequência Cardíaca (bpm)</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 1 - Recuperação:</span>
+                          <span className="font-medium">120-130</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 2 - Resistência:</span>
+                          <span className="font-medium">130-145</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 3 - Ritmo:</span>
+                          <span className="font-medium">145-160</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 4 - Limiar:</span>
+                          <span className="font-medium">160-170</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 5 - VO2max:</span>
+                          <span className="font-medium">170-185</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 2 - Resistência:</span>
-                        <span className="font-medium">160-200W</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 3 - Ritmo:</span>
-                        <span className="font-medium">200-240W</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 4 - Limiar:</span>
-                        <span className="font-medium">240-270W</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Zona 5 - VO2max:</span>
-                        <span className="font-medium">270-310W</span>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">Por Potência (watts)</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 1 - Recuperação:</span>
+                          <span className="font-medium">até 160W</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 2 - Resistência:</span>
+                          <span className="font-medium">160-200W</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 3 - Ritmo:</span>
+                          <span className="font-medium">200-240W</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 4 - Limiar:</span>
+                          <span className="font-medium">240-270W</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Zona 5 - VO2max:</span>
+                          <span className="font-medium">270-310W</span>
+                        </div>
                       </div>
                     </div>
                   </div>

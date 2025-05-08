@@ -6,21 +6,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AIInsightCard from '@/components/training/AIInsightCard';
 import { mockMonthlySummaries, mockYearlySummary } from '@/components/training/mockTrainingData';
-import { ChartContainer } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const TrainingCalendar = () => {
   const [year, setYear] = useState(2024);
   const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   
-  // Monthly chart data based on mock data
-  const chartData = mockMonthlySummaries.map(month => ({
-    name: month.month.substring(0, 3),
-    distância: month.distance,
-    atividades: month.activities,
-    elevação: month.elevation / 100, // Scaled down for better visualization
-  }));
-
   return (
     <div className="space-y-8 pb-16 pt-6 px-4 md:px-0">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -103,78 +93,6 @@ const TrainingCalendar = () => {
           </div>
         }
       />
-
-      {/* Yearly Chart - Improved layout and sizing */}
-      <div className="mt-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>Volume de Treinamento ({year})</CardTitle>
-            <CardDescription>Distribuição mensal de distância e atividades</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-2">
-            <div className="h-80 w-full">
-              <ChartContainer
-                config={{
-                  distance: {
-                    label: "Distância (km)",
-                    color: "#9b87f5"
-                  },
-                  activities: {
-                    label: "Atividades",
-                    color: "#7E69AB"
-                  },
-                  elevation: {
-                    label: "Elevação (x100m)",
-                    color: "#6E59A5"
-                  }
-                }}
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={chartData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis 
-                      dataKey="name" 
-                      tick={{ fontSize: 12 }} 
-                      height={50}
-                      padding={{ left: 10, right: 10 }}
-                    />
-                    <YAxis 
-                      tick={{ fontSize: 12 }} 
-                      width={50}
-                      tickFormatter={(value) => `${value}`}
-                    />
-                    <Tooltip 
-                      contentStyle={{ fontSize: '12px' }} 
-                      itemStyle={{ padding: '2px 0' }}
-                    />
-                    <Bar 
-                      dataKey="distância" 
-                      fill="var(--color-distance)" 
-                      name="Distância (km)"
-                      barSize={20} 
-                    />
-                    <Bar 
-                      dataKey="atividades" 
-                      fill="var(--color-activities)" 
-                      name="Atividades" 
-                      barSize={20}
-                    />
-                    <Bar 
-                      dataKey="elevação" 
-                      fill="var(--color-elevation)" 
-                      name="Elevação (x100m)" 
-                      barSize={20}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Monthly Summary Cards - Better spacing and clear separation */}
       <div className="mt-16">
