@@ -1,13 +1,14 @@
+
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-import ActivityDetailHeader from '@/components/activities/ActivityDetailHeader';
-import ActivityDetailMetrics from '@/components/activities/ActivityDetailMetrics';
-import ActivityDetailActions from '@/components/activities/ActivityDetailActions';
-import ActivityPerformanceChart from '@/components/activities/ActivityPerformanceChart';
-import ActivityComments from '@/components/activities/ActivityComments';
+import { ActivityDetailHeader } from '@/components/activities/ActivityDetailHeader';
+import { ActivityDetailMetrics } from '@/components/activities/ActivityDetailMetrics';
+import { ActivityDetailActions } from '@/components/activities/ActivityDetailActions';
+import { ActivityPerformanceChart } from '@/components/activities/ActivityPerformanceChart';
+import { ActivityComments } from '@/components/activities/ActivityComments';
 import ReportRouteConditionModal from '@/components/activity/ReportRouteConditionModal';
 import { AlertCircle } from 'lucide-react';
 

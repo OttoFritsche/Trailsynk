@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
-import { AlertTriangle, CheckCircle, DropletIcon, XCircle, MapPin, Tree, Car } from 'lucide-react';
+import { AlertTriangle, CheckCircle, DropletIcon, XCircle, MapPin, PalmTree, Car } from 'lucide-react';
 
 interface ReportRouteConditionModalProps {
   open: boolean;
@@ -17,7 +17,7 @@ const conditionOptions = [
   { id: 'mud', label: 'Lama', icon: <DropletIcon className="h-5 w-5" /> },
   { id: 'hole', label: 'Buraco', icon: <AlertTriangle className="h-5 w-5" /> },
   { id: 'obstacle', label: 'Obstáculo na trilha', icon: <XCircle className="h-5 w-5" /> },
-  { id: 'fallen_tree', label: 'Árvore caída', icon: <Tree className="h-5 w-5" /> },
+  { id: 'fallen_tree', label: 'Árvore caída', icon: <PalmTree className="h-5 w-5" /> },
   { id: 'traffic_danger', label: 'Trecho perigoso (trânsito)', icon: <Car className="h-5 w-5" /> },
   { id: 'good_condition', label: 'Condição da rota boa', icon: <CheckCircle className="h-5 w-5" /> },
   { id: 'other', label: 'Outro', icon: <MapPin className="h-5 w-5" /> },
