@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GroupMembersList } from './GroupMembersList';
 import { GroupScheduledRides } from './GroupScheduledRides';
-import { GroupChecklist } from './GroupChecklist';
+import GroupChecklist from './GroupChecklist';
 import { LocationMap } from './LocationMap';
 
 interface GroupOverviewTabProps {

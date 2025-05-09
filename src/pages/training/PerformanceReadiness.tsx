@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -162,14 +161,11 @@ const PerformanceReadiness = () => {
 
           {/* AI Interpretation for Overview */}
           <AIInsightCard 
+            type="performance"
             title="Interpretação da IA sobre sua Prontidão"
-            content="Com base na análise dos últimos 7 dias, você está respondendo bem aos estímulos de treino. Sua recuperação está acima da média para seu perfil, e a tendência é positiva. Para maximizar seu progresso, recomendamos manter o ciclo de treino atual por mais uma semana, seguido de uma semana de recuperação ativa com redução de 20% no volume total."
-            type="info"
-            icon={
-              <div className="rounded-full p-2 bg-blue-100 text-blue-500">
-                <Info className="h-5 w-5" />
-              </div>
-            }
+            description="Com base na análise dos últimos 7 dias, você está respondendo bem aos estímulos de treino. Sua recuperação está acima da média para seu perfil, e a tendência é positiva. Para maximizar seu progresso, recomendamos manter o ciclo de treino atual por mais uma semana, seguido de uma semana de recuperação ativa com redução de 20% no volume total."
+            actionLabel="Ver detalhes"
+            onAction={() => {}}
           />
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">

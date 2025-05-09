@@ -6,7 +6,7 @@ import { Calendar, Plus } from 'lucide-react';
 import { GroupAgendaTab } from './tabs/GroupAgendaTab';
 import { GroupMembersTabContent } from './tabs/GroupMembersTabContent';
 import { GroupRoutesTabContent } from './tabs/GroupRoutesTabContent';
-import { GroupChecklistTab } from './tabs/GroupChecklistTab';
+import GroupChecklistTab from './tabs/GroupChecklistTab';
 import { RideMapDialog } from './RideMapDialog';
 import { ScheduleRideDialog } from './ScheduleRideDialog';
 

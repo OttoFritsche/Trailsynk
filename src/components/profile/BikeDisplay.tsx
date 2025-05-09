@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bike, Calendar, Tool, AlertTriangle } from 'lucide-react';
+import { Bike, Calendar, Wrench, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export interface Bicycle {
@@ -95,7 +94,7 @@ const BikeCard: React.FC<{ bike: Bicycle }> = ({ bike }) => {
       
       <CardFooter className="flex flex-col space-y-2">
         <Button variant="outline" className="w-full flex items-center gap-2">
-          <Tool size={16} />
+          <Wrench size={16} />
           Gerenciar Manutenção
         </Button>
         <Button variant="secondary" asChild className="w-full">

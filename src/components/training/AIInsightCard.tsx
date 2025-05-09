@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   Activity, 
-  Route, 
-  Tool, 
+  Map, 
+  Wrench, 
   Zap, 
   BarChart4, 
   Heart, 
@@ -44,9 +43,9 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
       case 'performance':
         return <BarChart4 className="h-5 w-5 text-blue-600" />;
       case 'route':
-        return <Route className="h-5 w-5 text-green-600" />;
+        return <Map className="h-5 w-5 text-green-600" />;
       case 'maintenance':
-        return <Tool className="h-5 w-5 text-amber-600" />;
+        return <Wrench className="h-5 w-5 text-amber-600" />;
       case 'recovery':
         return <Heart className="h-5 w-5 text-red-600" />;
       case 'progress':

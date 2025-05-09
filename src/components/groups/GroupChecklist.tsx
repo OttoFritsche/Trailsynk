@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Bike, Tool, Coffee, Droplet, Plus, Save, Share, X } from 'lucide-react';
+import { Bike, Wrench, Coffee, Droplet, Plus, Save, Share, X } from 'lucide-react';
 
 interface ChecklistItem {
   id: string;
@@ -70,7 +69,7 @@ const GroupChecklist: React.FC<GroupChecklistProps> = ({ groupId }) => {
       case 'bike':
         return <Bike className="h-4 w-4" />;
       case 'accessory':
-        return <Tool className="h-4 w-4" />;
+        return <Wrench className="h-4 w-4" />;
       case 'personal':
         return <Coffee className="h-4 w-4" />;
       default:

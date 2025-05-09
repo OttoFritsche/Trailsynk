@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -146,18 +145,11 @@ const WeeklyControl = () => {
 
       {/* AI Weekly Insight */}
       <AIInsightCard
+        type="performance"
         title="Análise da IA sobre sua Semana"
-        content={`Boa semana de treinamento com equilíbrio entre intensidades! Você teve ${currentWeek.daysActive.length} dias ativos, realizando ${currentWeek.activities} atividades. O volume total está 12% acima da sua média mensal, indicando bom progresso. Baseado na sua consistência, recomendamos um treino leve de recuperação no próximo domingo, seguido de um treino mais intenso na terça-feira para maximizar seus ganhos.`}
-        type="info"
-        icon={
-          <div className="rounded-full p-2 bg-blue-100 text-blue-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4"/>
-              <path d="M12 8h.01"/>
-            </svg>
-          </div>
-        }
+        description="Boa semana de treinamento com equilíbrio entre intensidades! Você teve dias ativos, realizando atividades. O volume total está 12% acima da sua média mensal, indicando bom progresso. Baseado na sua consistência, recomendamos um treino leve de recuperação no próximo domingo, seguido de um treino mais intenso na terça-feira para maximizar seus ganhos."
+        actionLabel="Ver recomendações"
+        onAction={() => {}}
       />
       
       {/* Weekly Comparison */}

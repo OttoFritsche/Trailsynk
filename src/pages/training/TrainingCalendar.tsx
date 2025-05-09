@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -81,17 +80,11 @@ const TrainingCalendar = () => {
 
       {/* AI Insight Card */}
       <AIInsightCard 
+        type="performance"
         title="Análise Anual da IA"
-        content="Seu volume de treino aumentou 15% nos últimos 3 meses comparado com o início do ano. A consistência melhorou, com aumento na frequência semanal de treinos. Continue aumentando gradualmente o volume para atingir seus objetivos de performance."
-        type="success"
-        icon={
-          <div className="rounded-full p-2 bg-green-100 text-green-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-        }
+        description="Seu volume de treino aumentou 15% nos últimos 3 meses comparado com o início do ano. A consistência melhorou, com aumento na frequência semanal de treinos. Continue aumentando gradualmente o volume para atingir seus objetivos de performance."
+        actionLabel="Ver detalhes"
+        onAction={() => {}}
       />
 
       {/* Monthly Summary Cards - Better spacing and clear separation */}
