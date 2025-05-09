@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/hooks/useAuth';
@@ -14,15 +15,17 @@ import EditProfileButton from '@/components/profile/EditProfileButton';
 import AddPhotoModal from '@/components/profile/AddPhotoModal';
 import { v4 as uuidv4 } from 'uuid';
 import { ProfilePhoto } from '@/types/profile';
+import BadgesPreview from '@/components/profile/BadgesPreview';
+import PerformanceStats from '@/components/profile/PerformanceStats';
 
-// Mock data para atividades recentes
+// Mock data for recent activities
 const recentActivities: Activity[] = [
   {
     id: '1',
     user: {
       id: 'user1',
       name: 'João Silva',
-      avatar: 'https://i.pravatar.cc/150?img=1',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
     },
     type: 'pedal',
     title: 'Pedal matinal na orla',
@@ -42,7 +45,7 @@ const recentActivities: Activity[] = [
     user: {
       id: 'user2',
       name: 'João Silva',
-      avatar: 'https://i.pravatar.cc/150?img=1',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
     },
     type: 'trilha',
     title: 'Trilha no Parque da Serra',
@@ -58,9 +61,29 @@ const recentActivities: Activity[] = [
     comments: 8,
     hasLiked: true,
   },
+  {
+    id: '3',
+    user: {
+      id: 'user3',
+      name: 'João Silva',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    },
+    type: 'treino',
+    title: 'Treino de Sprint',
+    description: 'Foco em melhorar velocidade em trechos planos. Sensação de progresso!',
+    metrics: {
+      distance: 12.4,
+      duration: 40,
+      elevation: 85,
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&auto=format&fit=crop',
+    createdAt: new Date('2023-05-12T07:45:00'),
+    likes: 15,
+    comments: 2,
+  }
 ];
 
-// Mock data para rotas salvas
+// Mock data for saved routes
 const savedRoutes = [
   {
     id: 'route1',
@@ -82,44 +105,57 @@ const savedRoutes = [
     distance: 15.7,
     elevation: 220,
     imageUrl: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&h=200&fit=crop'
+  },
+  {
+    id: 'route4',
+    name: 'Trilha das Cachoeiras',
+    distance: 22.3,
+    elevation: 650,
+    imageUrl: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=200&fit=crop'
   }
 ];
 
-// Mock data para trails (amigos)
+// Mock data for trails (amigos)
 const trails = [
   {
     id: 'friend1',
     name: 'Carlos Lima',
-    avatar: 'https://i.pravatar.cc/150?img=20',
+    avatar: 'https://randomuser.me/api/portraits/men/20.jpg',
     mutualFriends: 5
   },
   {
     id: 'friend2',
     name: 'Fernanda Santos',
-    avatar: 'https://i.pravatar.cc/150?img=29',
+    avatar: 'https://randomuser.me/api/portraits/women/29.jpg',
     mutualFriends: 3
   },
   {
     id: 'friend3',
     name: 'Ricardo Oliveira',
-    avatar: 'https://i.pravatar.cc/150?img=33',
+    avatar: 'https://randomuser.me/api/portraits/men/33.jpg',
     mutualFriends: 12
   },
   {
     id: 'friend4',
     name: 'Ana Sousa',
-    avatar: 'https://i.pravatar.cc/150?img=44',
+    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
     mutualFriends: 2
+  },
+  {
+    id: 'friend5',
+    name: 'Paulo Mendes',
+    avatar: 'https://randomuser.me/api/portraits/men/46.jpg',
+    mutualFriends: 7
   }
 ];
 
-// Mock data para grupos
+// Mock data for grupos
 const groups = [
   {
     id: 'group1',
     name: 'MTB Salvador',
     members: 24,
-    imageUrl: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=200&h=200&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=200&h=200&fit=crop'
   },
   {
     id: 'group2',
@@ -131,7 +167,13 @@ const groups = [
     id: 'group3',
     name: 'Pedalada Noturna',
     members: 18,
-    imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=200&h=200&fit=crop'
+    imageUrl: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=200&h=200&fit=crop'
+  },
+  {
+    id: 'group4',
+    name: 'Gravel Brasil',
+    members: 45,
+    imageUrl: 'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=200&h=200&fit=crop'
   }
 ];
 
@@ -143,6 +185,7 @@ const Profile = () => {
     userStats, 
     highlightedBadges, 
     isConnectedToStrava, 
+    bicycles,
     refreshProfileData,
     photos,
     addPhoto,
@@ -175,7 +218,8 @@ const Profile = () => {
     const newPhoto: ProfilePhoto = { 
       id: uuidv4(),
       url: photoUrl,
-      caption: caption
+      caption: caption,
+      date: new Date()
     };
     addPhoto(newPhoto);
   }, [addPhoto]);
@@ -206,9 +250,9 @@ const Profile = () => {
       </Helmet>
 
       <div className="space-y-6 pb-12">
-        {/* Reorganized Profile Header Section */}
+        {/* Profile Header Section */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          {/* Banner Photo Carousel - Now clearly separated from profile info */}
+          {/* Banner Photo Carousel */}
           <div className="w-full">
             <EnhancedPhotoCarousel 
               photos={activityPhotos}
@@ -217,7 +261,7 @@ const Profile = () => {
             />
           </div>
           
-          {/* Profile Header - Now positioned below the banner */}
+          {/* Profile Header */}
           <ProfileHeader 
             profileData={profileData}
             displayName={displayName}
@@ -234,6 +278,21 @@ const Profile = () => {
               formatDuration={formatDuration}
               recentActivitiesCount={23}
             />
+
+            {/* Key Statistics and Badges Preview */}
+            {activeTab === "overview" && (
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <PerformanceStats 
+                  stats={{
+                    weeklyDistance: userStats.weeklyAverage || 0,
+                    totalElevation: userStats.totalElevationGain || 0,
+                    avgSpeed: userStats.avgSpeed || 0,
+                    favoriteType: userStats.favoriteRouteType || 'Montanha'
+                  }}
+                />
+                <BadgesPreview badges={highlightedBadges.slice(0, 3)} />
+              </div>
+            )}
           </div>
           
           {/* Profile Tabs */}
@@ -257,6 +316,8 @@ const Profile = () => {
             onAssignPhotoToAlbum={assignPhotoToAlbum}
             onSetAlbumCover={setAlbumCover}
             getAlbumPhotos={getAlbumPhotos}
+            badges={highlightedBadges}
+            bicycles={bicycles}
           />
         </div>
       </div>

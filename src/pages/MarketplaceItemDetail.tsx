@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
@@ -176,9 +175,11 @@ const MarketplaceItemDetail = () => {
             </div>
           </Card>
           
+          {/* Enhanced Seller Card */}
           <Card className="p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 mr-3">
+            <h3 className="font-semibold mb-4">Informações do Vendedor</h3>
+            <div className="flex items-start">
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 mr-4 flex-shrink-0">
                 <img 
                   src={item.seller.imageUrl} 
                   alt={item.seller.name} 
@@ -186,17 +187,45 @@ const MarketplaceItemDetail = () => {
                 />
               </div>
               <div>
-                <h3 className="font-semibold">{item.seller.name}</h3>
-                <div className="flex items-center text-sm">
+                <h3 className="font-semibold text-lg">{item.seller.name}</h3>
+                <div className="flex items-center text-sm mb-1">
                   <span className="text-yellow-500 mr-1">★</span>
                   <span>{item.seller.rating}</span>
+                  <span className="text-gray-500 ml-2">(32 avaliações)</span>
+                </div>
+                <span className="text-xs text-gray-500 block mb-3">Membro desde Novembro 2023</span>
+                <div className="flex items-center space-x-1 text-xs text-gray-600">
+                  <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full">15 vendas</span>
+                  <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Verificado</span>
                 </div>
               </div>
             </div>
             
-            <Button variant="outline" className="w-full mt-4">
-              Ver Perfil
-            </Button>
+            <Separator className="my-4" />
+            
+            <div className="text-sm space-y-2 mb-4">
+              <p>
+                <span className="font-medium">Tempo médio de resposta:</span> 
+                <span className="ml-2">2 horas</span>
+              </p>
+              <p>
+                <span className="font-medium">Taxa de resposta:</span>
+                <span className="ml-2">98%</span>
+              </p>
+              <p>
+                <span className="font-medium">Outros anúncios ativos:</span>
+                <span className="ml-2">7 itens</span>
+              </p>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1">
+                Ver Perfil
+              </Button>
+              <Button variant="outline" className="flex-1">
+                Ver Anúncios
+              </Button>
+            </div>
           </Card>
           
           <Card className="p-6 bg-yellow-50 border-yellow-200">

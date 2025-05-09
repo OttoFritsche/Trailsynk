@@ -1,16 +1,19 @@
 
 import React from 'react';
-import { Activity } from '@/components/app/ActivityFeedItem';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from '@/components/ui/button';
 import OverviewTab from './tabs/OverviewTab';
 import ActivitiesTab from './tabs/ActivitiesTab';
 import RoutesTab from './tabs/RoutesTab';
 import TrailsTab from './tabs/TrailsTab';
-import StatsTab from './tabs/StatsTab';
-import BadgesTab from './tabs/BadgesTab';
 import GroupsTab from './tabs/GroupsTab';
 import AlbumsTab from './tabs/AlbumsTab';
-import { PhotoAlbum, ProfilePhoto } from '@/types/profile';
+import StatsTab from './tabs/StatsTab';
+import BadgesTab from './tabs/BadgesTab';
+import BikesTab from './tabs/BikesTab';
+import { UserBadge, PhotoAlbum, ProfilePhoto } from '@/types/profile';
+import { Activity } from '@/components/app/ActivityFeedItem';
+import { Bicycle } from './BikeDisplay';
 
 interface ProfileTabsProps {
   activeTab: string;
@@ -18,37 +21,22 @@ interface ProfileTabsProps {
   isConnectedToStrava: boolean;
   handleStravaConnect: () => void;
   recentActivities: Activity[];
-  savedRoutes: Array<{
-    id: string;
-    name: string;
-    distance: number;
-    elevation: number;
-    imageUrl?: string;
-  }>;
-  trails: Array<{
-    id: string;
-    name: string;
-    avatar: string;
-    mutualFriends?: number;
-  }>;
-  groups: Array<{
-    id: string;
-    name: string;
-    members: number;
-    imageUrl?: string;
-  }>;
+  savedRoutes: any[];
+  trails: any[];
+  groups: any[];
   onLike: (activityId: string) => void;
   onComment: (activityId: string) => void;
-  // Props para álbuns
-  albums: PhotoAlbum[];
-  photos: ProfilePhoto[];
-  onAddAlbum: (album: PhotoAlbum) => string;
-  onUpdateAlbum: (albumId: string, updates: Partial<PhotoAlbum>) => void;
-  onDeleteAlbum: (albumId: string) => void;
-  onDeletePhoto: (photoId: string) => void;
-  onAssignPhotoToAlbum: (photoId: string, albumId: string | undefined) => void;
-  onSetAlbumCover: (albumId: string, photoId: string) => void;
-  getAlbumPhotos: (albumId: string) => ProfilePhoto[];
+  albums?: PhotoAlbum[];
+  photos?: ProfilePhoto[];
+  onAddAlbum?: (album: PhotoAlbum) => string;
+  onUpdateAlbum?: (albumId: string, updates: Partial<PhotoAlbum>) => void;
+  onDeleteAlbum?: (albumId: string) => void;
+  onDeletePhoto?: (photoId: string) => void;
+  onAssignPhotoToAlbum?: (photoId: string, albumId: string | undefined) => void;
+  onSetAlbumCover?: (albumId: string, photoId: string) => void;
+  getAlbumPhotos?: (albumId: string) => ProfilePhoto[];
+  badges?: UserBadge[];
+  bicycles?: Bicycle[];
 }
 
 const ProfileTabs: React.FC<ProfileTabsProps> = ({
@@ -62,87 +50,86 @@ const ProfileTabs: React.FC<ProfileTabsProps> = ({
   groups,
   onLike,
   onComment,
-  // Props de álbuns
-  albums,
-  photos,
+  albums = [],
+  photos = [],
   onAddAlbum,
   onUpdateAlbum,
   onDeleteAlbum,
   onDeletePhoto,
   onAssignPhotoToAlbum,
   onSetAlbumCover,
-  getAlbumPhotos
+  getAlbumPhotos,
+  badges = [],
+  bicycles = []
 }) => {
   return (
-    <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <div className="border-b">
-        <div className="px-4 md:px-8">
-          <TabsList className="bg-transparent grid grid-cols-8 md:w-auto w-full">
-            <TabsTrigger value="overview" className="text-sm">Visão Geral</TabsTrigger>
-            <TabsTrigger value="activities" className="text-sm">Atividades</TabsTrigger>
-            <TabsTrigger value="routes" className="text-sm">Rotas</TabsTrigger>
-            <TabsTrigger value="albums" className="text-sm">Álbuns</TabsTrigger>
-            <TabsTrigger value="trails" className="text-sm">Trails</TabsTrigger>
-            <TabsTrigger value="stats" className="text-sm">Estatísticas</TabsTrigger>
-            <TabsTrigger value="badges" className="text-sm">Badges</TabsTrigger>
-            <TabsTrigger value="groups" className="text-sm">Grupos</TabsTrigger>
-          </TabsList>
-        </div>
-      </div>
+    <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+      <TabsList className="grid grid-cols-4 md:grid-cols-8 bg-gray-100">
+        <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+        <TabsTrigger value="activities">Atividades</TabsTrigger>
+        <TabsTrigger value="routes">Rotas</TabsTrigger>
+        <TabsTrigger value="trails">Trails</TabsTrigger>
+        <TabsTrigger value="groups">Grupos</TabsTrigger>
+        <TabsTrigger value="albums">Álbuns</TabsTrigger>
+        <TabsTrigger value="stats">Estatísticas</TabsTrigger>
+        <TabsTrigger value="bikes">Bicicletas</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview" className="pt-4">
+        <OverviewTab
+          isConnectedToStrava={isConnectedToStrava}
+          handleStravaConnect={handleStravaConnect}
+          recentActivities={recentActivities}
+          onLike={onLike}
+          onComment={onComment}
+        />
+      </TabsContent>
+
+      <TabsContent value="activities" className="pt-4">
+        <ActivitiesTab 
+          activities={recentActivities} 
+          onLike={onLike} 
+          onComment={onComment} 
+        />
+      </TabsContent>
+
+      <TabsContent value="routes" className="pt-4">
+        <RoutesTab routes={savedRoutes} />
+      </TabsContent>
+
+      <TabsContent value="trails" className="pt-4">
+        <TrailsTab trails={trails} />
+      </TabsContent>
+
+      <TabsContent value="groups" className="pt-4">
+        <GroupsTab groups={groups} />
+      </TabsContent>
+
+      <TabsContent value="albums" className="pt-4">
+        <AlbumsTab 
+          albums={albums}
+          photos={photos}
+          onAddAlbum={onAddAlbum}
+          onUpdateAlbum={onUpdateAlbum}
+          onDeleteAlbum={onDeleteAlbum}
+          onDeletePhoto={onDeletePhoto}
+          onAssignPhotoToAlbum={onAssignPhotoToAlbum}
+          onSetAlbumCover={onSetAlbumCover}
+          getAlbumPhotos={getAlbumPhotos}
+        />
+      </TabsContent>
+
+      <TabsContent value="stats" className="pt-4">
+        <StatsTab />
+      </TabsContent>
+
+      <TabsContent value="badges" className="pt-4">
+        <BadgesTab badges={badges} />
+      </TabsContent>
       
-      <div className="p-4 md:p-8">
-        <TabsContent value="overview">
-          <OverviewTab 
-            isConnectedToStrava={isConnectedToStrava}
-            handleStravaConnect={handleStravaConnect}
-            recentActivities={recentActivities}
-            onLike={onLike}
-            onComment={onComment}
-          />
-        </TabsContent>
-        
-        <TabsContent value="activities">
-          <ActivitiesTab 
-            activities={recentActivities}
-            onLike={onLike}
-            onComment={onComment}
-          />
-        </TabsContent>
-        
-        <TabsContent value="routes">
-          <RoutesTab routes={savedRoutes} />
-        </TabsContent>
-        
-        <TabsContent value="albums">
-          <AlbumsTab
-            albums={albums}
-            photos={photos}
-            onAddAlbum={onAddAlbum}
-            onUpdateAlbum={onUpdateAlbum}
-            onDeleteAlbum={onDeleteAlbum}
-            onDeletePhoto={onDeletePhoto}
-            onAssignPhotoToAlbum={onAssignPhotoToAlbum}
-            onSetAlbumCover={onSetAlbumCover}
-            getAlbumPhotos={getAlbumPhotos}
-          />
-        </TabsContent>
-        
-        <TabsContent value="trails">
-          <TrailsTab trails={trails} />
-        </TabsContent>
-        
-        <TabsContent value="stats">
-          <StatsTab />
-        </TabsContent>
-        
-        <TabsContent value="badges">
-          <BadgesTab />
-        </TabsContent>
-        
-        <TabsContent value="groups">
-          <GroupsTab groups={groups} />
-        </TabsContent>
-      </div>
+      <TabsContent value="bikes" className="pt-4">
+        <BikesTab bicycles={bicycles} />
+      </TabsContent>
     </Tabs>
   );
 };

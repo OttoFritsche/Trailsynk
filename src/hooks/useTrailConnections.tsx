@@ -21,7 +21,7 @@ export const useTrailConnections = () => {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // Mock data
+        // Expanded mock data with diverse avatars and statuses
         const mockConnections: TrailConnection[] = [
           {
             id: '1',
@@ -72,6 +72,77 @@ export const useTrailConnections = () => {
             online: false,
             lastActivity: 'há 1 semana',
             stats: { totalDistance: 780 }
+          },
+          // Additional connections
+          {
+            id: '6',
+            userId: '106',
+            fullName: 'Roberto Ferreira',
+            username: 'robertof',
+            avatarUrl: 'https://randomuser.me/api/portraits/men/56.jpg',
+            online: true,
+            lastActivity: 'agora mesmo',
+            stats: { totalDistance: 612 }
+          },
+          {
+            id: '7',
+            userId: '107',
+            fullName: 'Camila Santos',
+            username: 'camilasantos',
+            avatarUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
+            online: false,
+            lastActivity: 'há 2 dias',
+            stats: { totalDistance: 295 }
+          },
+          {
+            id: '8',
+            userId: '108',
+            fullName: 'Lucas Oliveira',
+            username: 'lucase',
+            avatarUrl: 'https://randomuser.me/api/portraits/men/72.jpg',
+            online: true,
+            lastActivity: 'há 15 minutos',
+            stats: { totalDistance: 428 }
+          },
+          {
+            id: '9',
+            userId: '109',
+            fullName: 'Fernanda Lima',
+            username: 'ferlima',
+            avatarUrl: 'https://randomuser.me/api/portraits/women/12.jpg',
+            online: false,
+            lastActivity: 'há 5 dias',
+            stats: { totalDistance: 532 }
+          },
+          {
+            id: '10',
+            userId: '110',
+            fullName: 'Ricardo Gomes',
+            username: 'ricgomes',
+            avatarUrl: 'https://randomuser.me/api/portraits/men/18.jpg',
+            online: true,
+            lastActivity: 'há 1 hora',
+            stats: { totalDistance: 845 }
+          },
+          {
+            id: '11',
+            userId: '111',
+            fullName: 'Patrícia Duarte',
+            username: 'patduarte',
+            avatarUrl: 'https://randomuser.me/api/portraits/women/54.jpg',
+            online: false,
+            lastActivity: 'há 2 semanas',
+            stats: { totalDistance: 187 }
+          },
+          {
+            id: '12',
+            userId: '112',
+            fullName: 'Grupo Pedal Matinal',
+            username: 'pedalmatinal',
+            avatarUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=200&h=200&fit=crop',
+            online: true,
+            lastActivity: 'há 5 horas',
+            stats: { totalDistance: 1250 }
           }
         ];
         
