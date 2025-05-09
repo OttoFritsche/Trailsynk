@@ -1,51 +1,20 @@
-
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import jwt, JWTError
-from app.db import supabase
-from typing import Optional, Dict
+from fastapi.security import OAuth2PasswordBearer
+from typing import Dict
 
-# Security scheme for JWT token
-security = HTTPBearer()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-class AuthError(Exception):
-    def __init__(self, message: str):
-        self.message = message
-        super().__init__(self.message)
-
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
-) -> Dict:
+# This is a placeholder for the actual JWT verification
+# In a real implementation, this would verify the JWT token against Supabase
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict:
     """
-    Validate the JWT token and return the user data.
+    Get the current authenticated user from the JWT token.
+    This is a placeholder for the actual implementation.
     """
-    try:
-        # This is a simple placeholder for actual JWT validation
-        # In a real implementation, you would verify the token with Supabase
-        token = credentials.credentials
-        
-        # For now, just check if the token exists and has a valid format
-        if not token:
-            raise AuthError("Missing token")
-        
-        # In a real implementation, verify the token and extract user data
-        # Example: user_data = supabase.auth.get_user(token)
-        
-        # For now, returning a placeholder user
-        # In reality, you would decode and verify the JWT
-        user_id = "placeholder_user_id"
-        
-        return {"user_id": user_id}
+    # In a real implementation, this would:
+    # 1. Verify the JWT token against Supabase
+    # 2. Extract the user ID and other claims from the token
+    # 3. Return the user information
     
-    except JWTError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid authentication credentials: {str(e)}",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    except AuthError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=e.message,
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # For now, we'll just return a mock user
+    return {"user_id": "00000000-0000-0000-0000-000000000000"}
