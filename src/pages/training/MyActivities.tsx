@@ -6,17 +6,19 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from 'lucide-react';
+import { Calendar, PlusCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import ActivitySummaryCard from '@/components/training/ActivitySummaryCard';
 import { mockActivities } from '@/components/training/mockTrainingData';
+import TrainingFormModal from '@/components/training/TrainingFormModal';
 
 const MyActivities = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [isTrainingModalOpen, setIsTrainingModalOpen] = useState(false);
 
   // Filter activities based on search, type, and date
   const filteredActivities = mockActivities.filter(activity => {
@@ -79,6 +81,7 @@ const MyActivities = () => {
                     selected={date}
                     onSelect={setDate}
                     initialFocus
+                    className="p-3 pointer-events-auto"
                   />
                   {date && (
                     <div className="p-3 border-t border-border">
@@ -97,40 +100,51 @@ const MyActivities = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-muted-foreground">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-sm text-muted-foreground mb-2 md:mb-0">
               {filteredActivities.length} atividades encontradas
             </div>
-            <div className="flex gap-2">
-              {selectedType !== 'all' && (
-                <Badge variant="secondary" className="gap-1">
-                  {selectedType === 'ride' ? 'Ciclismo' : 
-                   selectedType === 'run' ? 'Corrida' : 
-                   selectedType === 'hike' ? 'Caminhada' : 'Outro'}
-                  <button className="ml-1 text-xs" onClick={() => setSelectedType('all')}>✕</button>
-                </Badge>
-              )}
-              
-              {date && (
-                <Badge variant="secondary" className="gap-1">
-                  {format(date, 'dd/MM/yyyy')}
-                  <button className="ml-1 text-xs" onClick={() => setDate(undefined)}>✕</button>
-                </Badge>
-              )}
-              
-              {(selectedType !== 'all' || date || searchQuery) && (
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => {
-                    setSelectedType('all');
-                    setDate(undefined);
-                    setSearchQuery('');
-                  }}
-                >
-                  Limpar filtros
-                </Button>
-              )}
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="default"
+                onClick={() => setIsTrainingModalOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <PlusCircle className="h-4 w-4" />
+                Registrar Treino Manual
+              </Button>
+
+              <div className="flex gap-2">
+                {selectedType !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    {selectedType === 'ride' ? 'Ciclismo' : 
+                    selectedType === 'run' ? 'Corrida' : 
+                    selectedType === 'hike' ? 'Caminhada' : 'Outro'}
+                    <button className="ml-1 text-xs" onClick={() => setSelectedType('all')}>✕</button>
+                  </Badge>
+                )}
+                
+                {date && (
+                  <Badge variant="secondary" className="gap-1">
+                    {format(date, 'dd/MM/yyyy')}
+                    <button className="ml-1 text-xs" onClick={() => setDate(undefined)}>✕</button>
+                  </Badge>
+                )}
+                
+                {(selectedType !== 'all' || date || searchQuery) && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      setSelectedType('all');
+                      setDate(undefined);
+                      setSearchQuery('');
+                    }}
+                  >
+                    Limpar filtros
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
@@ -171,6 +185,12 @@ const MyActivities = () => {
           </div>
         )}
       </div>
+
+      {/* Training Form Modal */}
+      <TrainingFormModal 
+        open={isTrainingModalOpen}
+        onOpenChange={setIsTrainingModalOpen}
+      />
     </div>
   );
 };

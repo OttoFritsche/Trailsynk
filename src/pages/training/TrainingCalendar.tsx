@@ -1,13 +1,16 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AIInsightCard from '@/components/training/AIInsightCard';
 import { mockMonthlySummaries, mockYearlySummary } from '@/components/training/mockTrainingData';
+import TrainingFormModal from '@/components/training/TrainingFormModal';
 
 const TrainingCalendar = () => {
   const [year, setYear] = useState(2024);
+  const [isTrainingModalOpen, setIsTrainingModalOpen] = useState(false);
   const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   
   return (
@@ -20,17 +23,28 @@ const TrainingCalendar = () => {
           </p>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => setYear(year - 1)}>
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            {year - 1}
-          </Button>
-          <Button variant="outline" size="sm" className="font-medium">
-            {year}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setYear(year + 1)}>
-            {year + 1}
-            <ChevronRight className="h-4 w-4 ml-1" />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm" onClick={() => setYear(year - 1)}>
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              {year - 1}
+            </Button>
+            <Button variant="outline" size="sm" className="font-medium">
+              {year}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setYear(year + 1)}>
+              {year + 1}
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+          
+          <Button 
+            variant="default"
+            onClick={() => setIsTrainingModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <PlusCircle className="h-4 w-4" />
+            Registrar Treino Manual
           </Button>
         </div>
       </div>
@@ -120,6 +134,12 @@ const TrainingCalendar = () => {
           ))}
         </div>
       </div>
+
+      {/* Training Form Modal */}
+      <TrainingFormModal 
+        open={isTrainingModalOpen}
+        onOpenChange={setIsTrainingModalOpen}
+      />
     </div>
   );
 };
