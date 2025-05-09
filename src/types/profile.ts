@@ -21,15 +21,21 @@ export interface UserStats {
   highestElevation: number;
   longestRide: number;
   totalRides: number;
+  // Add the missing properties that are causing errors
+  totalElevationGain?: number;
+  weeklyAverage?: number;
+  avgSpeed?: number;
+  favoriteRouteType?: string;
 }
 
 export interface UserBadge {
   id: string;
   title: string;
   description: string;
-  iconUrl?: string;
   dateEarned?: Date;
   status: "earned" | "locked";
+  // Add the missing property
+  category?: 'distance' | 'elevation' | 'speed' | 'consistency' | 'achievement';
 }
 
 export interface ProfilePhoto {

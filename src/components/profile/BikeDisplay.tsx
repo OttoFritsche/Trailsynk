@@ -2,11 +2,11 @@
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bicycle, Calendar, Settings, Tag } from 'lucide-react';
-import { Bicycle as BicycleType } from '@/types/profile';
+import { Calendar, Settings, Tag } from 'lucide-react';
+import { Bicycle } from '@/types/profile';
 
 interface BikeDisplayProps {
-  bicycle: BicycleType;
+  bicycle: Bicycle;
   onEdit?: () => void;
   onDelete?: () => void;
   onMaintenanceLog?: () => void;
@@ -38,7 +38,12 @@ const BikeDisplay: React.FC<BikeDisplayProps> = ({
           />
         ) : (
           <div className="flex items-center justify-center h-full bg-gray-200">
-            <Bicycle className="h-16 w-16 text-gray-400" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="5.5" cy="17.5" r="3.5"/>
+              <circle cx="18.5" cy="17.5" r="3.5"/>
+              <path d="M15 6a1 1 0 100-2 1 1 0 000 2z"/>
+              <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+            </svg>
           </div>
         )}
       </div>
@@ -60,7 +65,12 @@ const BikeDisplay: React.FC<BikeDisplayProps> = ({
 
           {bicycle.type && (
             <div className="flex items-center text-sm">
-              <Bicycle className="h-4 w-4 mr-2 text-gray-500" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="5.5" cy="17.5" r="3.5"/>
+                <circle cx="18.5" cy="17.5" r="3.5"/>
+                <path d="M15 6a1 1 0 100-2 1 1 0 000 2z"/>
+                <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+              </svg>
               <span className="text-gray-600">{bicycle.type}</span>
             </div>
           )}
@@ -103,3 +113,4 @@ const BikeDisplay: React.FC<BikeDisplayProps> = ({
 };
 
 export default BikeDisplay;
+export type { BikeDisplayProps };

@@ -1,7 +1,6 @@
 
 import React from 'react';
-import ActivityFeedItem from './ActivityFeedItem';
-import { Activity } from './ActivityFeedItem';
+import ActivityFeedItem, { Activity } from './ActivityFeedItem';
 
 interface ActivityFeedProps {
   activities: Activity[];

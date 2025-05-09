@@ -282,12 +282,10 @@ const Profile = () => {
             {activeTab === "overview" && (
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <PerformanceStats 
-                  stats={{
-                    weeklyDistance: userStats.weeklyAverage || 0,
-                    totalElevation: userStats.totalElevationGain || 0,
-                    avgSpeed: userStats.avgSpeed || 0,
-                    favoriteType: userStats.favoriteRouteType || 'Montanha'
-                  }}
+                  weeklyDistance={userStats.weeklyAverage || 0}
+                  totalElevation={userStats.totalElevationGain || 0}
+                  avgSpeed={userStats.avgSpeed || 0}
+                  favoriteType={userStats.favoriteRouteType || 'Montanha'}
                 />
                 <BadgesPreview badges={highlightedBadges.slice(0, 3)} />
               </div>

@@ -2,8 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ProfileData, UserStats, UserBadge, ProfilePhoto, PhotoAlbum } from '@/types/profile';
-import { Bicycle } from '@/components/profile/BikeDisplay';
+import { ProfileData, UserStats, UserBadge, ProfilePhoto, PhotoAlbum, Bicycle } from '@/types/profile';
 
 export const useProfileData = (user: User | null) => {
   const [profileData, setProfileData] = useState<ProfileData>({});
@@ -13,38 +12,33 @@ export const useProfileData = (user: User | null) => {
   const [bicycles, setBicycles] = useState<Bicycle[]>([
     {
       id: 'bike1',
+      name: 'Specialized Epic Pro',
       brand: 'Specialized',
       model: 'Epic Pro',
       type: 'MTB',
-      year: 2023,
-      color: 'Vermelho/Preto',
-      weight: 10.8,
-      lastMaintenance: '12/03/2024',
-      imageUrl: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&h=300&fit=crop'
+      image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&h=300&fit=crop',
+      purchase_date: '2023-03-12',
+      initial_odometer: 0
     },
     {
       id: 'bike2',
+      name: 'Caloi Elite Carbon',
       brand: 'Caloi',
       model: 'Elite Carbon',
       type: 'Road',
-      year: 2022,
-      color: 'Azul',
-      weight: 8.2,
-      lastMaintenance: '25/04/2024',
-      maintenanceDue: false,
-      imageUrl: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&h=300&fit=crop'
+      image_url: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&h=300&fit=crop',
+      purchase_date: '2022-04-25',
+      initial_odometer: 120
     },
     {
       id: 'bike3',
+      name: 'Trek Fuel EX 8',
       brand: 'Trek',
       model: 'Fuel EX 8',
       type: 'MTB Full',
-      year: 2021,
-      color: 'Preto/Verde',
-      weight: 13.5,
-      lastMaintenance: '05/01/2024',
-      maintenanceDue: true,
-      imageUrl: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=500&h=300&fit=crop'
+      image_url: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=500&h=300&fit=crop',
+      purchase_date: '2021-01-05',
+      initial_odometer: 0
     }
   ]);
   
@@ -343,7 +337,7 @@ export const useProfileData = (user: User | null) => {
     highlightedBadges,
     isConnectedToStrava,
     bicycles,
-    refreshProfileData,
+    refreshProfileData: fetchProfileData,
     photos,
     addPhoto,
     deletePhoto,
