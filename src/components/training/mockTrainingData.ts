@@ -137,7 +137,7 @@ export const mockActivities: Activity[] = [
     aiInsight: 'Bom treino complementar para fortalecer os músculos estabilizadores.',
     imageUrl: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&h=300&fit=crop'
   },
-  // Adicionando mais 10 atividades
+  // Adicionando mais atividades
   {
     id: '9',
     title: 'Circuito Urbano',
@@ -248,24 +248,155 @@ export const mockActivities: Activity[] = [
     intensity: 'medium',
     aiInsight: 'Você manteve um ritmo social constante, ideal para eventos em grupo.',
     imageUrl: 'https://images.unsplash.com/photo-1571188654248-7a89213915f7?w=800&h=300&fit=crop'
+  },
+  {
+    id: '19',
+    title: 'Volta ao Lago',
+    date: '18 Mar 2024',
+    distance: 36.7,
+    duration: 145,
+    elevation: 290,
+    type: 'ride',
+    intensity: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1475666675596-cca2035b3d79?w=800&h=300&fit=crop'
+  },
+  {
+    id: '20',
+    title: 'Trilha da Serra Escura',
+    date: '15 Mar 2024',
+    distance: 25.3,
+    duration: 160,
+    elevation: 830,
+    type: 'ride',
+    intensity: 'high',
+    aiInsight: 'Sua habilidade técnica em descidas está melhorando, mas mantenha o foco na postura para evitar fadiga.'
+  },
+  {
+    id: '21',
+    title: 'Treino de Recuperação',
+    date: '12 Mar 2024',
+    distance: 12.5,
+    duration: 55,
+    elevation: 85,
+    type: 'ride',
+    intensity: 'low',
+    aiInsight: 'Excelente treino de recuperação após a competição. Sua frequência cardíaca se manteve controlada.'
+  },
+  {
+    id: '22',
+    title: 'Competição Regional MTB',
+    date: '10 Mar 2024',
+    distance: 42.8,
+    duration: 185,
+    elevation: 980,
+    type: 'ride',
+    intensity: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=800&h=300&fit=crop'
+  },
+  {
+    id: '23',
+    title: 'Hiking com Amigos',
+    date: '05 Mar 2024',
+    distance: 18.2,
+    duration: 240,
+    elevation: 580,
+    type: 'hike',
+    intensity: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=300&fit=crop'
+  },
+  {
+    id: '24',
+    title: 'Treino de Sprints',
+    date: '02 Mar 2024',
+    distance: 8.5,
+    duration: 45,
+    elevation: 60,
+    type: 'ride',
+    intensity: 'high',
+    aiInsight: 'Seus sprints estão mais potentes! A potência média aumentou 8% comparada ao último treino similar.'
+  },
+  {
+    id: '25',
+    title: 'Percurso Costeiro',
+    date: '28 Fev 2024',
+    distance: 42.3,
+    duration: 150,
+    elevation: 260,
+    type: 'ride',
+    intensity: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&h=300&fit=crop'
+  },
+  {
+    id: '26',
+    title: 'Corrida Intervalar',
+    date: '25 Fev 2024',
+    distance: 7.2,
+    duration: 40,
+    elevation: 45,
+    type: 'run',
+    intensity: 'high',
+    aiInsight: 'Excelente progresso no treino de corrida. Seu ritmo em intervalos curtos melhorou 5% desde o mês passado.'
+  },
+  {
+    id: '27',
+    title: 'Pedal Rural',
+    date: '22 Fev 2024',
+    distance: 53.7,
+    duration: 205,
+    elevation: 440,
+    type: 'ride',
+    intensity: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1505672678657-cc7037095e60?w=800&h=300&fit=crop'
+  },
+  {
+    id: '28',
+    title: 'Caminhada Urbana',
+    date: '18 Fev 2024',
+    distance: 6.3,
+    duration: 80,
+    elevation: 90,
+    type: 'hike',
+    intensity: 'low'
   }
 ];
 
-// Mock monthly summaries
+// Mock monthly summaries for 2023 and 2024
 export const mockMonthlySummaries: MonthSummary[] = [
-  { month: 'Janeiro', distance: 320, duration: 1200, activities: 12, elevation: 4500 },
-  { month: 'Fevereiro', distance: 280, duration: 1050, activities: 10, elevation: 3800 },
-  { month: 'Março', distance: 410, duration: 1450, activities: 15, elevation: 5200 },
-  { month: 'Abril', distance: 380, duration: 1350, activities: 14, elevation: 4900 },
-  { month: 'Maio', distance: 120, duration: 450, activities: 5, elevation: 1800 },
+  // 2024
+  { month: 'Janeiro 2024', distance: 450, duration: 1650, activities: 16, elevation: 6200 },
+  { month: 'Fevereiro 2024', distance: 420, duration: 1580, activities: 14, elevation: 5800 },
+  { month: 'Março 2024', distance: 520, duration: 1850, activities: 18, elevation: 7100 },
+  { month: 'Abril 2024', distance: 480, duration: 1720, activities: 16, elevation: 6500 },
+  { month: 'Maio 2024', distance: 180, duration: 650, activities: 6, elevation: 2400 },
+  { month: 'Junho 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Julho 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Agosto 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Setembro 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Outubro 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Novembro 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  { month: 'Dezembro 2024', distance: 0, duration: 0, activities: 0, elevation: 0 },
+  
+  // 2023
+  { month: 'Janeiro 2023', distance: 320, duration: 1200, activities: 12, elevation: 4500 },
+  { month: 'Fevereiro 2023', distance: 280, duration: 1050, activities: 10, elevation: 3800 },
+  { month: 'Março 2023', distance: 410, duration: 1450, activities: 15, elevation: 5200 },
+  { month: 'Abril 2023', distance: 380, duration: 1350, activities: 14, elevation: 4900 },
+  { month: 'Maio 2023', distance: 440, duration: 1550, activities: 16, elevation: 5700 },
+  { month: 'Junho 2023', distance: 460, duration: 1650, activities: 15, elevation: 6200 },
+  { month: 'Julho 2023', distance: 520, duration: 1850, activities: 18, elevation: 7300 },
+  { month: 'Agosto 2023', distance: 490, duration: 1750, activities: 17, elevation: 6800 },
+  { month: 'Setembro 2023', distance: 430, duration: 1550, activities: 15, elevation: 5900 },
+  { month: 'Outubro 2023', distance: 390, duration: 1400, activities: 14, elevation: 5300 },
+  { month: 'Novembro 2023', distance: 360, duration: 1300, activities: 13, elevation: 4800 },
+  { month: 'Dezembro 2023', distance: 400, duration: 1450, activities: 14, elevation: 5500 }
 ];
 
 // Mock yearly summary
 export const mockYearlySummary = {
-  totalDistance: 1510,
-  totalDuration: 5500,
-  totalActivities: 56,
-  totalElevation: 20200,
+  totalDistance: 2050,
+  totalDuration: 7450,
+  totalActivities: 70,
+  totalElevation: 28000,
 };
 
 // Mock weekly summaries
@@ -314,6 +445,33 @@ export const mockWeeklySummaries: WeeklySummary[] = [
     elevation: 1120,
     daysActive: [0, 3, 5],
     intensityByDay: ['medium', 'none', 'none', 'high', 'none', 'low', 'none']
+  },
+  {
+    week: '26 Mar-2 Abr',
+    distance: 64.5,
+    duration: 320,
+    activities: 4,
+    elevation: 1350,
+    daysActive: [0, 2, 5, 6],
+    intensityByDay: ['medium', 'none', 'high', 'none', 'none', 'low', 'medium']
+  },
+  {
+    week: '19-25 Mar',
+    distance: 89.2,
+    duration: 365,
+    activities: 5,
+    elevation: 1680,
+    daysActive: [1, 2, 3, 5, 6],
+    intensityByDay: ['none', 'medium', 'high', 'medium', 'none', 'low', 'high']
+  },
+  {
+    week: '12-18 Mar',
+    distance: 80.3,
+    duration: 400,
+    activities: 4,
+    elevation: 1890,
+    daysActive: [0, 2, 4, 6],
+    intensityByDay: ['high', 'none', 'medium', 'none', 'high', 'none', 'medium']
   }
 ];
 
@@ -341,12 +499,14 @@ export const mockTrainingMetrics: TrainingMetrics = {
 
 // Mock training metrics history
 export const mockTrainingMetricsHistory = [
-  { date: '01 Abr', load: 45, recovery: 90, readiness: 'high' },
-  { date: '08 Abr', load: 65, recovery: 75, readiness: 'medium' },
-  { date: '15 Abr', load: 80, recovery: 60, readiness: 'medium' },
-  { date: '22 Abr', load: 70, recovery: 80, readiness: 'high' },
-  { date: '29 Abr', load: 90, recovery: 65, readiness: 'medium' },
-  { date: '06 Mai', load: 85, recovery: 70, readiness: 'medium' },
-  { date: '13 Mai', load: 75, recovery: 85, readiness: 'high' },
-  { date: '20 Mai', load: 95, recovery: 60, readiness: 'low' },
+  { date: '01 Jan', load: 35, recovery: 95, readiness: 'high' },
+  { date: '15 Jan', load: 45, recovery: 90, readiness: 'high' },
+  { date: '01 Fev', load: 60, recovery: 85, readiness: 'high' },
+  { date: '15 Fev', load: 70, recovery: 75, readiness: 'medium' },
+  { date: '01 Mar', load: 75, recovery: 70, readiness: 'medium' },
+  { date: '15 Mar', load: 80, recovery: 65, readiness: 'medium' },
+  { date: '01 Abr', load: 85, recovery: 60, readiness: 'medium' },
+  { date: '15 Abr', load: 90, recovery: 55, readiness: 'low' },
+  { date: '01 Mai', load: 85, recovery: 70, readiness: 'medium' },
+  { date: '15 Mai', load: 75, recovery: 85, readiness: 'high' },
 ];
