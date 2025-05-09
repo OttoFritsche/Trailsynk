@@ -16,6 +16,35 @@ import { v4 as uuidv4 } from 'uuid';
 import { ProfilePhoto } from '@/types/profile';
 import BadgesPreview from '@/components/profile/BadgesPreview';
 import PerformanceStats from '@/components/profile/PerformanceStats';
+import MaintenanceSuggestionCard from '@/components/profile/MaintenanceSuggestionCard';
+
+// Mock data for maintenance suggestions
+const mockMaintenanceSuggestions = [
+  {
+    id: 'ms1',
+    bikeId: 'bike1',
+    bikeName: 'MTB Specialized Epic',
+    type: 'routine' as const,
+    message: 'Sua corrente atingiu 500 km desde a última lubrificação. Considere verificar.',
+    suggestedDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
+  },
+  {
+    id: 'ms2',
+    bikeId: 'bike2',
+    bikeName: 'Gravel Canyon Grizl',
+    type: 'urgent' as const,
+    message: 'As pastilhas de freio apresentam desgaste acima do normal devido ao uso em terrenos úmidos. Recomendamos verificação imediata.',
+    suggestedDate: new Date()
+  },
+  {
+    id: 'ms3',
+    bikeId: 'bike1',
+    bikeName: 'MTB Specialized Epic',
+    type: 'upcoming' as const,
+    message: 'Próxima manutenção de suspensão recomendada em ~200km (baseado no seu histórico de uso em trilhas).',
+    suggestedDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) // 15 days from now
+  }
+];
 
 // Mock data for recent activities
 const recentActivities: Activity[] = [
@@ -288,6 +317,13 @@ const Profile = () => {
                   favoriteType={userStats.favoriteRouteType || 'Montanha'}
                 />
                 <BadgesPreview badges={highlightedBadges.slice(0, 3)} />
+              </div>
+            )}
+
+            {/* Maintenance Suggestion Card */}
+            {activeTab === "overview" && bicycles && bicycles.length > 0 && (
+              <div className="mt-6">
+                <MaintenanceSuggestionCard suggestions={mockMaintenanceSuggestions} />
               </div>
             )}
           </div>

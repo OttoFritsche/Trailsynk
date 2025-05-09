@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,6 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import ChallengesPreview from '@/components/badges/ChallengesPreview';
+import LeaderboardPreview from '@/components/badges/LeaderboardPreview';
 
 // Mock badge data
 interface Badge {
@@ -157,6 +158,90 @@ const mockBadges: Badge[] = [
   }
 ];
 
+// Mock challenges data
+const mockChallenges = [
+  {
+    id: 'c1',
+    title: 'Desafio dos 500km',
+    type: 'distance' as const,
+    description: 'Percorra 500km em 30 dias',
+    goal: 500,
+    unit: 'km',
+    currentProgress: 320,
+    deadline: new Date('2025-06-10')
+  },
+  {
+    id: 'c2',
+    title: 'Escalador de Montanhas',
+    type: 'elevation' as const,
+    description: 'Acumule 10.000m de elevação',
+    goal: 10000,
+    unit: 'm',
+    currentProgress: 6500,
+    deadline: new Date('2025-06-30')
+  },
+  {
+    id: 'c3',
+    title: 'Consistência Semanal',
+    type: 'consistency' as const,
+    description: 'Complete ao menos 3 atividades por semana durante 4 semanas',
+    goal: 12,
+    unit: 'atividades',
+    currentProgress: 8,
+    deadline: new Date('2025-05-28')
+  }
+];
+
+// Mock leaderboard data
+const mockLeaderboard = [
+  {
+    id: 'l1',
+    position: 1,
+    userId: 'user1',
+    userName: 'Carlos Pereira',
+    userAvatar: 'https://randomuser.me/api/portraits/men/23.jpg',
+    value: 789,
+    unit: 'km'
+  },
+  {
+    id: 'l2',
+    position: 2,
+    userId: 'user2',
+    userName: 'Ana Silva',
+    userAvatar: 'https://randomuser.me/api/portraits/women/45.jpg',
+    value: 682,
+    unit: 'km'
+  },
+  {
+    id: 'l3',
+    position: 3,
+    userId: 'user3',
+    userName: 'Marcos Santos',
+    userAvatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    value: 645,
+    unit: 'km'
+  },
+  {
+    id: 'l4',
+    position: 4,
+    userId: 'currentUser',
+    userName: 'Você',
+    userAvatar: 'https://randomuser.me/api/portraits/women/32.jpg',
+    value: 521,
+    unit: 'km',
+    isCurrentUser: true
+  },
+  {
+    id: 'l5',
+    position: 5,
+    userId: 'user5',
+    userName: 'Pedro Oliveira',
+    userAvatar: 'https://randomuser.me/api/portraits/men/57.jpg',
+    value: 498,
+    unit: 'km'
+  }
+];
+
 const BadgesPage = () => {
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -219,6 +304,15 @@ const BadgesPage = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Active Challenges Section - NEW */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ChallengesPreview challenges={mockChallenges} />
+          <LeaderboardPreview 
+            title="Leaderboard de Maio" 
+            entries={mockLeaderboard}
+          />
+        </div>
 
         {/* Badge Categories */}
         <Card>

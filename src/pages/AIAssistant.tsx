@@ -6,6 +6,74 @@ import { Button } from '@/components/ui/button';
 import { Bot, MessageCircle, Zap, Route, Settings, Award, BadgeDollarSign } from 'lucide-react';
 import AIChat from '@/components/app/AIChat';
 import { Link } from 'react-router-dom';
+import TrainingPlanPreview from '@/components/training/TrainingPlanPreview';
+
+// Mock data for the weekly training plan
+const mockWeeklyPlan = [
+  {
+    id: 'day1',
+    day: 'Segunda',
+    type: 'rest' as const,
+    title: 'Descanso Ativo',
+    description: 'Recuperação com caminhada leve ou alongamento',
+    duration: 30,
+    intensity: 'low' as const,
+  },
+  {
+    id: 'day2',
+    day: 'Terça',
+    type: 'interval' as const,
+    title: 'Treino de Intervalo',
+    description: 'Séries de 4x4min a 90% FCM com recuperação ativa',
+    duration: 60,
+    intensity: 'high' as const,
+  },
+  {
+    id: 'day3',
+    day: 'Quarta',
+    type: 'recovery' as const,
+    title: 'Recuperação',
+    description: 'Pedal leve em terreno plano, baixa intensidade',
+    duration: 45,
+    intensity: 'low' as const,
+  },
+  {
+    id: 'day4',
+    day: 'Quinta',
+    type: 'strength' as const,
+    title: 'Força Específica',
+    description: 'Subidas em baixa cadência, trabalho de força',
+    duration: 75,
+    intensity: 'medium' as const,
+  },
+  {
+    id: 'day5',
+    day: 'Sexta',
+    type: 'recovery' as const,
+    title: 'Recuperação Ativa',
+    description: 'Pedal leve ou descanso total',
+    duration: 30,
+    intensity: 'low' as const,
+  },
+  {
+    id: 'day6',
+    day: 'Sábado',
+    type: 'endurance' as const,
+    title: 'Resistência Longa',
+    description: 'Pedal longo em Z2 (65-75% FCM)',
+    duration: 150,
+    intensity: 'medium' as const,
+  },
+  {
+    id: 'day7',
+    day: 'Domingo',
+    type: 'recovery' as const,
+    title: 'Recuperação',
+    description: 'Pedal recreativo com família/amigos ou descanso',
+    duration: 60,
+    intensity: 'low' as const,
+  },
+];
 
 const suggestedQuestions = [
   "Qual rota você recomenda para hoje?",
@@ -76,6 +144,9 @@ const AIAssistant: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Coluna principal - Chat AI */}
           <div className="lg:col-span-2 space-y-4">
+            {/* AI Training Plan - NEW SECTION */}
+            <TrainingPlanPreview weeklyPlan={mockWeeklyPlan} />
+            
             <Card className="overflow-hidden border shadow-sm">
               <CardContent className="p-0">
                 <AIChat />

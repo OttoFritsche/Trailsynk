@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, PlusCircle, SlidersHorizontal } from 'lucide-react';
@@ -13,6 +12,41 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import AIRecommendations from '@/components/marketplace/AIRecommendations';
+
+// Mock data for AI recommendations
+const mockRecommendations = [
+  {
+    id: 'rec1',
+    name: 'Capacete POC Ventral Air MIPS',
+    price: 1150,
+    image: 'https://images.unsplash.com/photo-1557687654-eff900306574?auto=format&fit=crop&q=80',
+    seller: 'Loja Premium Bikes',
+    location: 'São Paulo, SP',
+    condition: 'Novo',
+    reasonForRecommendation: 'Compatível com seu tipo de pedal e histórico de preferências de segurança.'
+  },
+  {
+    id: 'rec2',
+    name: 'Grupo Shimano Deore XT 12v',
+    price: 3800,
+    image: 'https://images.unsplash.com/photo-1620054665724-25f85f2513f6?auto=format&fit=crop&q=80',
+    seller: 'Oficina Central',
+    location: 'Campinas, SP',
+    condition: 'Novo',
+    reasonForRecommendation: 'Upgrade recomendado baseado no desgaste atual da sua transmissão.'
+  },
+  {
+    id: 'rec3',
+    name: 'Sapatilha Specialized Recon 3.0',
+    price: 950,
+    image: 'https://images.unsplash.com/photo-1605034493903-10ae5549989a?auto=format&fit=crop&q=80',
+    seller: 'Carlos MTB',
+    location: 'Belo Horizonte, MG',
+    condition: 'Novo',
+    reasonForRecommendation: 'Ideal para trilhas semelhantes às que você frequenta recentemente.'
+  }
+];
 
 // Enhanced mock data for marketplace items
 const mockItems = [
@@ -225,6 +259,9 @@ const Marketplace = () => {
           </Button>
         </Link>
       </div>
+      
+      {/* AI Recommendations Section - NEW */}
+      <AIRecommendations recommendations={mockRecommendations} />
       
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
