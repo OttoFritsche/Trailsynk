@@ -2,7 +2,6 @@
 import React from 'react';
 import BikeDisplay from '@/components/profile/BikeDisplay';
 import { Bicycle } from '@/types/profile';
-import { Grid } from '@/components/ui/grid';
 
 interface BikesTabProps {
   bicycles: Bicycle[];

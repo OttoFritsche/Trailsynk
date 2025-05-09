@@ -41,6 +41,7 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
   metric,
   imageUrl
 }) => {
+  // Helper functions to determine styling and icons based on the insight type
   const getIcon = () => {
     switch (type) {
       case 'performance':
@@ -80,6 +81,12 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
         return 'bg-indigo-50';
       case 'challenge':
         return 'bg-purple-50';
+      case 'info':
+        return 'bg-blue-50';
+      case 'warning':
+        return 'bg-amber-50';
+      case 'success':
+        return 'bg-green-50';
       default:
         return 'bg-primary/5';
     }
@@ -99,6 +106,12 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
         return 'border-indigo-100';
       case 'challenge':
         return 'border-purple-100';
+      case 'info':
+        return 'border-blue-100';
+      case 'warning':
+        return 'border-amber-100';
+      case 'success':
+        return 'border-green-100';
       default:
         return 'border-primary/10';
     }
@@ -118,6 +131,12 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
         return 'Progresso Detectado';
       case 'challenge':
         return 'Desafio Personalizado';
+      case 'info':
+        return 'Informação';
+      case 'warning':
+        return 'Aviso';
+      case 'success':
+        return 'Sucesso';
       default:
         return 'Insight TrailSynk AI';
     }
@@ -196,81 +215,6 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
       </CardContent>
     </Card>
   );
-
-  function getBackground() {
-    switch (type) {
-      case 'performance':
-        return 'bg-blue-50';
-      case 'route':
-        return 'bg-green-50';
-      case 'maintenance':
-        return 'bg-amber-50';
-      case 'recovery':
-        return 'bg-red-50';
-      case 'progress':
-        return 'bg-indigo-50';
-      case 'challenge':
-        return 'bg-purple-50';
-      case 'info':
-        return 'bg-blue-50';
-      case 'warning':
-        return 'bg-amber-50';
-      case 'success':
-        return 'bg-green-50';
-      default:
-        return 'bg-primary/5';
-    }
-  }
-
-  function getBorder() {
-    switch (type) {
-      case 'performance':
-        return 'border-blue-100';
-      case 'route':
-        return 'border-green-100';
-      case 'maintenance':
-        return 'border-amber-100';
-      case 'recovery':
-        return 'border-red-100';
-      case 'progress':
-        return 'border-indigo-100';
-      case 'challenge':
-        return 'border-purple-100';
-      case 'info':
-        return 'border-blue-100';
-      case 'warning':
-        return 'border-amber-100';
-      case 'success':
-        return 'border-green-100';
-      default:
-        return 'border-primary/10';
-    }
-  }
-
-  function getTitle() {
-    switch (type) {
-      case 'performance':
-        return 'Insight de Performance';
-      case 'route':
-        return 'Sugestão de Rota';
-      case 'maintenance':
-        return 'Alerta de Manutenção';
-      case 'recovery':
-        return 'Dica de Recuperação';
-      case 'progress':
-        return 'Progresso Detectado';
-      case 'challenge':
-        return 'Desafio Personalizado';
-      case 'info':
-        return 'Informação';
-      case 'warning':
-        return 'Aviso';
-      case 'success':
-        return 'Sucesso';
-      default:
-        return 'Insight TrailSynk AI';
-    }
-  }
 };
 
 export default AIInsightCard;

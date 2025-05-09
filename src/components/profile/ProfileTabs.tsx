@@ -11,9 +11,8 @@ import AlbumsTab from './tabs/AlbumsTab';
 import StatsTab from './tabs/StatsTab';
 import BadgesTab from './tabs/BadgesTab';
 import BikesTab from './tabs/BikesTab';
-import { UserBadge, PhotoAlbum, ProfilePhoto } from '@/types/profile';
+import { UserBadge, PhotoAlbum, ProfilePhoto, Bicycle } from '@/types/profile';
 import { Activity } from '@/components/app/ActivityFeedItem';
-import { Bicycle } from './BikeDisplay';
 
 interface ProfileTabsProps {
   activeTab: string;
