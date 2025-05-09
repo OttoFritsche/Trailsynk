@@ -39,12 +39,12 @@ const HeroSection: React.FC = () => {
       </div>
 
       <div className="container mx-auto z-10 py-10 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-[32px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-[44px] px-[240px]">
           {/* Left column - Text content */}
           <div className="text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[40px] md:text-6xl px-[42px] font-extrabold text-left mx-0 my-[30px]">Pedale Mais Longe, Mais Seguro. Com a Inteligência TrailSynk.</h1>
+            <h1 className="text-4xl sm:text-5xl mb-4 bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent animate-fade-in py-[40px] text-left mx-0 my-[50px] px-[67px] font-extrabold md:text-6xl">Pedale Mais Longe, Mais Seguro. Com a Inteligência TrailSynk.</h1>
             
-            <h2 className="text-lg sm:text-xl md:text-2xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in">Desbloqueie novas aventuras com rotas otimizadas por IA para seu estilo de pedal, receba insights de manutenção e conecte-se com ciclistas que compartilham sua paixão.</h2>
+            <h2 className="text-lg sm:text-xl text-secondary/80 mb-6 max-w-3xl mx-auto lg:mx-0 animate-fade-in py-[15px] px-[23px] md:text-3xl">Desbloqueie novas aventuras com rotas otimizadas por IA para seu estilo de pedal, receba insights de manutenção e conecte-se com ciclistas que compartilham sua paixão.</h2>
             
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 animate-fade-in">
               <Button onClick={scrollToWaitlist} size="lg" className="bg-primary hover:bg-primary-dark text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
@@ -62,7 +62,7 @@ const HeroSection: React.FC = () => {
           {/* Right column - App mockup image */}
           <div className="flex justify-center lg:justify-end items-center animate-fade-in">
             <div className="relative">
-              <img src="/lovable-uploads/c4ff46a9-7875-4056-aaac-a24ddd966ecc.png" alt="TrailSynk App Mockup" className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-none lg:w-[95%] h-auto object-contain z-10 relative" />
+              
               {/* Decorative glow effect */}
               <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur-xl -z-10"></div>
             </div>
