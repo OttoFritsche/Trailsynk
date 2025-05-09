@@ -4,15 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, TrendingUp, Zap, Mountain } from 'lucide-react';
 
 export interface PerformanceStatsProps {
-  stats: {
-    weeklyDistance: number;
-    totalElevation: number;
-    avgSpeed: number;
-    favoriteType: string;
-  };
+  weeklyDistance: number;
+  totalElevation: number;
+  avgSpeed: number;
+  favoriteType: string;
 }
 
-const PerformanceStats: React.FC<PerformanceStatsProps> = ({ stats }) => {
+const PerformanceStats: React.FC<PerformanceStatsProps> = ({
+  weeklyDistance,
+  totalElevation,
+  avgSpeed,
+  favoriteType
+}) => {
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -26,7 +29,7 @@ const PerformanceStats: React.FC<PerformanceStatsProps> = ({ stats }) => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Distância Semanal</p>
-              <p className="font-medium">{stats.weeklyDistance} km</p>
+              <p className="font-medium">{weeklyDistance} km</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
@@ -35,7 +38,7 @@ const PerformanceStats: React.FC<PerformanceStatsProps> = ({ stats }) => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Elevação Total</p>
-              <p className="font-medium">{stats.totalElevation} m</p>
+              <p className="font-medium">{totalElevation} m</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
@@ -44,7 +47,7 @@ const PerformanceStats: React.FC<PerformanceStatsProps> = ({ stats }) => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Velocidade Média</p>
-              <p className="font-medium">{stats.avgSpeed} km/h</p>
+              <p className="font-medium">{avgSpeed} km/h</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
@@ -53,7 +56,7 @@ const PerformanceStats: React.FC<PerformanceStatsProps> = ({ stats }) => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Tipo Favorito</p>
-              <p className="font-medium">{stats.favoriteType}</p>
+              <p className="font-medium">{favoriteType}</p>
             </div>
           </div>
         </div>

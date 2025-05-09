@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import {
   ArrowRight 
 } from 'lucide-react';
 
-export type InsightType = 'performance' | 'route' | 'maintenance' | 'recovery' | 'progress' | 'challenge';
+export type InsightType = 'performance' | 'route' | 'maintenance' | 'recovery' | 'progress' | 'challenge' | 'info' | 'warning' | 'success';
 
 interface AIInsightCardProps {
   type: InsightType;
@@ -52,6 +53,12 @@ const AIInsightCard: React.FC<AIInsightCardProps> = ({
         return <Activity className="h-5 w-5 text-indigo-600" />;
       case 'challenge':
         return <Maximize className="h-5 w-5 text-purple-600" />;
+      case 'info':
+        return <Zap className="h-5 w-5 text-blue-600" />;
+      case 'warning':
+        return <Wrench className="h-5 w-5 text-amber-600" />;
+      case 'success':
+        return <Activity className="h-5 w-5 text-green-600" />;
       default:
         return <Zap className="h-5 w-5 text-primary" />;
     }

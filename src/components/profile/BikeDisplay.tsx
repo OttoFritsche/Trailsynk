@@ -1,140 +1,104 @@
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Bike, Calendar, Wrench, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-export interface Bicycle {
-  id: string;
-  brand: string;
-  model: string;
-  type: string;
-  year?: number;
-  color?: string;
-  weight?: number;
-  lastMaintenance?: string;
-  maintenanceDue?: boolean;
-  imageUrl?: string;
-}
+import React from 'react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Bicycle, Calendar, Settings, Tag } from 'lucide-react';
+import { Bicycle as BicycleType } from '@/types/profile';
 
 interface BikeDisplayProps {
-  bikes: Bicycle[];
+  bicycle: BicycleType;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onMaintenanceLog?: () => void;
 }
 
-const BikeCard: React.FC<{ bike: Bicycle }> = ({ bike }) => {
+const BikeDisplay: React.FC<BikeDisplayProps> = ({
+  bicycle,
+  onEdit,
+  onDelete,
+  onMaintenanceLog,
+}) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'Data desconhecida';
+    return new Intl.DateTimeFormat('pt-BR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(new Date(dateString));
+  };
+
   return (
-    <Card className="overflow-hidden">
-      <div className="aspect-video bg-gray-100 relative">
-        {bike.imageUrl ? (
-          <img 
-            src={bike.imageUrl} 
-            alt={`${bike.brand} ${bike.model}`} 
+    <Card className="overflow-hidden h-full flex flex-col">
+      <div className="relative h-48 bg-gray-100">
+        {bicycle.image_url ? (
+          <img
+            src={bicycle.image_url}
+            alt={bicycle.name}
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Bike className="h-12 w-12 text-gray-400" />
-          </div>
-        )}
-        
-        {bike.maintenanceDue && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="destructive" className="flex items-center gap-1">
-              <AlertTriangle size={14} />
-              Manutenção Pendente
-            </Badge>
+          <div className="flex items-center justify-center h-full bg-gray-200">
+            <Bicycle className="h-16 w-16 text-gray-400" />
           </div>
         )}
       </div>
-      
-      <CardHeader>
-        <CardTitle className="text-lg">
-          {bike.brand} {bike.model}
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Tipo:</span>
-          <Badge variant="secondary">{bike.type}</Badge>
+
+      <CardContent className="flex-1 pt-4">
+        <div className="flex justify-between items-start">
+          <h3 className="font-semibold text-lg">{bicycle.name}</h3>
         </div>
-        
-        {bike.year && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Ano:</span>
-            <span>{bike.year}</span>
-          </div>
-        )}
-        
-        {bike.color && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Cor:</span>
-            <span>{bike.color}</span>
-          </div>
-        )}
-        
-        {bike.weight && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Peso:</span>
-            <span>{bike.weight} kg</span>
-          </div>
-        )}
-        
-        {bike.lastMaintenance && (
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Última manutenção:</span>
-            <span className="flex items-center gap-1">
-              <Calendar size={14} />
-              {bike.lastMaintenance}
-            </span>
-          </div>
-        )}
+
+        <div className="mt-4 space-y-2.5">
+          {(bicycle.brand || bicycle.model) && (
+            <div className="flex items-center text-sm">
+              <Tag className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-600">
+                {bicycle.brand} {bicycle.model}
+              </span>
+            </div>
+          )}
+
+          {bicycle.type && (
+            <div className="flex items-center text-sm">
+              <Bicycle className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-600">{bicycle.type}</span>
+            </div>
+          )}
+
+          {bicycle.purchase_date && (
+            <div className="flex items-center text-sm">
+              <Calendar className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-600">
+                Adquirida em {formatDate(bicycle.purchase_date)}
+              </span>
+            </div>
+          )}
+
+          {bicycle.initial_odometer !== undefined && (
+            <div className="flex items-center text-sm">
+              <Settings className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-600">
+                Odômetro inicial: {bicycle.initial_odometer} km
+              </span>
+            </div>
+          )}
+        </div>
       </CardContent>
-      
-      <CardFooter className="flex flex-col space-y-2">
-        <Button variant="outline" className="w-full flex items-center gap-2">
-          <Wrench size={16} />
-          Gerenciar Manutenção
-        </Button>
-        <Button variant="secondary" asChild className="w-full">
-          <Link to={`/app/bikes/${bike.id}`}>Ver Detalhes</Link>
-        </Button>
+
+      <CardFooter className="pt-0 flex gap-2 justify-end">
+        {onMaintenanceLog && (
+          <Button variant="outline" size="sm" onClick={onMaintenanceLog}>
+            <Settings className="h-4 w-4 mr-2" />
+            Manutenção
+          </Button>
+        )}
+        {onEdit && (
+          <Button variant="outline" size="sm" onClick={onEdit}>
+            Editar
+          </Button>
+        )}
       </CardFooter>
     </Card>
-  );
-};
-
-const BikeDisplay: React.FC<BikeDisplayProps> = ({ bikes }) => {
-  if (!bikes || bikes.length === 0) {
-    return (
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <Bike className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-        <h3 className="font-medium">Nenhuma bicicleta cadastrada</h3>
-        <p className="text-muted-foreground mb-4">
-          Adicione suas bicicletas para gerenciar manutenções e personalizar suas estatísticas.
-        </p>
-        <Button>Adicionar Bicicleta</Button>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Minhas Bicicletas</h3>
-        <Button size="sm" variant="outline">
-          <Bike className="mr-2 h-4 w-4" />
-          Adicionar Bicicleta
-        </Button>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {bikes.map((bike) => (
-          <BikeCard key={bike.id} bike={bike} />
-        ))}
-      </div>
-    </div>
   );
 };
 
