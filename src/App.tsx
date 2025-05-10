@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
@@ -55,65 +55,67 @@ const queryClient = new QueryClient({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/admin" element={<Admin />} />
-          
-          {/* Protected App Routes */}
-          <Route path="/app" element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<AppHome />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="profile/complete" element={<CompleteProfile />} />
-            <Route path="routes" element={<RoutesPage />} />
-            <Route path="routes/:routeId" element={<RouteDetail />} />
-            <Route path="routes/new" element={<NewRoute />} />
-            <Route path="activity/:activityId" element={<ActivityDetail />} />
-            <Route path="statistics" element={<Statistics />} />
-            <Route path="badges" element={<Badges />} />
-            <Route path="trails" element={<Trails />} />
-            <Route path="find-cyclists" element={<FindCyclists />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="groups" element={<Groups />} />
-            <Route path="groups/:groupId" element={<GroupDetail />} />
-            <Route path="assistant" element={<Assistant />} />
-            <Route path="ai-assistant" element={<AIAssistant />} />
-            <Route path="subscription" element={<Subscription />} />
-            <Route path="subscription-success" element={<SubscriptionSuccess />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="messages/:chatId" element={<ChatDetail />} />
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/admin" element={<Admin />} />
             
-            {/* Marketplace Routes */}
-            <Route path="marketplace" element={<Marketplace />} />
-            <Route path="marketplace/new" element={<CreateMarketplaceItem />} />
-            <Route path="marketplace/:itemId" element={<MarketplaceItemDetail />} />
-            
-            {/* Events Routes */}
-            <Route path="events" element={<Events />} />
-            <Route path="events/new" element={<CreateEvent />} />
-            <Route path="events/:eventId" element={<EventDetail />} />
-            
-            {/* Training Routes */}
-            <Route path="training">
-              <Route path="calendar" element={<TrainingCalendar />} />
-              <Route path="activities" element={<MyActivities />} />
-              <Route path="weekly" element={<WeeklyControl />} />
-              <Route path="performance" element={<PerformanceReadiness />} />
+            {/* Protected App Routes */}
+            <Route path="/app" element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<AppHome />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="profile/complete" element={<CompleteProfile />} />
+              <Route path="routes" element={<RoutesPage />} />
+              <Route path="routes/:routeId" element={<RouteDetail />} />
+              <Route path="routes/new" element={<NewRoute />} />
+              <Route path="activity/:activityId" element={<ActivityDetail />} />
+              <Route path="statistics" element={<Statistics />} />
+              <Route path="badges" element={<Badges />} />
+              <Route path="trails" element={<Trails />} />
+              <Route path="find-cyclists" element={<FindCyclists />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="groups" element={<Groups />} />
+              <Route path="groups/:groupId" element={<GroupDetail />} />
+              <Route path="assistant" element={<Assistant />} />
+              <Route path="ai-assistant" element={<AIAssistant />} />
+              <Route path="subscription" element={<Subscription />} />
+              <Route path="subscription-success" element={<SubscriptionSuccess />} />
+              <Route path="messages" element={<Messages />} />
+              <Route path="messages/:chatId" element={<ChatDetail />} />
+              
+              {/* Marketplace Routes */}
+              <Route path="marketplace" element={<Marketplace />} />
+              <Route path="marketplace/new" element={<CreateMarketplaceItem />} />
+              <Route path="marketplace/:itemId" element={<MarketplaceItemDetail />} />
+              
+              {/* Events Routes */}
+              <Route path="events" element={<Events />} />
+              <Route path="events/new" element={<CreateEvent />} />
+              <Route path="events/:eventId" element={<EventDetail />} />
+              
+              {/* Training Routes */}
+              <Route path="training">
+                <Route path="calendar" element={<TrainingCalendar />} />
+                <Route path="activities" element={<MyActivities />} />
+                <Route path="weekly" element={<WeeklyControl />} />
+                <Route path="performance" element={<PerformanceReadiness />} />
+              </Route>
             </Route>
-          </Route>
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
