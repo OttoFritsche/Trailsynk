@@ -97,7 +97,7 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
             ) : (
               <PaginationLink
                 isActive={pageNumber === currentPage}
-                onClick={() => pageNumber !== currentPage && onPageChange(pageNumber as number)}
+                onClick={() => typeof pageNumber === 'number' && pageNumber !== currentPage && onPageChange(pageNumber)}
               >
                 {pageNumber}
               </PaginationLink>
