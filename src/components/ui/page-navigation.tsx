@@ -45,11 +45,11 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
     // Add ellipses and first/last pages
     if (range.length > 0) {
       // Fix: Explicitly check that the first element is a number before comparison
-      if (range[0] !== 'ellipsis' && range[0] > 2) {
+      if (typeof range[0] === 'number' && range[0] > 2) {
         range.unshift('ellipsis');
       }
       // Fix: Explicitly check that the last element is a number before comparison
-      if (range[range.length - 1] !== 'ellipsis' && range[range.length - 1] < totalPages - 1) {
+      if (typeof range[range.length - 1] === 'number' && range[range.length - 1] < totalPages - 1) {
         range.push('ellipsis');
       }
     }
