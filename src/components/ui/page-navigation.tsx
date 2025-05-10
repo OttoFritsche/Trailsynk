@@ -49,7 +49,8 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
         range.unshift('ellipsis');
       }
       // Fix: Explicitly check that the last element is a number before comparison
-      if (typeof range[range.length - 1] === 'number' && range[range.length - 1] < totalPages - 1) {
+      const lastItem = range[range.length - 1];
+      if (typeof lastItem === 'number' && lastItem < totalPages - 1) {
         range.push('ellipsis');
       }
     }
