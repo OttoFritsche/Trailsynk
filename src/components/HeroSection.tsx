@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Bike, Navigation, Map, Activity } from 'lucide-react';
+import { ArrowDown, Bike, Navigation, Map, Activity, ShieldCheck } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
   const scrollToWaitlist = () => {
@@ -154,7 +153,7 @@ const HeroSection: React.FC = () => {
                 
                 {/* Floating safety badge */}
                 <div className="absolute -right-12 top-10 bg-white p-2 rounded-lg shadow-lg flex items-center animate-pulse">
-                  <Shield className="h-4 w-4 text-primary mr-1" />
+                  <ShieldCheck className="h-4 w-4 text-primary mr-1" />
                   <span className="text-xs font-medium">Rota Segura</span>
                 </div>
                 
