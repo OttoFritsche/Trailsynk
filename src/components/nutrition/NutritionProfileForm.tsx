@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { NutritionProfile, ActivityLevel, NutritionGoal, DietaryRestriction } from '@/types/nutrition';
+import { NutritionProfile, ActivityLevel, NutritionGoal, DietaryRestriction, NutritionFormValues } from '@/types/nutrition';
 import { nutritionService } from '@/services/nutritionService';
 import { toast } from 'sonner';
 
@@ -61,7 +61,18 @@ const NutritionProfileForm: React.FC<NutritionProfileFormProps> = ({ profile, on
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const result = await nutritionService.saveNutritionProfile(data);
+      // Ensure data matches the NutritionFormValues interface
+      const formData: NutritionFormValues = {
+        weight: data.weight,
+        height: data.height,
+        age: data.age,
+        activity_level: data.activity_level as ActivityLevel | null,
+        goals: data.goals as NutritionGoal[],
+        dietary_restrictions: data.dietary_restrictions as DietaryRestriction[],
+        other_restrictions: data.other_restrictions,
+      };
+      
+      const result = await nutritionService.saveNutritionProfile(formData);
       toast.success('Perfil nutricional salvo com sucesso');
       if (result?.id) {
         onSaved(result.id);
