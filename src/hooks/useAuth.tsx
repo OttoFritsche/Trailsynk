@@ -13,26 +13,18 @@ export const useAuth = () => {
     session: null,
     user: null,
     loading: true,
-    error: null,
   });
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    let mounted = true;
-    
-    // Set up auth state listener FIRST (seguindo as melhores práticas da Supabase)
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event);
-        
-        if (!mounted) return;
-        
         setAuthState((current) => ({
           ...current,
           session,
           user: session?.user ?? null,
-          loading: false,
         }));
 
         if (event === 'SIGNED_IN') {
@@ -47,7 +39,7 @@ export const useAuth = () => {
                 .eq('id', session.user.id)
                 .single();
               
-              if (!error && profileData && mounted) {
+              if (!error && profileData) {
                 const isProfileComplete = !!profileData.is_profile_complete;
                 
                 // Only redirect if not already on the complete profile page
@@ -67,44 +59,20 @@ export const useAuth = () => {
           }
         } else if (event === 'SIGNED_OUT') {
           toast.info('Você saiu da sua conta');
-          navigate('/');
-        } else if (event === 'USER_UPDATED') {
-          toast.info('Perfil atualizado');
-          if (mounted) {
-            setAuthState((current) => ({ 
-              ...current,
-              user: session?.user ?? null
-            }));
-          }
         }
       }
     );
 
-    // THEN check for existing session (importante manter esta ordem)
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
-      if (!mounted) return;
-      
-      if (error) {
-        console.error('Error getting session:', error);
-        setAuthState({
-          session: null,
-          user: null,
-          loading: false,
-          error: error.message
-        });
-        return;
-      }
-      
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setAuthState({
         session,
         user: session?.user ?? null,
         loading: false,
-        error: null
       });
     });
 
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate, location.pathname]);
@@ -114,70 +82,27 @@ export const useAuth = () => {
     password: string,
     username?: string
   ) => {
-    // Reset error state and set loading
-    setAuthState(current => ({ ...current, loading: true, error: null }));
+    const result = await signIn(email, password, username);
     
-    try {
-      const result = await signIn(email, password, username);
-      
-      if (!result.success) {
-        setAuthState(current => ({ 
-          ...current, 
-          loading: false, 
-          error: result.error ? result.error.message : 'Erro ao fazer login'
-        }));
-      }
-      
-      return result;
-    } catch (error: any) {
-      const errorMessage = error?.message || 'Erro ao fazer login';
-      setAuthState(current => ({ 
-        ...current, 
-        loading: false, 
-        error: errorMessage 
-      }));
-      
-      return { success: false, error: new Error(errorMessage) };
+    if (result.success) {
+      // Let the auth state change handler handle redirection
     }
+    
+    return result;
   };
 
   const handleSignOut = async () => {
-    setAuthState(current => ({ ...current, loading: true, error: null }));
+    const result = await signOut();
     
-    try {
-      const result = await signOut();
-      
-      if (!result.success) {
-        setAuthState(current => ({ 
-          ...current, 
-          loading: false, 
-          error: result.error ? result.error.message : 'Erro ao sair'
-        }));
-      }
-      
-      return result;
-    } catch (error: any) {
-      const errorMessage = error?.message || 'Erro ao sair';
-      setAuthState(current => ({ 
-        ...current, 
-        loading: false, 
-        error: errorMessage 
-      }));
-      
-      return { success: false, error: new Error(errorMessage) };
+    if (result.success) {
+      navigate('/auth');
     }
+    
+    return result;
   };
 
-  // Exposição de estado adicional para facilitar acesso
-  const isAuthenticated = !!authState.user;
-  const { loading, error, user, session } = authState;
-
   return {
-    isAuthenticated,
-    loading,
-    error,
-    user,
-    session,
+    ...authState,
     signIn: handleSignIn,
     signUp,
     signOut: handleSignOut,

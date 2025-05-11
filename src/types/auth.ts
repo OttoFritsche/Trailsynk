@@ -5,7 +5,6 @@ export type AuthState = {
   session: Session | null;
   user: User | null;
   loading: boolean;
-  error: string | null;
 };
 
 export type UserMetadata = {

@@ -44,13 +44,10 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
     
     // Add ellipses and first/last pages
     if (range.length > 0) {
-      // Fix: Explicitly check that the first element is a number before comparison
-      if (typeof range[0] === 'number' && range[0] > 2) {
+      if (range[0] > 2) {
         range.unshift('ellipsis');
       }
-      // Fix: Explicitly check that the last element is a number before comparison
-      const lastItem = range[range.length - 1];
-      if (typeof lastItem === 'number' && lastItem < totalPages - 1) {
+      if (range[range.length - 1] < totalPages - 1) {
         range.push('ellipsis');
       }
     }
@@ -100,7 +97,7 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
             ) : (
               <PaginationLink
                 isActive={pageNumber === currentPage}
-                onClick={() => typeof pageNumber === 'number' && pageNumber !== currentPage && onPageChange(pageNumber)}
+                onClick={() => pageNumber !== currentPage && onPageChange(pageNumber as number)}
               >
                 {pageNumber}
               </PaginationLink>

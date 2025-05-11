@@ -19,7 +19,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     session: null,
     user: null,
     loading: true,
-    error: null // Added error property here
   });
 
   useEffect(() => {
@@ -62,7 +61,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         session,
         user: session?.user ?? null,
         loading: false,
-        error: null // Added error property here
       });
     });
 
