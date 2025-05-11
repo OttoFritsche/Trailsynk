@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   Sheet,
@@ -49,16 +49,16 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
             </div>
             
             <div className="flex flex-col space-y-3 pt-4 border-t">
-              <Link to="/auth?mode=login" onClick={() => setOpen(false)}>
+              <RouterLink to="/auth?mode=login" onClick={() => setOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
                   Login
                 </Button>
-              </Link>
-              <Link to="/auth?mode=signup" onClick={() => setOpen(false)}>
+              </RouterLink>
+              <RouterLink to="/auth?mode=signup" onClick={() => setOpen(false)}>
                 <Button className="w-full">
                   Cadastre-se
                 </Button>
-              </Link>
+              </RouterLink>
             </div>
           </div>
         </SheetContent>

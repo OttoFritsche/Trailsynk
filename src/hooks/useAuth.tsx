@@ -13,18 +13,25 @@ export const useAuth = () => {
     session: null,
     user: null,
     loading: true,
+    error: null,
   });
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Configurando um indicador de carregamento
+    setAuthState(current => ({ ...current, loading: true, error: null }));
+    
+    // Set up auth state listener FIRST (seguindo as melhores práticas da Supabase)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event);
+        
         setAuthState((current) => ({
           ...current,
           session,
           user: session?.user ?? null,
+          loading: false,
         }));
 
         if (event === 'SIGNED_IN') {
@@ -59,16 +66,35 @@ export const useAuth = () => {
           }
         } else if (event === 'SIGNED_OUT') {
           toast.info('Você saiu da sua conta');
+          navigate('/');
+        } else if (event === 'USER_UPDATED') {
+          toast.info('Perfil atualizado');
+          setAuthState((current) => ({ 
+            ...current,
+            user: session?.user ?? null
+          }));
         }
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // THEN check for existing session (importante manter esta ordem)
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+        setAuthState({
+          session: null,
+          user: null,
+          loading: false,
+          error: error.message
+        });
+        return;
+      }
+      
       setAuthState({
         session,
         user: session?.user ?? null,
         loading: false,
+        error: null
       });
     });
 
@@ -82,27 +108,70 @@ export const useAuth = () => {
     password: string,
     username?: string
   ) => {
-    const result = await signIn(email, password, username);
+    // Reset error state and set loading
+    setAuthState(current => ({ ...current, loading: true, error: null }));
     
-    if (result.success) {
-      // Let the auth state change handler handle redirection
+    try {
+      const result = await signIn(email, password, username);
+      
+      if (!result.success) {
+        setAuthState(current => ({ 
+          ...current, 
+          loading: false, 
+          error: result.error 
+        }));
+      }
+      
+      return result;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Erro ao fazer login';
+      setAuthState(current => ({ 
+        ...current, 
+        loading: false, 
+        error: errorMessage 
+      }));
+      
+      return { success: false, error: errorMessage };
     }
-    
-    return result;
   };
 
   const handleSignOut = async () => {
-    const result = await signOut();
+    setAuthState(current => ({ ...current, loading: true, error: null }));
     
-    if (result.success) {
-      navigate('/auth');
+    try {
+      const result = await signOut();
+      
+      if (!result.success) {
+        setAuthState(current => ({ 
+          ...current, 
+          loading: false, 
+          error: result.error 
+        }));
+      }
+      
+      return result;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Erro ao sair';
+      setAuthState(current => ({ 
+        ...current, 
+        loading: false, 
+        error: errorMessage 
+      }));
+      
+      return { success: false, error: errorMessage };
     }
-    
-    return result;
   };
 
+  // Exposição de estado adicional para facilitar acesso
+  const isAuthenticated = !!authState.user;
+  const { loading, error, user, session } = authState;
+
   return {
-    ...authState,
+    isAuthenticated,
+    loading,
+    error,
+    user,
+    session,
     signIn: handleSignIn,
     signUp,
     signOut: handleSignOut,
