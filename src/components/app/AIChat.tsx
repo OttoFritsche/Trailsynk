@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { nutritionService } from '@/services/nutritionService';
+import { toast } from 'sonner';
 
 // Define message type
 interface ChatMessage {
@@ -49,12 +51,16 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // This is where we would normally make the API call to the backend
-      // For now, we'll simulate a response after a delay
-      setTimeout(() => {
+      // Check if it's a nutrition-related query
+      const isNutritionQuery = checkIfNutritionQuery(inputValue);
+      
+      // Simulate a response after a delay
+      setTimeout(async () => {
         const aiResponse: ChatMessage = {
           id: `ai-${Date.now()}`,
-          content: getSimulatedResponse(inputValue),
+          content: isNutritionQuery ? 
+            await handleNutritionQuery(inputValue) : 
+            getSimulatedResponse(inputValue),
           isUser: false,
           timestamp: new Date(),
         };
@@ -76,6 +82,77 @@ const AIChat: React.FC = () => {
     }
   };
 
+  const checkIfNutritionQuery = (query: string): boolean => {
+    const nutritionKeywords = [
+      'nutri', 'aliment', 'comer', 'comida', 'dieta', 'proteina', 'carboidrato',
+      'gordura', 'kcal', 'caloria', 'refeição', 'jejum', 'pré-treino', 'pós-treino'
+    ];
+    
+    const lowercaseQuery = query.toLowerCase();
+    return nutritionKeywords.some(keyword => lowercaseQuery.includes(keyword));
+  };
+
+  // Handle nutrition-specific queries
+  const handleNutritionQuery = async (query: string): Promise<string> => {
+    // Check if it's about pre-workout nutrition
+    if (query.toLowerCase().includes('antes') || query.toLowerCase().includes('pré-treino')) {
+      // Create a nutrition suggestion in the database
+      await nutritionService.createNutritionSuggestion({
+        type: 'pre_treino',
+        description: 'Para um desempenho ideal antes do treino, consuma uma refeição rica em carboidratos e moderada em proteínas 2-3 horas antes.\n\nExemplos:\n- 1 tigela de aveia com banana e mel\n- 1 sanduíche de pão integral com peito de frango e abacate\n- 1 batata doce média com atum\n\nHidrate-se bem bebendo pelo menos 500ml de água nos 60 minutos anteriores ao exercício.',
+        recommended_at: new Date().toISOString(),
+        calories: 350,
+        proteins: 20,
+        carbs: 45,
+        fats: 10
+      });
+      
+      return 'Para um desempenho ideal antes do treino, consuma uma refeição rica em carboidratos e moderada em proteínas 2-3 horas antes.\n\nExemplos:\n- 1 tigela de aveia com banana e mel\n- 1 sanduíche de pão integral com peito de frango e abacate\n- 1 batata doce média com atum\n\nHidrate-se bem bebendo pelo menos 500ml de água nos 60 minutos anteriores ao exercício.\n\n*Salvei esta sugestão no seu perfil nutricional para referência futura.*';
+    }
+    
+    // Check if it's about during workout nutrition
+    else if (query.toLowerCase().includes('durante')) {
+      await nutritionService.createNutritionSuggestion({
+        type: 'durante_treino',
+        description: 'Durante treinos longos (mais de 60-90 minutos), é importante repor carboidratos e eletrólitos.\n\nSugestões:\n- Géis energéticos (25-30g de carboidratos)\n- Bebidas esportivas (30-60g de carboidratos por hora)\n- Bananas ou barras energéticas\n\nConsuma 30-60g de carboidratos por hora e beba 400-800ml de líquidos a cada hora, dependendo da intensidade e condições climáticas.',
+        recommended_at: new Date().toISOString(),
+        carbs: 40
+      });
+      
+      return 'Durante treinos longos (mais de 60-90 minutos), é importante repor carboidratos e eletrólitos.\n\nSugestões:\n- Géis energéticos (25-30g de carboidratos)\n- Bebidas esportivas (30-60g de carboidratos por hora)\n- Bananas ou barras energéticas\n\nConsuma 30-60g de carboidratos por hora e beba 400-800ml de líquidos a cada hora, dependendo da intensidade e condições climáticas.\n\n*Salvei esta sugestão no seu perfil nutricional para referência futura.*';
+    }
+    
+    // Check if it's about post-workout nutrition
+    else if (query.toLowerCase().includes('depois') || query.toLowerCase().includes('após') || query.toLowerCase().includes('pós-treino') || query.toLowerCase().includes('recuperação')) {
+      await nutritionService.createNutritionSuggestion({
+        type: 'pos_treino',
+        description: 'Após o treino, foque em proteínas para recuperação muscular e carboidratos para repor o glicogênio. Consuma nos 30-60 minutos após o exercício.\n\nOpções recomendadas:\n- Shake de proteína (whey) com banana\n- Iogurte grego com frutas e granola\n- Omelete com legumes e torrada integral\n- Peito de frango grelhado com arroz e legumes\n\nProporção ideal: 20-25g de proteína e 1g de carboidrato por kg de peso corporal.',
+        recommended_at: new Date().toISOString(),
+        calories: 400,
+        proteins: 25,
+        carbs: 50,
+        fats: 8
+      });
+      
+      return 'Após o treino, foque em proteínas para recuperação muscular e carboidratos para repor o glicogênio. Consuma nos 30-60 minutos após o exercício.\n\nOpções recomendadas:\n- Shake de proteína (whey) com banana\n- Iogurte grego com frutas e granola\n- Omelete com legumes e torrada integral\n- Peito de frango grelhado com arroz e legumes\n\nProporção ideal: 20-25g de proteína e 1g de carboidrato por kg de peso corporal.\n\n*Salvei esta sugestão no seu perfil nutricional para referência futura.*';
+    }
+    
+    // General nutrition tips
+    else {
+      await nutritionService.createNutritionSuggestion({
+        type: 'diario',
+        description: 'Como ciclista, sua alimentação diária deve priorizar um equilíbrio adequado de nutrientes:\n\n1. Carboidratos: 5-7g/kg de peso corporal para treinos moderados, 7-10g/kg para treinos intensos\n2. Proteínas: 1.2-1.6g/kg de peso corporal\n3. Gorduras: 1g/kg de peso corporal de gorduras saudáveis\n\nDistribua as refeições ao longo do dia e priorize alimentos não processados como frutas, vegetais, grãos integrais, proteínas magras e gorduras saudáveis.\n\nLembre-se de manter uma boa hidratação: beba pelo menos 2 litros de água diariamente, além do que você consome durante os treinos.',
+        recommended_at: new Date().toISOString(),
+        calories: 2400,
+        proteins: 90,
+        carbs: 320,
+        fats: 70
+      });
+      
+      return 'Como ciclista, sua alimentação diária deve priorizar um equilíbrio adequado de nutrientes:\n\n1. Carboidratos: 5-7g/kg de peso corporal para treinos moderados, 7-10g/kg para treinos intensos\n2. Proteínas: 1.2-1.6g/kg de peso corporal\n3. Gorduras: 1g/kg de peso corporal de gorduras saudáveis\n\nDistribua as refeições ao longo do dia e priorize alimentos não processados como frutas, vegetais, grãos integrais, proteínas magras e gorduras saudáveis.\n\nLembre-se de manter uma boa hidratação: beba pelo menos 2 litros de água diariamente, além do que você consome durante os treinos.\n\n*Salvei esta sugestão no seu perfil nutricional para referência futura. Você pode acessar todas as sugestões na página de Nutrição.*';
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -88,7 +165,7 @@ const AIChat: React.FC = () => {
     const input = userInput.toLowerCase();
     
     if (input.includes('olá') || input.includes('oi') || input.includes('começar')) {
-      return 'Olá, ciclista! Estou aqui para ajudar com dicas de treino, manutenção de bikes e sugestões de rotas. O que você precisa hoje?';
+      return 'Olá, ciclista! Estou aqui para ajudar com dicas de treino, manutenção de bikes, nutrição e sugestões de rotas. O que você precisa hoje?';
     } else if (input.includes('treino') || input.includes('melhorar')) {
       return 'Para melhorar seu desempenho, recomendo alternar entre treinos de intensidade e resistência. Tente fazer sprints curtos em um dia e pedaladas longas de baixa intensidade no outro. Também é importante descansar adequadamente.';
     } else if (input.includes('manutenção') || input.includes('bike') || input.includes('bicicleta')) {
@@ -96,7 +173,7 @@ const AIChat: React.FC = () => {
     } else if (input.includes('rota') || input.includes('percurso')) {
       return 'Com base no seu histórico, você parece gostar de rotas com elevação moderada. Já experimentou a Trilha da Serra? Tem 22km com 450m de elevação e paisagens incríveis.';
     } else {
-      return 'Interessante! Como seu assessor de ciclismo, posso oferecer dicas personalizadas sobre treinos, rotas ou manutenção da sua bike. Tem alguma dessas áreas que gostaria de explorar?';
+      return 'Interessante! Como seu assessor de ciclismo, posso oferecer dicas personalizadas sobre treinos, rotas, nutrição ou manutenção da sua bike. Tem alguma dessas áreas que gostaria de explorar?';
     }
   };
 

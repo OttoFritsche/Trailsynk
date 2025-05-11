@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageCircle, Zap, Route, Settings, Award, BadgeDollarSign } from 'lucide-react';
+import { Bot, MessageCircle, Zap, Route, Settings, Award, BadgeDollarSign, Apple } from 'lucide-react';
 import AIChat from '@/components/app/AIChat';
 import { Link } from 'react-router-dom';
 import TrainingPlanPreview from '@/components/training/TrainingPlanPreview';
@@ -78,7 +78,7 @@ const mockWeeklyPlan = [
 const suggestedQuestions = [
   "Qual rota você recomenda para hoje?",
   "Como posso melhorar em subidas?",
-  "Quando devo fazer manutenção na minha bike?",
+  "O que devo comer antes de treinar?",
   "Qual treinamento é ideal para aumentar resistência?"
 ];
 
@@ -99,10 +99,10 @@ const recentSuggestions = [
   },
   {
     id: 3,
-    title: "Dica: Foco em Cadência",
-    description: "Mantenha entre 80-90 RPM para melhorar sua eficiência em subidas",
-    icon: Award,
-    type: "performance"
+    title: "Alimentação Pós-Treino",
+    description: "Otimize sua recuperação com estas recomendações nutricionais",
+    icon: Apple,
+    type: "nutrition"
   }
 ];
 
@@ -119,6 +119,11 @@ const AIAssistant: React.FC = () => {
   const handleSuggestionClick = (suggestion: typeof recentSuggestions[0]) => {
     // Implementação futura: navegar para a página correspondente ao tipo da sugestão
     console.log(`Navegando para sugestão: ${suggestion.title}, tipo: ${suggestion.type}`);
+    
+    // Navigate to nutrition page if the type is nutrition
+    if (suggestion.type === 'nutrition') {
+      window.location.href = '/app/nutrition';
+    }
   };
 
   const handleQuestionClick = (question: string) => {
@@ -249,7 +254,7 @@ const AIAssistant: React.FC = () => {
                   </li>
                   <li className="flex items-start">
                     <Bot className="h-4 w-4 mr-2 mt-0.5 text-primary" />
-                    <span>Solicite dicas de manutenção preventiva</span>
+                    <span>Solicite sugestões nutricionais para otimizar seu desempenho</span>
                   </li>
                 </ul>
               </CardContent>

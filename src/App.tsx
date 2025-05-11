@@ -42,6 +42,7 @@ import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 import CreateEvent from "./pages/CreateEvent";
+import Nutrition from './pages/Nutrition';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -110,6 +111,9 @@ const App = () => (
                 <Route path="weekly" element={<WeeklyControl />} />
                 <Route path="performance" element={<PerformanceReadiness />} />
               </Route>
+              
+              {/* Nutrition Route */}
+              <Route path="nutrition" element={<Nutrition />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />
