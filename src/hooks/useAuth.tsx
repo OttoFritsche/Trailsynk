@@ -118,7 +118,7 @@ export const useAuth = () => {
         setAuthState(current => ({ 
           ...current, 
           loading: false, 
-          error: result.error 
+          error: result.error ? result.error.message : 'Erro ao fazer login'
         }));
       }
       
@@ -131,7 +131,7 @@ export const useAuth = () => {
         error: errorMessage 
       }));
       
-      return { success: false, error: errorMessage };
+      return { success: false, error: new Error(errorMessage) };
     }
   };
 
@@ -145,7 +145,7 @@ export const useAuth = () => {
         setAuthState(current => ({ 
           ...current, 
           loading: false, 
-          error: result.error 
+          error: result.error ? result.error.message : 'Erro ao sair'
         }));
       }
       
@@ -158,7 +158,7 @@ export const useAuth = () => {
         error: errorMessage 
       }));
       
-      return { success: false, error: errorMessage };
+      return { success: false, error: new Error(errorMessage) };
     }
   };
 
