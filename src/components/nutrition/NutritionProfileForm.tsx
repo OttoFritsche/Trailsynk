@@ -1,231 +1,289 @@
 
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
-import InputRow from '@/components/ui/input-row';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ActivityLevel, NutritionFormValues, NutritionProfile, NutritionGoal, DietaryRestriction } from '@/types/nutrition';
+import { Textarea } from '@/components/ui/textarea';
+import { NutritionProfile, ActivityLevel, NutritionGoal, DietaryRestriction } from '@/types/nutrition';
 import { nutritionService } from '@/services/nutritionService';
 import { toast } from 'sonner';
-import { FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { LoaderCircle } from 'lucide-react';
-
-const formSchema = z.object({
-  weight: z.number().nullable(),
-  height: z.number().nullable(),
-  age: z.number().nullable(),
-  activity_level: z.enum(['sedentário', 'leve', 'moderado', 'ativo', 'muito ativo']).nullable(),
-  goals: z.array(z.string()),
-  dietary_restrictions: z.array(z.string()),
-  other_restrictions: z.string().nullable()
-});
 
 interface NutritionProfileFormProps {
-  profile?: NutritionProfile | null;
-  onSaved?: (profileId: string) => void;
+  profile: NutritionProfile | null;
+  onSaved: (profileId: string) => void;
 }
 
-const activityLevelOptions: { value: ActivityLevel; label: string }[] = [
-  { value: 'sedentário', label: 'Sedentário (pouca ou nenhuma atividade física)' },
-  { value: 'leve', label: 'Leve (exercício leve 1-3x por semana)' },
-  { value: 'moderado', label: 'Moderado (exercício moderado 3-5x por semana)' },
-  { value: 'ativo', label: 'Ativo (exercício intenso 5-7x por semana)' },
-  { value: 'muito ativo', label: 'Muito Ativo (exercício intenso diário ou atleta)' }
-];
+const formSchema = z.object({
+  weight: z.number().min(30).max(250).nullable(),
+  height: z.number().min(100).max(250).nullable(),
+  age: z.number().min(12).max(120).nullable(),
+  activity_level: z.enum(['sedentário', 'leve', 'moderado', 'ativo', 'muito ativo']).nullable(),
+  goals: z.array(z.enum(['perder_peso', 'ganhar_massa', 'melhorar_performance', 'saúde_geral'])),
+  dietary_restrictions: z.array(z.enum(['vegetariano', 'vegano', 'sem_gluten', 'sem_lactose', 'outro'])),
+  other_restrictions: z.string().nullable(),
+});
 
-const nutritionGoals: { value: NutritionGoal; label: string }[] = [
+type FormValues = z.infer<typeof formSchema>;
+
+const goalOptions = [
   { value: 'perder_peso', label: 'Perder peso' },
   { value: 'ganhar_massa', label: 'Ganhar massa muscular' },
   { value: 'melhorar_performance', label: 'Melhorar performance' },
-  { value: 'saúde_geral', label: 'Manter saúde geral' }
+  { value: 'saúde_geral', label: 'Saúde geral' },
 ];
 
-const dietaryRestrictions: { value: DietaryRestriction; label: string }[] = [
+const restrictionOptions = [
   { value: 'vegetariano', label: 'Vegetariano' },
   { value: 'vegano', label: 'Vegano' },
   { value: 'sem_gluten', label: 'Sem glúten' },
   { value: 'sem_lactose', label: 'Sem lactose' },
-  { value: 'outro', label: 'Outras restrições' }
+  { value: 'outro', label: 'Outra restrição' },
 ];
 
 const NutritionProfileForm: React.FC<NutritionProfileFormProps> = ({ profile, onSaved }) => {
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const form = useForm<NutritionFormValues>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       weight: profile?.weight || null,
       height: profile?.height || null,
       age: profile?.age || null,
       activity_level: profile?.activity_level || null,
-      goals: profile?.goals || [],
-      dietary_restrictions: profile?.dietary_restrictions || [],
-      other_restrictions: profile?.other_restrictions || null
-    }
+      goals: (profile?.goals || []) as NutritionGoal[],
+      dietary_restrictions: (profile?.dietary_restrictions || []) as DietaryRestriction[],
+      other_restrictions: profile?.other_restrictions || null,
+    },
   });
 
-  const handleSubmit = async (values: NutritionFormValues) => {
-    setIsSubmitting(true);
+  const onSubmit = async (data: FormValues) => {
     try {
-      const profileId = await nutritionService.saveNutritionProfile(values);
-      if (profileId && onSaved) {
-        onSaved(profileId);
+      const result = await nutritionService.saveNutritionProfile(data);
+      toast.success('Perfil nutricional salvo com sucesso');
+      if (result?.id) {
+        onSaved(result.id);
       }
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      toast.error('Erro ao salvar perfil nutricional');
+      console.error(error);
     }
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Perfil Nutricional</CardTitle>
-        <CardDescription>
-          Preencha suas informações nutricionais para receber sugestões personalizadas
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <InputRow
-                form={form}
-                name="weight"
-                label="Peso (kg)"
-                type="number"
-                placeholder="70"
-                min={30}
-                max={200}
-                step={0.1}
-              />
-              
-              <InputRow
-                form={form}
-                name="height"
-                label="Altura (cm)"
-                type="number"
-                placeholder="175"
-                min={100}
-                max={250}
-                step={1}
-              />
-              
-              <InputRow
-                form={form}
-                name="age"
-                label="Idade"
-                type="number"
-                placeholder="30"
-                min={13}
-                max={120}
-                step={1}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <FormItem className="space-y-3">
-                <FormLabel>Nível de Atividade Física</FormLabel>
-                <div className="space-y-1">
-                  {activityLevelOptions.map((option) => (
-                    <FormItem key={option.value} className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <input
-                          type="radio"
-                          value={option.value}
-                          className="radio"
-                          checked={form.watch('activity_level') === option.value}
-                          onChange={() => form.setValue('activity_level', option.value)}
-                        />
-                      </FormControl>
-                      <FormLabel className="font-normal cursor-pointer">
-                        {option.label}
-                      </FormLabel>
-                    </FormItem>
-                  ))}
-                </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name="weight"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Peso (kg)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Ex: 70"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
-            </div>
-            
-            <div className="space-y-3">
-              <FormLabel>Objetivos Nutricionais</FormLabel>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {nutritionGoals.map((goal) => (
-                  <FormItem key={goal.value} className="flex items-center space-x-2 space-y-0">
-                    <FormControl>
-                      <Checkbox 
-                        checked={form.watch('goals').includes(goal.value)}
-                        onCheckedChange={(checked) => {
-                          const currentGoals = form.getValues('goals');
-                          if (checked) {
-                            form.setValue('goals', [...currentGoals, goal.value]);
-                          } else {
-                            form.setValue('goals', currentGoals.filter(g => g !== goal.value));
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-normal cursor-pointer">
-                      {goal.label}
-                    </FormLabel>
-                  </FormItem>
-                ))}
-              </div>
-              <FormMessage />
-            </div>
-            
-            <div className="space-y-3">
-              <FormLabel>Restrições Alimentares</FormLabel>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {dietaryRestrictions.map((restriction) => (
-                  <FormItem key={restriction.value} className="flex items-center space-x-2 space-y-0">
-                    <FormControl>
-                      <Checkbox 
-                        checked={form.watch('dietary_restrictions').includes(restriction.value)}
-                        onCheckedChange={(checked) => {
-                          const currentRestrictions = form.getValues('dietary_restrictions');
-                          if (checked) {
-                            form.setValue('dietary_restrictions', [...currentRestrictions, restriction.value]);
-                          } else {
-                            form.setValue('dietary_restrictions', currentRestrictions.filter(r => r !== restriction.value));
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-normal cursor-pointer">
-                      {restriction.label}
-                    </FormLabel>
-                  </FormItem>
-                ))}
-              </div>
-              <FormMessage />
-            </div>
-            
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="height"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Altura (cm)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Ex: 175"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="age"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Idade</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Ex: 30"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="activity_level"
+          render={({ field }) => (
             <FormItem>
-              <FormLabel>Outras Restrições ou Observações</FormLabel>
+              <FormLabel>Nível de atividade física</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                value={field.value || undefined}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione seu nível de atividade" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="sedentário">Sedentário</SelectItem>
+                  <SelectItem value="leve">Leve - Exercícios 1-2x por semana</SelectItem>
+                  <SelectItem value="moderado">Moderado - Exercícios 3-4x por semana</SelectItem>
+                  <SelectItem value="ativo">Ativo - Exercícios 5-6x por semana</SelectItem>
+                  <SelectItem value="muito ativo">Muito ativo - Exercícios diários ou intensos</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="goals"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel>Objetivos</FormLabel>
+                <FormDescription>
+                  Selecione seus objetivos nutricionais.
+                </FormDescription>
+              </div>
+              {goalOptions.map((option) => (
+                <FormField
+                  key={option.value}
+                  control={form.control}
+                  name="goals"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={option.value}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(option.value as NutritionGoal)}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || [];
+                              const optionValue = option.value as NutritionGoal;
+                              return checked
+                                ? field.onChange([...currentValue, optionValue])
+                                : field.onChange(
+                                    currentValue.filter((value) => value !== optionValue)
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {option.label}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="dietary_restrictions"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel>Restrições alimentares</FormLabel>
+                <FormDescription>
+                  Selecione suas restrições alimentares.
+                </FormDescription>
+              </div>
+              {restrictionOptions.map((option) => (
+                <FormField
+                  key={option.value}
+                  control={form.control}
+                  name="dietary_restrictions"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={option.value}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(option.value as DietaryRestriction)}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || [];
+                              const optionValue = option.value as DietaryRestriction;
+                              return checked
+                                ? field.onChange([...currentValue, optionValue])
+                                : field.onChange(
+                                    currentValue.filter((value) => value !== optionValue)
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {option.label}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="other_restrictions"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Outras restrições ou observações</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Descreva outras informações relevantes sobre sua alimentação..."
-                  className="min-h-[100px]"
-                  {...form.register('other_restrictions')}
+                <Textarea 
+                  placeholder="Descreva outras restrições alimentares ou observações importantes."
+                  {...field}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
-            
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar Perfil Nutricional
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          )}
+        />
+
+        <Button type="submit">Salvar perfil nutricional</Button>
+      </form>
+    </Form>
   );
 };
 

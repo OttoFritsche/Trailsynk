@@ -10,17 +10,16 @@ interface AppNavigationProps {
 }
 
 const AppNavigation: React.FC<AppNavigationProps> = ({ isMobile }) => {
-  const location = useLocation();
   const isDeviceMobile = useIsMobile();
   
   // Use the prop if provided, otherwise use the hook
   const showMobileNav = isMobile !== undefined ? isMobile : isDeviceMobile;
   
   if (showMobileNav) {
-    return <MobileNavigation currentPath={location.pathname} />;
+    return <MobileNavigation user={null} />;
   }
 
-  return <DesktopNavigation currentPath={location.pathname} />;
+  return <DesktopNavigation />;
 };
 
 export default AppNavigation;
