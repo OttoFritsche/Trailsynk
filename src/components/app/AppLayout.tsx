@@ -1,11 +1,12 @@
 
 import React, { Suspense, useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AppHeader from './AppHeader';
 import { useAuth } from '@/hooks/useAuth';
 import LeftSidebar from './LeftSidebar';
 import RightSidebar from './RightSidebar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 
 // Componente de carregamento para Suspense
 const LoadingFallback = () => (
@@ -23,27 +24,40 @@ const LoadingFallback = () => (
 );
 
 const AppLayout: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   
   // Determina se a página atual deve ter layout de 3 colunas
   const isThreeColumnPage = location.pathname === '/app' || location.pathname === '/app/';
 
-  // Simula um efeito de carregamento suave para transições
+  // Handle route transitions with a shorter loading time
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 300);
+    const timer = setTimeout(() => setIsLoading(false), 250); // Reduced from 300ms
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // Make sure user is authenticated, else redirect
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, navigate]);
+
   // Se ainda estiver carregando a autenticação, mostra um indicador de carregamento
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-pulse text-primary">Carregando...</div>
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
+  }
+
+  // If no user after auth loading is done, don't render anything (will be redirected)
+  if (!user) {
+    return null;
   }
 
   return (

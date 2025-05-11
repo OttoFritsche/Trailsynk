@@ -52,6 +52,9 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutos
+      // Important to prevent freezing UI
+      suspense: false,
+      useErrorBoundary: false,
     },
   },
 });
@@ -61,7 +64,7 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <Toaster />
-        <Sonner />
+        <Sonner position="top-right" closeButton={true} />
         <BrowserRouter>
           <Routes>
             {/* Rotas Públicas */}
@@ -71,11 +74,14 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             
             {/* Rotas Protegidas */}
-            <Route path="/app" element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }>
+            <Route 
+              path="/app" 
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<AppHome />} />
               <Route path="profile" element={<Profile />} />
               <Route path="profile/complete" element={<CompleteProfile />} />

@@ -12,6 +12,7 @@ import { RouteDetailHeader } from '@/components/routes/RouteDetailHeader';
 import { RouteDetailMetrics } from '@/components/routes/RouteDetailMetrics';
 import { RouteDetailActions } from '@/components/routes/RouteDetailActions';
 import { RouteDetailCreator } from '@/components/routes/RouteDetailCreator';
+import { routeService } from '@/services/routeService';
 
 // Interface para os detalhes da rota
 interface RouteDetails {
@@ -51,33 +52,57 @@ const RouteDetail: React.FC = () => {
   const { user } = useAuth();
   const [routeDetails, setRouteDetails] = useState<RouteDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   useEffect(() => {
     const loadRouteDetails = async () => {
+      if (!routeId) return;
+      
       setLoading(true);
+      setError(null);
+      
       try {
-        // Na implementação real, isso buscaria dados da API/Supabase
-        // const response = await fetchRouteDetails(routeId);
-        // setRouteDetails(response);
+        // Try to fetch the route from the API
+        const route = await routeService.getRouteById(routeId);
         
-        // Usando dados mock por enquanto
-        setTimeout(() => {
+        if (route) {
+          // Transform the API response to match our UI model
+          const details: RouteDetails = {
+            id: route.id,
+            name: route.name,
+            description: route.description || 'Sem descrição disponível',
+            distance: route.distance,
+            elevation: route.elevation,
+            type: (route.route_type as any) || 'mountain',
+            creatorId: route.created_by,
+            creatorName: 'Criador', // This should be fetched from user profile
+            createdAt: new Date(route.created_at),
+            isOwner: user?.id === route.created_by,
+            isFavorite: false // This should be determined by checking user's favorites
+          };
+          
+          setRouteDetails(details);
+          setIsFavorite(details.isFavorite || false);
+        } else {
+          // Fallback to mock data if API fails
+          console.log('Using mock data as fallback');
           setRouteDetails(mockRouteDetails);
           setIsFavorite(mockRouteDetails.isFavorite || false);
-          setLoading(false);
-        }, 1000);
+        }
       } catch (error) {
         console.error('Erro ao carregar detalhes da rota:', error);
-        toast.error('Não foi possível carregar os detalhes da rota');
+        setError('Não foi possível carregar os detalhes da rota');
+        // Still use mock data for demo purposes
+        setRouteDetails(mockRouteDetails);
+        setIsFavorite(mockRouteDetails.isFavorite || false);
+      } finally {
         setLoading(false);
       }
     };
 
-    if (routeId) {
-      loadRouteDetails();
-    }
-  }, [routeId]);
+    loadRouteDetails();
+  }, [routeId, user?.id]);
 
   const handleBack = () => {
     navigate('/app/routes');
@@ -92,12 +117,10 @@ const RouteDetail: React.FC = () => {
 
   const handleRideThisRoute = () => {
     toast.info('Funcionalidade "Pedalar Esta Rota" será implementada em breve');
-    // Aqui o app poderá iniciar um novo pedal usando esta rota
   };
 
   const handleShareRoute = () => {
     toast.info('Funcionalidade "Compartilhar" será implementada em breve');
-    // Aqui o app poderá compartilhar a rota com outros usuários
   };
 
   if (loading) {
@@ -123,11 +146,11 @@ const RouteDetail: React.FC = () => {
     );
   }
 
-  if (!routeDetails) {
+  if (error || !routeDetails) {
     return (
       <div className="text-center py-10">
         <h2 className="text-2xl font-bold mb-2">Rota não encontrada</h2>
-        <p className="text-muted-foreground mb-4">A rota solicitada não existe ou foi removida.</p>
+        <p className="text-muted-foreground mb-4">{error || 'A rota solicitada não existe ou foi removida.'}</p>
         <Button onClick={handleBack}>Voltar para Rotas</Button>
       </div>
     );
