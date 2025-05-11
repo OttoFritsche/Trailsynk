@@ -24,10 +24,14 @@ const NutritionSuggestionCard: React.FC<NutritionSuggestionCardProps> = ({
     if (confirm('Tem certeza que deseja excluir esta sugestão?')) {
       setIsDeleting(true);
       try {
-        const success = await nutritionService.deleteNutritionSuggestion(suggestion.id);
-        if (success && onDelete) {
+        await nutritionService.deleteNutritionSuggestion(suggestion.id);
+        if (onDelete) {
           onDelete();
         }
+        toast.success('Sugestão excluída com sucesso');
+      } catch (error) {
+        toast.error('Erro ao excluir sugestão');
+        console.error(error);
       } finally {
         setIsDeleting(false);
       }
