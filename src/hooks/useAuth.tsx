@@ -19,13 +19,14 @@ export const useAuth = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Configurando um indicador de carregamento
-    setAuthState(current => ({ ...current, loading: true, error: null }));
+    let mounted = true;
     
     // Set up auth state listener FIRST (seguindo as melhores práticas da Supabase)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);
+        
+        if (!mounted) return;
         
         setAuthState((current) => ({
           ...current,
@@ -46,7 +47,7 @@ export const useAuth = () => {
                 .eq('id', session.user.id)
                 .single();
               
-              if (!error && profileData) {
+              if (!error && profileData && mounted) {
                 const isProfileComplete = !!profileData.is_profile_complete;
                 
                 // Only redirect if not already on the complete profile page
@@ -69,16 +70,20 @@ export const useAuth = () => {
           navigate('/');
         } else if (event === 'USER_UPDATED') {
           toast.info('Perfil atualizado');
-          setAuthState((current) => ({ 
-            ...current,
-            user: session?.user ?? null
-          }));
+          if (mounted) {
+            setAuthState((current) => ({ 
+              ...current,
+              user: session?.user ?? null
+            }));
+          }
         }
       }
     );
 
     // THEN check for existing session (importante manter esta ordem)
     supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!mounted) return;
+      
       if (error) {
         console.error('Error getting session:', error);
         setAuthState({
@@ -99,6 +104,7 @@ export const useAuth = () => {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate, location.pathname]);

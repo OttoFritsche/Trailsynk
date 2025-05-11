@@ -11,19 +11,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-  const [isVerifying, setIsVerifying] = useState(true);
   
-  useEffect(() => {
-    // Set a short timeout to avoid flashing loading states
-    const timer = setTimeout(() => {
-      setIsVerifying(false);
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [user, loading]);
-
-  // Show loading state while checking authentication
-  if (loading || isVerifying) {
+  // Show loading state only while the auth state is being determined
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
