@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -51,8 +52,7 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutos
-      // Removed 'suspense' property as it's not supported in this version
-      useErrorBoundary: false,
+      // Both suspense and useErrorBoundary properties are not supported in this version
     },
   },
 });
