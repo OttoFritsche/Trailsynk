@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, Shield, Bell, Route, Users, Activity } from 'lucide-react';
+import { MapPin, ShieldCheck, Bell, Route, Users, Activity } from 'lucide-react';
 import PlanWithAIMockup from './PlanWithAIMockup';
 import RideInformedMockup from './RideInformedMockup';
 import MaintenanceMockup from './MaintenanceMockup';
@@ -34,7 +34,7 @@ export const stepsData = [
     ]
   },
   {
-    icon: <Shield className="w-8 h-8 text-primary" />,
+    icon: <ShieldCheck className="w-8 h-8 text-primary" />,
     title: "Pedale Informado",
     description: "Receba alertas em tempo real e dicas do seu assessor IA durante todo o percurso para evitar perigos e otimizar sua performance.",
     mockupContent: <RideInformedMockup />,
