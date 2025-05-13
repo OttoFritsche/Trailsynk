@@ -1,10 +1,10 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { Helmet } from 'react-helmet';
-import LoginForm, { LoginFormValues } from '@/components/auth/LoginForm';
+import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import SocialAuthButtons from '@/components/auth/SocialAuthButtons';
 
@@ -12,9 +12,7 @@ type AuthView = 'login' | 'register';
 
 const Auth: React.FC = () => {
   const [view, setView] = useState<AuthView>('login');
-  const [loading, setLoading] = useState(false);
-  
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   
   // If already authenticated, redirect to app
   if (user) {
@@ -55,7 +53,17 @@ const Auth: React.FC = () => {
         </div>
 
         {/* Right section with auth forms */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative">
+          {/* Overlay loading state when authentication is in progress */}
+          {loading && (
+            <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
+              <div className="flex flex-col items-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent mb-4"></div>
+                <p className="text-primary font-medium">Verificando autenticação...</p>
+              </div>
+            </div>
+          )}
+          
           <Card className="w-full max-w-md">
             <CardHeader>
               <div className="flex flex-col items-center mb-4 lg:hidden">

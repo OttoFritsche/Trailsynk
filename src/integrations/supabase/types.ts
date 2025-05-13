@@ -626,6 +626,63 @@ export type Database = {
           },
         ]
       }
+      nutrition_suggestions: {
+        Row: {
+          activity_id: string | null
+          calories: number | null
+          carbs: number | null
+          created_at: string | null
+          description: string
+          fats: number | null
+          id: string
+          proteins: number | null
+          recommended_at: string | null
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_id?: string | null
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          description: string
+          fats?: number | null
+          id?: string
+          proteins?: number | null
+          recommended_at?: string | null
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_id?: string | null
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          description?: string
+          fats?: number | null
+          id?: string
+          proteins?: number | null
+          recommended_at?: string | null
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrition_suggestions_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "activities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nutrition_suggestions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       participants: {
         Row: {
           conversation_id: string | null
@@ -673,6 +730,7 @@ export type Database = {
           height_cm: number | null
           id: string
           is_profile_complete: boolean | null
+          nutrition_profile_id: string | null
           objectives: Json | null
           onboarding_complete: boolean | null
           pedal_frequency: string | null
@@ -693,6 +751,7 @@ export type Database = {
           height_cm?: number | null
           id: string
           is_profile_complete?: boolean | null
+          nutrition_profile_id?: string | null
           objectives?: Json | null
           onboarding_complete?: boolean | null
           pedal_frequency?: string | null
@@ -713,6 +772,7 @@ export type Database = {
           height_cm?: number | null
           id?: string
           is_profile_complete?: boolean | null
+          nutrition_profile_id?: string | null
           objectives?: Json | null
           onboarding_complete?: boolean | null
           pedal_frequency?: string | null
@@ -723,7 +783,15 @@ export type Database = {
           weight?: number | null
           weight_kg?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_nutrition_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       routes_data: {
         Row: {
@@ -910,6 +978,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_nutrition_profiles: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          created_at: string | null
+          dietary_restrictions: string[] | null
+          goals: string[] | null
+          height: number | null
+          id: string
+          other_restrictions: string | null
+          updated_at: string | null
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          created_at?: string | null
+          dietary_restrictions?: string[] | null
+          goals?: string[] | null
+          height?: number | null
+          id?: string
+          other_restrictions?: string | null
+          updated_at?: string | null
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          created_at?: string | null
+          dietary_restrictions?: string[] | null
+          goals?: string[] | null
+          height?: number | null
+          id?: string
+          other_restrictions?: string | null
+          updated_at?: string | null
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_nutrition_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_stats: {
         Row: {
