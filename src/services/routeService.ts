@@ -259,14 +259,17 @@ export const routeService = {
         return false;
       }
 
-      // Create a properly typed parameter object
+      // Create parameters object without type annotation
       const params = { 
         route_id: routeId 
       };
       
       try {
-        // Fix: Use the correct approach without explicit type parameters
-        const { error: rpcError } = await supabase.rpc('increment_route_likes', params);
+        // Use type assertion to tell TypeScript to trust our function name
+        const { error: rpcError } = await supabase.rpc(
+          'increment_route_likes' as any, 
+          params
+        );
         
         if (rpcError) {
           throw rpcError; // Throw to go to fallback approach
