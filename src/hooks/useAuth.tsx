@@ -31,6 +31,8 @@ export const useAuth = () => {
       async (event, session) => {
         if (!isMounted.current) return;
         
+        console.log("Auth state change event:", event);
+        
         // Update session and user immediately
         setAuthState((current) => ({
           ...current,
@@ -73,16 +75,29 @@ export const useAuth = () => {
               } else {
                 if (!isMounted.current) return;
                 setAuthState(current => ({ ...current, loading: false }));
+                
+                // Even if we couldn't get profile data, still redirect to app
+                if (location.pathname === '/auth') {
+                  navigate('/app', { replace: true });
+                }
               }
             } catch (error) {
               console.error('Error checking profile status:', error);
               if (!isMounted.current) return;
               setAuthState(current => ({ ...current, loading: false }));
+              
+              // Even if there was an error, still redirect to app
+              if (location.pathname === '/auth') {
+                navigate('/app', { replace: true });
+              }
             }
           }
         } else if (event === 'SIGNED_OUT') {
           toast.info('Você saiu da sua conta');
           setAuthState(current => ({ ...current, loading: false }));
+          
+          // Redirect to auth page on sign out
+          navigate('/auth', { replace: true });
         }
       }
     );
@@ -91,11 +106,18 @@ export const useAuth = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!isMounted.current) return;
       
+      console.log("Initial session check:", session ? "Session exists" : "No session");
+      
       setAuthState({
         session,
         user: session?.user ?? null,
         loading: false,
       });
+      
+      // If user is authenticated and on auth page, redirect to app
+      if (session?.user && location.pathname === '/auth') {
+        navigate('/app', { replace: true });
+      }
     });
 
     return () => {

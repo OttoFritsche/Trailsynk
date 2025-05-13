@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { Helmet } from 'react-helmet';
@@ -11,16 +11,36 @@ import SocialAuthButtons from '@/components/auth/SocialAuthButtons';
 type AuthView = 'login' | 'register';
 
 const Auth: React.FC = () => {
-  const [view, setView] = useState<AuthView>('login');
+  const [searchParams] = useSearchParams();
+  const initialView = searchParams.get('mode') === 'signup' ? 'register' : 'login';
+  const [view, setView] = useState<AuthView>(initialView);
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Update view based on URL params when they change
+    const mode = searchParams.get('mode');
+    if (mode === 'signup' && view !== 'register') {
+      setView('register');
+    } else if (mode === 'login' && view !== 'login') {
+      setView('login');
+    }
+  }, [searchParams, view]);
   
   // If already authenticated, redirect to app
-  if (user) {
-    return <Navigate to="/app" replace />;
-  }
+  useEffect(() => {
+    if (user) {
+      console.log("Auth component: User is authenticated, redirecting to /app");
+      navigate('/app', { replace: true });
+    }
+  }, [user, navigate]);
   
   const toggleView = () => {
-    setView(view === 'login' ? 'register' : 'login');
+    const newView = view === 'login' ? 'register' : 'login';
+    setView(newView);
+    // Update URL params
+    const newMode = newView === 'login' ? 'login' : 'signup';
+    navigate(`/auth?mode=${newMode}`, { replace: true });
   };
 
   const handleSuccessfulRegister = (username: string) => {
