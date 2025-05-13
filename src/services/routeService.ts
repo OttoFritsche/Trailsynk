@@ -260,16 +260,13 @@ export const routeService = {
       }
 
       // Create a properly typed parameter object
-      const params: IncrementRouteLikesParams = { 
+      const params = { 
         route_id: routeId 
       };
       
       try {
-        // Fix: Remove explicit type parameters and just pass the correctly typed params object
-        const { error: rpcError } = await supabase.rpc(
-          'increment_route_likes', 
-          params
-        );
+        // Fix: Use the correct approach without explicit type parameters
+        const { error: rpcError } = await supabase.rpc('increment_route_likes', params);
         
         if (rpcError) {
           throw rpcError; // Throw to go to fallback approach
