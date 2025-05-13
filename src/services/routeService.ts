@@ -87,6 +87,11 @@ interface IncrementRouteLikesParams {
   route_id: string;
 }
 
+// Define the return type for the RPC function
+type IncrementRouteLikesResult = {
+  success: boolean;
+}
+
 export const routeService = {
   async getUserRoutes(userId: string): Promise<Route[]> {
     try {
@@ -260,8 +265,8 @@ export const routeService = {
       };
       
       try {
-        // Use the properly typed params object for the RPC call
-        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesParams>(
+        // Use the properly typed params object for the RPC call with both type parameters
+        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesParams, IncrementRouteLikesResult>(
           'increment_route_likes', 
           params
         );
