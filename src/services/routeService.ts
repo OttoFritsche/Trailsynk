@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Json } from '@/integrations/supabase/types';
@@ -184,47 +183,38 @@ export const routeService = {
   
   async searchRoutes(query: string, filters?: RouteFilters): Promise<Route[]> {
     try {
-      // Fix for excessive type instantiation: use type assertion
-      const baseQuery = supabase
+      // Start with a basic query to avoid TypeScript depth issues
+      const { data: allRoutes, error: queryError } = await supabase
         .from('routes_data')
         .select('*');
         
-      // Chain filters one by one to avoid type depth issues
-      let finalQuery = baseQuery.eq('is_public', true).ilike('name', `%${query}%`);
+      if (queryError) throw queryError;
       
-      // Apply filters if provided
-      if (filters) {
-        if (filters.distance_min !== undefined) {
-          finalQuery = finalQuery.gte('distance_km', filters.distance_min);
-        }
-        
-        if (filters.distance_max !== undefined) {
-          finalQuery = finalQuery.lte('distance_km', filters.distance_max);
-        }
-        
-        if (filters.elevation_min !== undefined) {
-          finalQuery = finalQuery.gte('elevation_gain_m', filters.elevation_min);
-        }
-        
-        if (filters.elevation_max !== undefined) {
-          finalQuery = finalQuery.lte('elevation_gain_m', filters.elevation_max);
-        }
-        
-        if (filters.difficulty) {
-          finalQuery = finalQuery.eq('difficulty', filters.difficulty);
-        }
-        
-        if (filters.route_type) {
-          finalQuery = finalQuery.eq('type', filters.route_type);
-        }
-      }
+      if (!allRoutes) return [];
       
-      const { data, error } = await finalQuery;
+      // Apply filters in memory to avoid TypeScript depth errors
+      let filteredRoutes = allRoutes.filter(route => {
+        // Apply is_public filter
+        if (!(route.is_public ?? false)) return false;
         
-      if (error) throw error;
+        // Apply name search filter
+        if (!route.name.toLowerCase().includes(query.toLowerCase())) return false;
+        
+        // Apply additional filters if provided
+        if (filters) {
+          if (filters.distance_min !== undefined && (route.distance_km ?? 0) < filters.distance_min) return false;
+          if (filters.distance_max !== undefined && (route.distance_km ?? 0) > filters.distance_max) return false;
+          if (filters.elevation_min !== undefined && (route.elevation_gain_m ?? 0) < filters.elevation_min) return false;
+          if (filters.elevation_max !== undefined && (route.elevation_gain_m ?? 0) > filters.elevation_max) return false;
+          if (filters.difficulty && route.difficulty !== filters.difficulty) return false;
+          if (filters.route_type && route.type !== filters.route_type) return false;
+        }
+        
+        return true;
+      });
       
       // Map database results to application Route interface
-      return data ? data.map(mapDbRouteToAppRoute) : [];
+      return filteredRoutes.map(mapDbRouteToAppRoute);
     } catch (error) {
       console.error('Erro ao buscar rotas:', error);
       toast.error('Não foi possível pesquisar rotas');
@@ -241,11 +231,20 @@ export const routeService = {
         return false;
       }
 
-      // Fix for "string not assignable to never" - use a properly typed parameter object
+      // Fix for "string not assignable to never" error
+      // Create a properly typed parameter object
+      const rpcParams = { 
+        route_id: routeId 
+      } as Record<string, any>;
+      
       try {
-        // Use a simple type assertion to avoid excessive type instantiation
-        const params: Record<string, any> = { route_id: routeId };
-        await supabase.rpc('increment_route_likes', params);
+        // Try the RPC function first
+        const { error: rpcError } = await supabase.rpc('increment_route_likes', rpcParams);
+        
+        if (rpcError) {
+          throw rpcError; // Throw to go to fallback approach
+        }
+        
         toast.success('Você curtiu esta rota');
         return true;
       } catch (rpcError) {
@@ -267,8 +266,10 @@ export const routeService = {
         if (routeData && 'likes_count' in routeData) {
           const currentLikes = (routeData as any).likes_count || 0;
           
-          // Use a simple Record object for the update to avoid type issues
-          const updateData: Record<string, any> = { likes_count: currentLikes + 1 };
+          // Use a typed object for the update
+          const updateData = { 
+            likes_count: currentLikes + 1 
+          } as Record<string, any>;
           
           const { error: updateError } = await supabase
             .from('routes_data')
