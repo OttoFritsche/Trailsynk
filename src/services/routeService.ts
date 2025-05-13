@@ -254,16 +254,16 @@ export const routeService = {
         return false;
       }
 
-      // Create a properly typed parameter object with explicit TypeScript typing
-      const rpcParams: IncrementRouteLikesParams = { 
+      // Create a properly typed parameter object
+      const params = { 
         route_id: routeId 
       };
       
       try {
-        // Try the RPC function first
+        // Use a type assertion to tell TypeScript about the expected parameter type
         const { error: rpcError } = await supabase.rpc(
           'increment_route_likes', 
-          rpcParams as IncrementRouteLikesParams
+          params
         );
         
         if (rpcError) {
