@@ -1,6 +1,6 @@
 
-import { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { ReactNode, useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
@@ -10,24 +10,14 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const [isChecking, setIsChecking] = useState(true);
-
-  // Enhanced authentication check with retry mechanism
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        console.log("ProtectedRoute: User is authenticated, allowing access");
-        setIsChecking(false);
-      } else {
-        console.log("ProtectedRoute: User is not authenticated, redirecting to /auth");
-        navigate('/auth', { state: { from: location }, replace: true });
-      }
-    }
-  }, [user, loading, navigate, location]);
   
-  // Show loading state while checking authentication
-  if (loading || isChecking) {
+  // For debugging
+  useEffect(() => {
+    console.log("ProtectedRoute state:", { user, loading, currentPath: location.pathname });
+  }, [user, loading, location.pathname]);
+  
+  // While checking authentication status
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center">
@@ -38,7 +28,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
   
+  // If not authenticated, redirect to auth page
+  if (!user) {
+    console.log("User not authenticated, redirecting to /auth");
+    return <Navigate to="/auth" state={{ from: location }} replace />;
+  }
+  
   // If authenticated, render the protected content
+  console.log("User authenticated, rendering content");
   return <>{children}</>;
 };
 

@@ -26,6 +26,8 @@ export const useAuth = () => {
   }, []);
 
   useEffect(() => {
+    console.log("Setting up auth state listener");
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -43,55 +45,18 @@ export const useAuth = () => {
         if (event === 'SIGNED_IN') {
           toast.success('Login realizado com sucesso!');
           
-          // Check profile completion status for onboarding flow
-          if (session?.user) {
-            try {
-              setAuthState(current => ({ ...current, loading: true }));
-              
-              const { data: profileData, error } = await supabase
-                .from('profiles')
-                .select('is_profile_complete, username')
-                .eq('id', session.user.id)
-                .single();
-              
-              if (!isMounted.current) return;
-              
-              if (!error && profileData) {
-                const isProfileComplete = !!profileData.is_profile_complete;
-                
-                // Small delay to ensure state updates are processed
-                setTimeout(() => {
-                  if (!isMounted.current) return;
-                  
-                  setAuthState(current => ({ ...current, loading: false }));
-                  
-                  // Redirect based on profile completion status
-                  if (!isProfileComplete) {
-                    navigate('/app/profile/complete', { replace: true });
-                  } else if (location.pathname === '/auth') {
-                    navigate('/app', { replace: true });
-                  }
-                }, 100);
-              } else {
-                if (!isMounted.current) return;
-                setAuthState(current => ({ ...current, loading: false }));
-                
-                // Even if we couldn't get profile data, still redirect to app
-                if (location.pathname === '/auth') {
-                  navigate('/app', { replace: true });
-                }
-              }
-            } catch (error) {
-              console.error('Error checking profile status:', error);
-              if (!isMounted.current) return;
-              setAuthState(current => ({ ...current, loading: false }));
-              
-              // Even if there was an error, still redirect to app
-              if (location.pathname === '/auth') {
-                navigate('/app', { replace: true });
-              }
+          // Clear loading state immediately after sign in
+          setTimeout(() => {
+            if (!isMounted.current) return;
+            
+            setAuthState(current => ({ ...current, loading: false }));
+            
+            // Redirect based on current path
+            if (location.pathname === '/auth') {
+              console.log("Auth event: redirecting to /app from /auth");
+              navigate('/app', { replace: true });
             }
-          }
+          }, 100);
         } else if (event === 'SIGNED_OUT') {
           toast.info('Você saiu da sua conta');
           setAuthState(current => ({ ...current, loading: false }));
@@ -111,11 +76,12 @@ export const useAuth = () => {
       setAuthState({
         session,
         user: session?.user ?? null,
-        loading: false,
+        loading: false,  // Important: Set loading to false after session check
       });
       
       // If user is authenticated and on auth page, redirect to app
       if (session?.user && location.pathname === '/auth') {
+        console.log("Initial session check: redirecting to /app from /auth");
         navigate('/app', { replace: true });
       }
     });
@@ -145,11 +111,10 @@ export const useAuth = () => {
     setAuthState(current => ({ ...current, loading: true }));
     const result = await signOut();
     
-    if (result.success) {
-      navigate('/auth', { replace: true });
-    } else {
+    if (!result.success) {
       setAuthState(current => ({ ...current, loading: false }));
     }
+    // If successful, let the auth state change handler handle redirection
     
     return result;
   };
