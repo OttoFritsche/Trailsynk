@@ -184,40 +184,42 @@ export const routeService = {
   
   async searchRoutes(query: string, filters?: RouteFilters): Promise<Route[]> {
     try {
-      let routesQuery = supabase
+      // Fix for excessive type instantiation: use type assertion
+      const baseQuery = supabase
         .from('routes_data')
-        .select('*')
-        .eq('is_public', true)
-        .ilike('name', `%${query}%`);
+        .select('*');
+        
+      // Chain filters one by one to avoid type depth issues
+      let finalQuery = baseQuery.eq('is_public', true).ilike('name', `%${query}%`);
       
       // Apply filters if provided
       if (filters) {
         if (filters.distance_min !== undefined) {
-          routesQuery = routesQuery.gte('distance_km', filters.distance_min);
+          finalQuery = finalQuery.gte('distance_km', filters.distance_min);
         }
         
         if (filters.distance_max !== undefined) {
-          routesQuery = routesQuery.lte('distance_km', filters.distance_max);
+          finalQuery = finalQuery.lte('distance_km', filters.distance_max);
         }
         
         if (filters.elevation_min !== undefined) {
-          routesQuery = routesQuery.gte('elevation_gain_m', filters.elevation_min);
+          finalQuery = finalQuery.gte('elevation_gain_m', filters.elevation_min);
         }
         
         if (filters.elevation_max !== undefined) {
-          routesQuery = routesQuery.lte('elevation_gain_m', filters.elevation_max);
+          finalQuery = finalQuery.lte('elevation_gain_m', filters.elevation_max);
         }
         
         if (filters.difficulty) {
-          routesQuery = routesQuery.eq('difficulty', filters.difficulty);
+          finalQuery = finalQuery.eq('difficulty', filters.difficulty);
         }
         
         if (filters.route_type) {
-          routesQuery = routesQuery.eq('type', filters.route_type);
+          finalQuery = finalQuery.eq('type', filters.route_type);
         }
       }
       
-      const { data, error } = await routesQuery;
+      const { data, error } = await finalQuery;
         
       if (error) throw error;
       
@@ -239,11 +241,11 @@ export const routeService = {
         return false;
       }
 
-      // First try to use RPC function (if it exists)
+      // Fix for "string not assignable to never" - use a properly typed parameter object
       try {
-        // Note: Using 'any' here to avoid the excessive type instantiation error
-        // The actual parameter is just { route_id: string }
-        await supabase.rpc('increment_route_likes', { route_id: routeId } as any);
+        // Use a simple type assertion to avoid excessive type instantiation
+        const params: Record<string, any> = { route_id: routeId };
+        await supabase.rpc('increment_route_likes', params);
         toast.success('Você curtiu esta rota');
         return true;
       } catch (rpcError) {
@@ -262,16 +264,15 @@ export const routeService = {
         }
 
         // Check if the likes_count column exists by checking if it's in the returned data
-        // Use type assertion for updating - we know this might fail if the column doesn't exist
         if (routeData && 'likes_count' in routeData) {
           const currentLikes = (routeData as any).likes_count || 0;
           
+          // Use a simple Record object for the update to avoid type issues
+          const updateData: Record<string, any> = { likes_count: currentLikes + 1 };
+          
           const { error: updateError } = await supabase
             .from('routes_data')
-            .update({ 
-              // @ts-ignore - Ignoring type error since the column might exist at runtime
-              likes_count: currentLikes + 1 
-            } as any)
+            .update(updateData)
             .eq('id', routeId);
           
           if (updateError) {
