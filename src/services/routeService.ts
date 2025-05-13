@@ -250,10 +250,10 @@ export const routeService = {
         return false;
       }
 
-      // Create a properly typed parameter object
-      const rpcParams = { 
+      // Create a properly typed parameter object with explicit TypeScript typing
+      const rpcParams: { route_id: string } = { 
         route_id: routeId 
-      } as Record<string, any>;
+      };
       
       try {
         // Try the RPC function first
