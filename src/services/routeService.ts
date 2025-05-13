@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Json } from '@/integrations/supabase/types';
@@ -266,8 +265,8 @@ export const routeService = {
       };
       
       try {
-        // Fix: Specify both input and output type parameters for rpc
-        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesParams, IncrementRouteLikesResult>(
+        // Fix: Remove explicit type parameters and just pass the correctly typed params object
+        const { error: rpcError } = await supabase.rpc(
           'increment_route_likes', 
           params
         );
