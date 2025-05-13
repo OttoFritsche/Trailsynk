@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Json } from '@/integrations/supabase/types';
@@ -82,6 +81,11 @@ const mapAppRouteToDbRoute = (appRoute: Omit<Route, 'id' | 'created_by' | 'creat
     type: appRoute.route_type
   };
 };
+
+// Define the RPC function parameter types
+interface IncrementRouteLikesParams {
+  route_id: string;
+}
 
 export const routeService = {
   async getUserRoutes(userId: string): Promise<Route[]> {
@@ -251,13 +255,16 @@ export const routeService = {
       }
 
       // Create a properly typed parameter object with explicit TypeScript typing
-      const rpcParams: { route_id: string } = { 
+      const rpcParams: IncrementRouteLikesParams = { 
         route_id: routeId 
       };
       
       try {
         // Try the RPC function first
-        const { error: rpcError } = await supabase.rpc('increment_route_likes', rpcParams);
+        const { error: rpcError } = await supabase.rpc(
+          'increment_route_likes', 
+          rpcParams as IncrementRouteLikesParams
+        );
         
         if (rpcError) {
           throw rpcError; // Throw to go to fallback approach
