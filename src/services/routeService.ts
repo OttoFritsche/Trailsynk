@@ -32,14 +32,15 @@ export const routeService = {
   async getUserRoutes(userId: string): Promise<Route[]> {
     try {
       const { data, error } = await supabase
-        .from('routes')
+        .from('routes_data')
         .select('*')
-        .eq('created_by', userId)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
         
       if (error) throw error;
       
-      return data || [];
+      // Cast the data to Route[] type
+      return data as unknown as Route[];
     } catch (error) {
       console.error('Erro ao buscar rotas do usuário:', error);
       toast.error('Não foi possível carregar suas rotas');
@@ -50,14 +51,14 @@ export const routeService = {
   async getRouteById(routeId: string): Promise<Route | null> {
     try {
       const { data, error } = await supabase
-        .from('routes')
+        .from('routes_data')
         .select('*')
         .eq('id', routeId)
         .single();
         
       if (error) throw error;
       
-      return data;
+      return data as unknown as Route;
     } catch (error) {
       console.error('Erro ao buscar detalhes da rota:', error);
       toast.error('Não foi possível carregar os detalhes da rota');
@@ -75,11 +76,11 @@ export const routeService = {
       }
       
       const { data, error } = await supabase
-        .from('routes')
+        .from('routes_data')
         .insert([
           {
             ...routeData,
-            created_by: userData.user.id,
+            user_id: userData.user.id, // Note: using user_id instead of created_by to match the schema
           }
         ])
         .select('id')
@@ -99,7 +100,7 @@ export const routeService = {
   async updateRoute(routeId: string, updates: Partial<Route>): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('routes')
+        .from('routes_data')
         .update(updates)
         .eq('id', routeId);
         
@@ -117,7 +118,7 @@ export const routeService = {
   async deleteRoute(routeId: string): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('routes')
+        .from('routes_data')
         .delete()
         .eq('id', routeId);
         
@@ -135,7 +136,7 @@ export const routeService = {
   async searchRoutes(query: string, filters?: RouteFilters): Promise<Route[]> {
     try {
       let routesQuery = supabase
-        .from('routes')
+        .from('routes_data')
         .select('*')
         .eq('is_public', true)
         .ilike('name', `%${query}%`);
@@ -143,19 +144,19 @@ export const routeService = {
       // Aplicar filtros se fornecidos
       if (filters) {
         if (filters.distance_min) {
-          routesQuery = routesQuery.gte('distance', filters.distance_min);
+          routesQuery = routesQuery.gte('distance_km', filters.distance_min);
         }
         
         if (filters.distance_max) {
-          routesQuery = routesQuery.lte('distance', filters.distance_max);
+          routesQuery = routesQuery.lte('distance_km', filters.distance_max);
         }
         
         if (filters.elevation_min) {
-          routesQuery = routesQuery.gte('elevation', filters.elevation_min);
+          routesQuery = routesQuery.gte('elevation_gain_m', filters.elevation_min);
         }
         
         if (filters.elevation_max) {
-          routesQuery = routesQuery.lte('elevation', filters.elevation_max);
+          routesQuery = routesQuery.lte('elevation_gain_m', filters.elevation_max);
         }
         
         if (filters.difficulty) {
@@ -163,7 +164,7 @@ export const routeService = {
         }
         
         if (filters.route_type) {
-          routesQuery = routesQuery.eq('route_type', filters.route_type);
+          routesQuery = routesQuery.eq('type', filters.route_type);
         }
       }
       
@@ -171,7 +172,7 @@ export const routeService = {
         
       if (error) throw error;
       
-      return data || [];
+      return data as unknown as Route[];
     } catch (error) {
       console.error('Erro ao buscar rotas:', error);
       toast.error('Não foi possível pesquisar rotas');
