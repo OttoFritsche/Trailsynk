@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Pagination,
@@ -71,6 +70,9 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
   if (totalPages <= 1) {
     return null;
   }
+
+  const canGoNext = typeof currentPage === 'number' && typeof totalPages === 'number' && currentPage < totalPages;
+  const canGoPrevious = typeof currentPage === 'number' && currentPage > 1;
 
   return (
     <Pagination className={cn("my-4", className)}>
