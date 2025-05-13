@@ -58,19 +58,9 @@
   }
 }
 
-/* Further reduced spacing for sections */
+/* Section spacing */
 section {
-  @apply py-5; /* Reduced from py-6 */
-}
-
-/* Better spacing between sections */
-section + section {
-  @apply pt-0;
-}
-
-/* Reduced margin between section elements */
-section > div > div {
-  @apply mb-2; /* Reduced from mb-3 */
+  @apply relative overflow-hidden;
 }
 
 /* Animation classes */
@@ -97,4 +87,53 @@ section > div > div {
 /* Small text utility */
 .text-2xs {
   font-size: 0.65rem;
+}
+
+/* Card hover effects */
+.hover-card {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Custom animation keyframes */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-soft-pulse {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* Gradient text effect */
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dark;
+}
+
+/* Glass effect */
+.glass {
+  @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+
+.glass-dark {
+  @apply bg-black/10 backdrop-blur-md border border-black/20;
 }

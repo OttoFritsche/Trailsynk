@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Bike } from 'lucide-react';
 
 const WaitlistSection: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -59,16 +60,32 @@ const WaitlistSection: React.FC = () => {
   };
 
   return (
-    <section id="waitlist" className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="bg-primary p-1">
-            <div className="bg-white p-8 sm:p-12">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl sm:text-4xl font-bold text-secondary mb-4">
+    <section id="waitlist" className="py-20 relative overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="/lovable-uploads/711ca6c8-0729-44dd-aaa8-e5bb774f13c6.png" 
+          alt="Vista panorâmica de montanhas" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/80"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+            <div className="p-8 sm:p-12">
+              <div className="flex justify-center mb-8">
+                <div className="bg-primary p-4 rounded-full shadow-lg">
+                  <Bike className="h-10 w-10 text-white" />
+                </div>
+              </div>
+              
+              <div className="text-center mb-12">
+                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
                   Seja o Primeiro a Ter o Futuro do Ciclismo nas Mãos!
                 </h2>
-                <p className="text-lg text-secondary/70">
+                <p className="text-lg text-white/80">
                   Inscreva-se no TrailSynk e receba novidades exclusivas.
                 </p>
               </div>
@@ -80,7 +97,7 @@ const WaitlistSection: React.FC = () => {
                     placeholder="Seu melhor email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-grow py-6 px-4 text-lg"
+                    className="flex-grow py-6 px-4 text-lg bg-white/20 border-white/40 text-white placeholder:text-white/60"
                     required
                   />
                   <Button 
@@ -93,7 +110,7 @@ const WaitlistSection: React.FC = () => {
                 </div>
               </form>
 
-              <p className="text-xs text-center mt-4 text-secondary/60">
+              <p className="text-sm text-center mt-6 text-white/60">
                 Sua jornada para um pedal mais inteligente e seguro começa aqui. Zero spam, apenas novidades incríveis do TrailSynk.
               </p>
             </div>
