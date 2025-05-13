@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Json } from '@/integrations/supabase/types';
@@ -28,17 +29,35 @@ interface RouteFilters {
   route_type?: string;
 }
 
+// Extended interface to represent the database route schema
+interface DbRoute {
+  id: string;
+  name: string;
+  description?: string;
+  distance_km?: number;
+  elevation_gain_m?: number;
+  coordinates: Json;
+  user_id?: string;
+  created_at?: string;
+  difficulty?: string;
+  image_url?: string;
+  is_public?: boolean;
+  tags?: string[];
+  likes_count?: number;
+  type?: string;
+}
+
 // Adapter functions to map between database schema and application interface
-const mapDbRouteToAppRoute = (dbRoute: any): Route => {
+const mapDbRouteToAppRoute = (dbRoute: DbRoute): Route => {
   return {
     id: dbRoute.id,
     name: dbRoute.name,
     description: dbRoute.description,
     distance: dbRoute.distance_km || 0,
     elevation: dbRoute.elevation_gain_m || 0,
-    created_by: dbRoute.user_id,
-    created_at: dbRoute.created_at,
-    difficulty: dbRoute.difficulty,
+    created_by: dbRoute.user_id || '',
+    created_at: dbRoute.created_at || new Date().toISOString(),
+    difficulty: dbRoute.difficulty as 'easy' | 'moderate' | 'hard',
     route_data: dbRoute.coordinates,
     image_url: dbRoute.image_url,
     is_public: dbRoute.is_public || false,
@@ -76,7 +95,7 @@ export const routeService = {
       if (error) throw error;
       
       // Map database results to application Route interface
-      return data ? data.map(mapDbRouteToAppRoute) : [];
+      return data ? data.map((route: DbRoute) => mapDbRouteToAppRoute(route)) : [];
     } catch (error) {
       console.error('Erro ao buscar rotas do usuário:', error);
       toast.error('Não foi possível carregar suas rotas');
@@ -94,7 +113,7 @@ export const routeService = {
         
       if (error) throw error;
       
-      return data ? mapDbRouteToAppRoute(data) : null;
+      return data ? mapDbRouteToAppRoute(data as DbRoute) : null;
     } catch (error) {
       console.error('Erro ao buscar detalhes da rota:', error);
       toast.error('Não foi possível carregar os detalhes da rota');
@@ -193,8 +212,8 @@ export const routeService = {
       if (!allRoutes) return [];
       
       // Apply filters in memory to avoid TypeScript depth errors
-      let filteredRoutes = allRoutes.filter(route => {
-        // Apply is_public filter
+      let filteredRoutes = allRoutes.filter((route: DbRoute) => {
+        // Apply is_public filter - default to false if undefined
         if (!(route.is_public ?? false)) return false;
         
         // Apply name search filter
@@ -214,7 +233,7 @@ export const routeService = {
       });
       
       // Map database results to application Route interface
-      return filteredRoutes.map(mapDbRouteToAppRoute);
+      return filteredRoutes.map((route: DbRoute) => mapDbRouteToAppRoute(route));
     } catch (error) {
       console.error('Erro ao buscar rotas:', error);
       toast.error('Não foi possível pesquisar rotas');
@@ -231,7 +250,6 @@ export const routeService = {
         return false;
       }
 
-      // Fix for "string not assignable to never" error
       // Create a properly typed parameter object
       const rpcParams = { 
         route_id: routeId 
