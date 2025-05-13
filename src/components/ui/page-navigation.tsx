@@ -49,8 +49,9 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
         range.unshift('ellipsis');
       }
       
-      // Fix: Type check before comparison
-      if (range[range.length - 1] !== undefined && typeof range[range.length - 1] === 'number' && range[range.length - 1] < totalPages - 1) {
+      // Fix: Type check before comparison and explicitly check as number
+      const lastItem = range[range.length - 1];
+      if (lastItem !== undefined && typeof lastItem === 'number' && lastItem < totalPages - 1) {
         range.push('ellipsis');
       }
     }
