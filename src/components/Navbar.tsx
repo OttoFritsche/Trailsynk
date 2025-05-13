@@ -66,17 +66,31 @@ const Navbar: React.FC = () => {
                 name={item.name}
                 href={item.href}
                 active={`#${activeItem}` === item.href}
+                isScrolled={scrolled}
               />
             ))}
           </div>
           <div className="flex items-center space-x-3">
             <Link to="/auth?mode=login">
-              <Button variant="ghost" size="sm" className="font-medium">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn(
+                  "font-medium",
+                  !scrolled && "text-white hover:text-gray-200 hover:bg-white/10"
+                )}
+              >
                 Login
               </Button>
             </Link>
             <Link to="/auth?mode=signup">
-              <Button size="sm" className="font-medium">
+              <Button 
+                size="sm" 
+                className={cn(
+                  "font-medium",
+                  !scrolled && "bg-white text-primary hover:bg-gray-200"
+                )}
+              >
                 Cadastre-se
               </Button>
             </Link>
@@ -85,7 +99,7 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Navigation */}
         <MobileNav 
-          navItems={NAV_ITEMS} 
+          navItems={NAV_ITEMS.map(item => ({...item, isScrolled: scrolled}))}
           open={mobileMenuOpen} 
           setOpen={setMobileMenuOpen} 
         />

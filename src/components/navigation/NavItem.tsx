@@ -8,6 +8,7 @@ export interface NavItemProps {
   active?: boolean;
   onClick?: () => void;
   className?: string;
+  isScrolled?: boolean;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -16,14 +17,18 @@ const NavItem: React.FC<NavItemProps> = ({
   active,
   onClick,
   className,
+  isScrolled = false,
 }) => {
   return (
     <a
       href={href}
       onClick={onClick}
       className={cn(
-        "text-gray-600 hover:text-primary transition-colors font-medium text-sm",
-        active && "text-primary",
+        "transition-colors font-medium text-sm",
+        isScrolled 
+          ? "text-gray-600 hover:text-primary" 
+          : "text-white hover:text-gray-200",
+        active && (isScrolled ? "text-primary" : "text-gray-200"),
         className
       )}
       aria-current={active ? 'page' : undefined}
