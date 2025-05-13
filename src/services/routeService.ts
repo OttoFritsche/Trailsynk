@@ -266,8 +266,8 @@ export const routeService = {
       };
       
       try {
-        // Fix: Use the generic type for the response only, not for the parameters
-        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesResult>(
+        // Fix: Specify both input and output type parameters for rpc
+        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesParams, IncrementRouteLikesResult>(
           'increment_route_likes', 
           params
         );
