@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Json } from '@/integrations/supabase/types';
@@ -259,15 +260,16 @@ export const routeService = {
         return false;
       }
 
-      // Create parameters object without type annotation
+      // Create parameters object
       const params = { 
         route_id: routeId 
       };
       
       try {
-        // Use type assertion to tell TypeScript to trust our function name
+        // Use a generic call without type parameters to avoid TypeScript errors
         const { error: rpcError } = await supabase.rpc(
-          'increment_route_likes' as any, 
+          // @ts-ignore - Ignoring TypeScript error for this RPC call
+          'increment_route_likes',
           params
         );
         
