@@ -82,7 +82,7 @@ const mapAppRouteToDbRoute = (appRoute: Omit<Route, 'id' | 'created_by' | 'creat
   };
 };
 
-// Define the RPC function parameter types with the correct type
+// Define the RPC function parameter types
 interface IncrementRouteLikesParams {
   route_id: string;
 }
@@ -265,8 +265,8 @@ export const routeService = {
       };
       
       try {
-        // Use the properly typed params object for the RPC call with both type parameters
-        const { error: rpcError } = await supabase.rpc<IncrementRouteLikesParams, IncrementRouteLikesResult>(
+        // Fix: Remove type parameters from rpc call and use type assertion if needed
+        const { error: rpcError } = await supabase.rpc(
           'increment_route_likes', 
           params
         );
