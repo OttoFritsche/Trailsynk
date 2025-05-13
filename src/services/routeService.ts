@@ -184,37 +184,36 @@ export const routeService = {
   
   async searchRoutes(query: string, filters?: RouteFilters): Promise<Route[]> {
     try {
-      // Use explicit type definition to avoid excessive type instantiation
-      const routesQuery = supabase
+      let routesQuery = supabase
         .from('routes_data')
         .select('*')
         .eq('is_public', true)
         .ilike('name', `%${query}%`);
       
-      // Aplicar filtros se fornecidos
+      // Apply filters if provided
       if (filters) {
-        if (filters.distance_min) {
-          routesQuery.gte('distance_km', filters.distance_min);
+        if (filters.distance_min !== undefined) {
+          routesQuery = routesQuery.gte('distance_km', filters.distance_min);
         }
         
-        if (filters.distance_max) {
-          routesQuery.lte('distance_km', filters.distance_max);
+        if (filters.distance_max !== undefined) {
+          routesQuery = routesQuery.lte('distance_km', filters.distance_max);
         }
         
-        if (filters.elevation_min) {
-          routesQuery.gte('elevation_gain_m', filters.elevation_min);
+        if (filters.elevation_min !== undefined) {
+          routesQuery = routesQuery.gte('elevation_gain_m', filters.elevation_min);
         }
         
-        if (filters.elevation_max) {
-          routesQuery.lte('elevation_gain_m', filters.elevation_max);
+        if (filters.elevation_max !== undefined) {
+          routesQuery = routesQuery.lte('elevation_gain_m', filters.elevation_max);
         }
         
         if (filters.difficulty) {
-          routesQuery.eq('difficulty', filters.difficulty);
+          routesQuery = routesQuery.eq('difficulty', filters.difficulty);
         }
         
         if (filters.route_type) {
-          routesQuery.eq('type', filters.route_type);
+          routesQuery = routesQuery.eq('type', filters.route_type);
         }
       }
       
@@ -240,19 +239,17 @@ export const routeService = {
         return false;
       }
 
-      // Since we don't have a route_likes table in the schema,
-      // we'll use the RPC function if it exists or fall back to
-      // directly updating the likes_count on the route
-      
+      // First try to use RPC function (if it exists)
       try {
-        // Try to use RPC function first (if it exists)
+        // Note: Using 'any' here to avoid the excessive type instantiation error
+        // The actual parameter is just { route_id: string }
         await supabase.rpc('increment_route_likes', { route_id: routeId } as any);
         toast.success('Você curtiu esta rota');
         return true;
       } catch (rpcError) {
         console.log('RPC não disponível ou falhou, tentando atualização direta:', rpcError);
         
-        // First check if the likes_count column exists by examining the schema
+        // Fallback approach - fetch the route first
         const { data: routeData, error: routeError } = await supabase
           .from('routes_data')
           .select('*')
@@ -263,19 +260,18 @@ export const routeService = {
           console.error('Error fetching route:', routeError);
           return false;
         }
-        
-        // Check if the likes_count property exists in the returned data
-        // If not, we can't update it directly
-        if ('likes_count' in routeData) {
-          const currentLikes = routeData?.likes_count || 0;
+
+        // Check if the likes_count column exists by checking if it's in the returned data
+        // Use type assertion for updating - we know this might fail if the column doesn't exist
+        if (routeData && 'likes_count' in routeData) {
+          const currentLikes = (routeData as any).likes_count || 0;
           
-          // Use a type assertion to add the non-standard field
           const { error: updateError } = await supabase
             .from('routes_data')
             .update({ 
               // @ts-ignore - Ignoring type error since the column might exist at runtime
               likes_count: currentLikes + 1 
-            })
+            } as any)
             .eq('id', routeId);
           
           if (updateError) {
@@ -294,7 +290,7 @@ export const routeService = {
         }
       }
     } catch (error) {
-      console.error('Erro ao curtir/descurtir rota:', error);
+      console.error('Erro ao curtir rota:', error);
       toast.error('Não foi possível processar sua ação');
       return false;
     }
