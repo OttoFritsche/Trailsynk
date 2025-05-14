@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
+import RequestPasswordReset from "./pages/RequestPasswordReset";
+import ResetPassword from "./pages/ResetPassword";
 import AppHome from "./pages/AppHome";
 import Profile from "./pages/Profile";
 import CompleteProfile from "./pages/CompleteProfile";
@@ -62,6 +65,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/request-reset" element={<RequestPasswordReset />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/admin" element={<Admin />} />
             

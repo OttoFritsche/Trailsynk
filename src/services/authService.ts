@@ -132,3 +132,37 @@ export const updateUserProfile = async (updates: UserMetadata) => {
     return { success: false, error };
   }
 };
+
+export const requestPasswordReset = async (email: string, redirectTo?: string) => {
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectTo || `${window.location.origin}/auth/reset-password`
+    });
+
+    if (error) throw error;
+    
+    toast.success('Link de recuperação enviado para seu email');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Password reset request error:', error);
+    toast.error(error.message || 'Erro ao solicitar recuperação de senha');
+    return { success: false, error };
+  }
+};
+
+export const resetPassword = async (newPassword: string) => {
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) throw error;
+    
+    toast.success('Senha atualizada com sucesso');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Password reset error:', error);
+    toast.error(error.message || 'Erro ao redefinir senha');
+    return { success: false, error };
+  }
+};

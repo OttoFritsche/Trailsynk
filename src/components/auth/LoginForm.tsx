@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { Mail, KeyRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Schema for login form validation
 const loginSchema = z.object({
@@ -131,6 +132,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleView }) => {
               </FormItem>
             )}
           />
+          
+          <div className="flex justify-end">
+            <Link 
+              to="/auth/request-reset" 
+              className="text-sm text-primary hover:text-primary-dark hover:underline transition-colors duration-200"
+            >
+              Esqueceu sua senha?
+            </Link>
+          </div>
           
           <Button 
             type="submit" 
