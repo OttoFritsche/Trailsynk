@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import SocialAuthButtons from '@/components/auth/SocialAuthButtons';
+import NavLogo from '@/components/navigation/NavLogo';
 
 type AuthView = 'login' | 'register';
 
@@ -67,17 +68,19 @@ const Auth: React.FC = () => {
       
       <div className="flex min-h-screen bg-gray-50">
         {/* Left section with app branding */}
-        <div className="hidden w-1/2 bg-primary/10 lg:flex flex-col justify-center items-center">
-          <div className="p-8 max-w-md text-center">
-            <img 
-              src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" 
-              alt="TrailSynk Logo" 
-              className="h-32 mx-auto mb-6" 
-            />
-            <h2 className="text-3xl font-bold text-secondary mb-4">
+        <div className="hidden lg:block lg:w-1/2 relative">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/50 z-10"></div>
+          <img 
+            src="/public/images/cycling-mountain.jpg" 
+            alt="Ciclista em montanha" 
+            className="absolute inset-0 w-full h-full object-cover" 
+          />
+          <div className="relative z-20 h-full flex flex-col justify-center items-center p-8">
+            <NavLogo className="text-white mb-8" />
+            <h2 className="text-3xl font-bold text-white mb-4 text-center">
               Seu Assessor Ciclista Inteligente
             </h2>
-            <p className="text-lg text-secondary/80">
+            <p className="text-lg text-white/90 text-center max-w-md">
               Encontre rotas seguras, obtenha insights de performance e conecte-se com outros ciclistas.
             </p>
           </div>
@@ -85,31 +88,29 @@ const Auth: React.FC = () => {
 
         {/* Right section with auth forms */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <div className="flex flex-col items-center mb-4 lg:hidden">
-                <img 
-                  src="/lovable-uploads/c6ac0b91-7542-4299-8422-3007983a958b.png" 
-                  alt="TrailSynk Logo" 
-                  className="h-20 mb-2" 
-                />
+          <Card className="w-full max-w-md shadow-xl bg-white border-0">
+            <CardHeader className="pb-2 pt-6 px-8">
+              <div className="flex flex-col items-center mb-6 lg:hidden">
+                <NavLogo className="h-20 mb-2" />
               </div>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-2xl font-bold">
                 {view === 'login' ? 'Bem-vindo de volta!' : 'Crie sua conta'}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-500">
                 {view === 'login' 
                   ? 'Faça login na sua conta do TrailSynk' 
                   : 'Registre-se para começar a explorar rotas'}
               </CardDescription>
             </CardHeader>
             
-            <CardContent>
-              {view === 'login' ? (
-                <LoginForm onToggleView={toggleView} />
-              ) : (
-                <RegisterForm onToggleView={toggleView} onSuccessfulRegister={handleSuccessfulRegister} />
-              )}
+            <CardContent className="px-8 pb-8">
+              <div className="transition-all duration-300 ease-in-out">
+                {view === 'login' ? (
+                  <LoginForm onToggleView={toggleView} />
+                ) : (
+                  <RegisterForm onToggleView={toggleView} onSuccessfulRegister={handleSuccessfulRegister} />
+                )}
+              </div>
               
               <SocialAuthButtons loading={loading} />
             </CardContent>
