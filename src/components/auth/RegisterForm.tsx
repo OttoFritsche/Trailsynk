@@ -266,7 +266,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleView, onSuccessfulR
         <p>
           Já tem uma conta?{" "}
           <button 
-            onClick={onToggleView} 
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleView();
+            }} 
             className="text-primary font-medium hover:text-primary-dark hover:underline transition-colors duration-200"
           >
             Faça Login

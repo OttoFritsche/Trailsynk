@@ -146,7 +146,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleView }) => {
         <p>
           Não tem conta?{" "}
           <button 
-            onClick={onToggleView} 
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleView();
+            }} 
             className="text-primary font-medium hover:text-primary-dark hover:underline transition-colors duration-200"
           >
             Registre-se
