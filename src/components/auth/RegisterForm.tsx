@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { User, Mail, Phone, KeyRound } from 'lucide-react';
 
 // Schema for form validation with simplified rules
 const registerSchema = z.object({
@@ -32,6 +33,8 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleView, onSuccessfulRegister }) => {
   const { signUp } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -79,105 +82,171 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleView, onSuccessfulR
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <>
       <form onSubmit={form.handleSubmit(handleRegister)} className="space-y-4">
         <div className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="fullName">Nome completo</Label>
-            <Input
-              id="fullName"
-              placeholder="Seu nome completo"
-              autoComplete="name"
-              disabled={loading}
-              {...form.register("fullName")}
-            />
+            <Label htmlFor="fullName" className="text-sm font-medium">Nome completo</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="fullName"
+                placeholder="Seu nome completo"
+                autoComplete="name"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("fullName")}
+              />
+            </div>
             {form.formState.errors.fullName && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.fullName.message}
               </p>
             )}
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="username">Nome de usuário</Label>
-            <Input
-              id="username"
-              placeholder="seu_usuario"
-              autoComplete="username"
-              disabled={loading}
-              {...form.register("username")}
-            />
+            <Label htmlFor="username" className="text-sm font-medium">Nome de usuário</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="username"
+                placeholder="seu_usuario"
+                autoComplete="username"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("username")}
+              />
+            </div>
             {form.formState.errors.username && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.username.message}
               </p>
             )}
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              autoComplete="email"
-              disabled={loading}
-              {...form.register("email")}
-            />
+            <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                autoComplete="email"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("email")}
+              />
+            </div>
             {form.formState.errors.email && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.email.message}
               </p>
             )}
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="phone">Telefone (opcional)</Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="(99) 99999-9999"
-              autoComplete="tel"
-              disabled={loading}
-              {...form.register("phone")}
-            />
+            <Label htmlFor="phone" className="text-sm font-medium">Telefone (opcional)</Label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="(99) 99999-9999"
+                autoComplete="tel"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("phone")}
+              />
+            </div>
             {form.formState.errors.phone && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.phone.message}
               </p>
             )}
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Crie uma senha forte"
-              autoComplete="new-password"
-              disabled={loading}
-              {...form.register("password")}
-            />
+            <Label htmlFor="password" className="text-sm font-medium">Senha</Label>
+            <div className="relative">
+              <KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Crie uma senha forte"
+                autoComplete="new-password"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("password")}
+              />
+              <button 
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
+              </button>
+            </div>
             {form.formState.errors.password && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.password.message}
               </p>
             )}
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="confirmPassword">Confirmar senha</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirme sua senha"
-              autoComplete="new-password"
-              disabled={loading}
-              {...form.register("confirmPassword")}
-            />
+            <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirmar senha</Label>
+            <div className="relative">
+              <KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirme sua senha"
+                autoComplete="new-password"
+                disabled={loading}
+                className="pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                {...form.register("confirmPassword")}
+              />
+              <button 
+                type="button"
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showConfirmPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
+              </button>
+            </div>
             {form.formState.errors.confirmPassword && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-xs font-medium text-red-500">
                 {form.formState.errors.confirmPassword.message}
               </p>
             )}
@@ -186,17 +255,20 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleView, onSuccessfulR
         
         <Button 
           type="submit" 
-          className="w-full" 
+          className="w-full h-11 font-medium shadow-md hover:shadow-lg transition-all duration-300 mt-2"
           disabled={loading}
         >
           {loading ? 'Processando...' : 'Cadastrar'}
         </Button>
       </form>
       
-      <div className="text-sm text-center w-full mt-4">
+      <div className="text-sm text-center w-full mt-5">
         <p>
           Já tem uma conta?{" "}
-          <button onClick={onToggleView} className="text-primary hover:underline">
+          <button 
+            onClick={onToggleView} 
+            className="text-primary font-medium hover:text-primary-dark hover:underline transition-colors duration-200"
+          >
             Faça Login
           </button>
         </p>

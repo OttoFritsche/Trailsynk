@@ -58,6 +58,27 @@
   }
 }
 
+/* Auth form specific styles */
+.auth-input-icon {
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4;
+}
+
+.auth-input {
+  @apply pl-10 h-11 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+}
+
+.auth-form-error {
+  @apply text-xs font-medium text-red-500 mt-1;
+}
+
+.auth-toggle-button {
+  @apply text-primary font-medium hover:text-primary-dark hover:underline transition-colors duration-200;
+}
+
+.auth-submit-button {
+  @apply w-full h-11 font-medium shadow-md hover:shadow-lg transition-all duration-300;
+}
+
 /* Section spacing */
 section {
   @apply relative overflow-hidden;
@@ -136,4 +157,33 @@ section {
 
 .glass-dark {
   @apply bg-black/10 backdrop-blur-md border border-black/20;
+}
+
+/* Auth card styles */
+.auth-card {
+  @apply shadow-xl border-0 bg-white;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Auth transition effects */
+.auth-fade-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.auth-fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.auth-fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.auth-fade-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
 }
