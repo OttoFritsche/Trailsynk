@@ -39,7 +39,7 @@ const Auth: React.FC = () => {
     const newView = view === 'login' ? 'register' : 'login';
     setView(newView);
     
-    // Update URL without refreshing the page
+    // Atualizar a URL sem redirecionar a página inteira
     const newMode = newView === 'login' ? 'login' : 'signup';
     const url = new URL(window.location.href);
     url.searchParams.set('mode', newMode);
