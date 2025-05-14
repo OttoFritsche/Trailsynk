@@ -75,7 +75,7 @@ const Auth: React.FC = () => {
         {/* Content area */}
         <div className="relative z-10 w-full max-w-md px-4 py-8">
           {/* Logo above the form (only visible on smaller screens) */}
-          <div className="flex flex-col items-center mb-6">
+          <div className="flex flex-col items-center mb-1">
             <img alt="TrailSynk Logo" src="/lovable-uploads/6273448b-6711-4015-bab3-731ece8ac240.png" className="h-24 mb-4" />
             
             
