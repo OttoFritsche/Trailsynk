@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { type DayProps } from 'react-day-picker';
 
 interface Event {
   id: string;
@@ -50,7 +51,7 @@ const EventCalendarView: React.FC<EventCalendarViewProps> = ({
   };
   
   // Custom day render to show events
-  const renderDay = (props: React.ComponentProps<typeof Calendar.Day>) => {
+  const renderDay = (props: DayProps) => {
     // Cast date to a proper Date object if it's not already
     const date = new Date(props.date);
     const hasEvents = hasEventsOnDate(date);

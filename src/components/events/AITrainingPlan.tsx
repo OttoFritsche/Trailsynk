@@ -15,11 +15,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface TrainingPlanProps {
-  eventId: string;
   eventName: string;
-  eventDate: string;
-  eventType: string;
-  eventDistance: number;
+  distance: number;
+  elevation: number;
+  eventId?: string;
+  eventDate?: string;
+  eventType?: string;
 }
 
 interface TrainingDay {
@@ -88,11 +89,12 @@ const generateMockPlan = (days: number, eventType: string): TrainingDay[] => {
 };
 
 const AITrainingPlan: React.FC<TrainingPlanProps> = ({
-  eventId,
   eventName,
-  eventDate,
-  eventType,
-  eventDistance
+  distance,
+  elevation,
+  eventId = '',
+  eventDate = 'Em breve',
+  eventType = 'Grupo'
 }) => {
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<TrainingDay[] | null>(null);
@@ -144,7 +146,7 @@ const AITrainingPlan: React.FC<TrainingPlanProps> = ({
             </div>
             <div className="flex items-center">
               <Clock className="h-4 w-4 text-gray-500 mr-2" />
-              <span>Distância: <strong>{eventDistance} km</strong></span>
+              <span>Distância: <strong>{distance} km</strong></span>
             </div>
             <div className="flex items-center">
               <TrendingUp className="h-4 w-4 text-gray-500 mr-2" />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Calendar, Clock, MapPin, Users, PlusCircle, ChevronRight } from 'lucide-react';
@@ -108,6 +107,19 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
+const getEventTypeBadge = (type: string) => {
+  switch (type) {
+    case 'Grupo':
+      return <Badge variant="outline" className="border-blue-500 text-blue-700">Grupo</Badge>;
+    case 'Competição':
+      return <Badge variant="outline" className="border-red-500 text-red-700">Competição</Badge>;
+    case 'Aberto':
+      return <Badge variant="outline" className="border-green-500 text-green-700">Aberto</Badge>;
+    default:
+      return <Badge variant="outline">{type}</Badge>;
+  }
+};
+
 interface EventCardProps {
   id: string;
   name: string;
@@ -139,19 +151,6 @@ const EventCard: React.FC<EventCardProps> = ({
   image,
   loading = false 
 }) => {
-  const getEventTypeBadge = (type: string) => {
-    switch (type) {
-      case 'Grupo':
-        return <Badge variant="outline" className="border-blue-500 text-blue-700">Grupo</Badge>;
-      case 'Competição':
-        return <Badge variant="outline" className="border-red-500 text-red-700">Competição</Badge>;
-      case 'Aberto':
-        return <Badge variant="outline" className="border-green-500 text-green-700">Aberto</Badge>;
-      default:
-        return <Badge variant="outline">{type}</Badge>;
-    }
-  };
-
   if (loading) {
     return (
       <Card className="overflow-hidden group">
