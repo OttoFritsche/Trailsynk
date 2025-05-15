@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import RouteMapControls from './RouteMapControls';
@@ -20,6 +19,7 @@ interface RouteMapProps {
   isEditing?: boolean;
   onPointAdded?: (point: RoutePoint) => void;
   onPointsChanged?: (points: RoutePoint[]) => void;
+  mapStyle?: 'streets' | 'outdoors' | 'satellite';
 }
 
 const RouteMap: React.FC<RouteMapProps> = ({ 
@@ -27,7 +27,8 @@ const RouteMap: React.FC<RouteMapProps> = ({
   className, 
   isEditing = false,
   onPointAdded,
-  onPointsChanged
+  onPointsChanged,
+  mapStyle = 'outdoors'
 }) => {
   const [zoom, setZoom] = useState(13);
   const maxZoom = 18;
@@ -235,6 +236,7 @@ const RouteMap: React.FC<RouteMapProps> = ({
             zoom={zoom}
             isEditing={isEditing}
             points={isEditing ? points.map(p => [p.lat, p.lng]) : undefined}
+            mapStyle={mapStyle}
           />
           
           <RouteMapControls 
