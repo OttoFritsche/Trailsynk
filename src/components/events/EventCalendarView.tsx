@@ -70,7 +70,7 @@ const EventCalendarView: React.FC<EventCalendarViewProps> = ({
     return (
       <div className="relative w-full h-full">
         <div className={`flex h-7 w-7 items-center justify-center rounded-full ${
-          props.selected ? 'bg-primary text-primary-foreground' : hasEvents ? 'bg-primary/10' : ''
+          props.isSelected ? 'bg-primary text-primary-foreground' : hasEvents ? 'bg-primary/10' : ''
         }`}>
           {date.getDate()}
         </div>

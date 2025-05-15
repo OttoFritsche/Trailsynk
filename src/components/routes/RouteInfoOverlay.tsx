@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bike, PlusCircle, Mountain, Road } from 'lucide-react';
+import { Bike, PlusCircle, Mountain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface RouteInfoOverlayProps {
@@ -38,7 +38,7 @@ const RouteInfoOverlay: React.FC<RouteInfoOverlayProps> = ({
       case 'mountain':
         return <Mountain size={16} className="text-green-500" />;
       case 'road':
-        return <Road size={16} className="text-blue-500" />;
+        return <Bike size={16} className="text-blue-500" />;
       default:
         return <Bike size={16} className="text-gray-500" />;
     }
