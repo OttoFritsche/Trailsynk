@@ -50,13 +50,15 @@ const EventCalendarView: React.FC<EventCalendarViewProps> = ({
   };
   
   // Custom day render to show events
-  const renderDay = (day: Date, isSelected: boolean): React.ReactNode => {
-    const hasEvents = hasEventsOnDate(day);
+  const renderDay = (props: React.ComponentProps<typeof Calendar.Day>) => {
+    // Cast date to a proper Date object if it's not already
+    const date = new Date(props.date);
+    const hasEvents = hasEventsOnDate(date);
     
     // Count events by type
     const eventsByType: Record<string, number> = {};
     if (hasEvents) {
-      const dateStr = day.toDateString();
+      const dateStr = date.toDateString();
       events.forEach(event => {
         if (new Date(event.date).toDateString() === dateStr) {
           eventsByType[event.type] = (eventsByType[event.type] || 0) + 1;
@@ -67,9 +69,9 @@ const EventCalendarView: React.FC<EventCalendarViewProps> = ({
     return (
       <div className="relative w-full h-full">
         <div className={`flex h-7 w-7 items-center justify-center rounded-full ${
-          isSelected ? 'bg-primary text-primary-foreground' : hasEvents ? 'bg-primary/10' : ''
+          props.selected ? 'bg-primary text-primary-foreground' : hasEvents ? 'bg-primary/10' : ''
         }`}>
-          {day.getDate()}
+          {date.getDate()}
         </div>
         
         {hasEvents && (
@@ -112,7 +114,7 @@ const EventCalendarView: React.FC<EventCalendarViewProps> = ({
           onSelect={handleDateSelect}
           className="border-b"
           components={{
-            Day: ({ day, isSelected }) => renderDay(day, isSelected)
+            Day: renderDay
           }}
         />
         

@@ -2,6 +2,7 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface RouteMapMarkerProps {
   active?: boolean;
@@ -9,6 +10,7 @@ interface RouteMapMarkerProps {
   variant?: 'start' | 'end' | 'waypoint' | 'selected';
   className?: string;
   onClick?: () => void;
+  tooltip?: string;
 }
 
 const RouteMapMarker: React.FC<RouteMapMarkerProps> = ({
@@ -16,7 +18,8 @@ const RouteMapMarker: React.FC<RouteMapMarkerProps> = ({
   variant = 'waypoint',
   children,
   className,
-  onClick
+  onClick,
+  tooltip
 }) => {
   // Define color schemes based on marker types
   const colorScheme = {
@@ -44,24 +47,41 @@ const RouteMapMarker: React.FC<RouteMapMarkerProps> = ({
   
   const colors = colorScheme[variant];
   
+  const markerElement = (
+    <div 
+      className={cn(
+        "relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 cursor-pointer",
+        colors.base,
+        colors.shadow,
+        active ? 'scale-110' : 'scale-100',
+        active ? 'ring-4' : 'ring-2',
+        colors.ring,
+        "before:content-[''] before:absolute before:left-1/2 before:-bottom-2 before:-translate-x-1/2 before:w-4 before:h-4 before:rotate-45 before:bg-inherit",
+        "hover:scale-110",
+        className
+      )}
+      onClick={onClick}
+    >
+      <MapPin className="h-5 w-5 text-white" />
+    </div>
+  );
+  
   return (
     <div className="relative group">
-      <div 
-        className={cn(
-          "relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 cursor-pointer",
-          colors.base,
-          colors.shadow,
-          active ? 'scale-110' : 'scale-100',
-          active ? 'ring-4' : 'ring-2',
-          colors.ring,
-          "before:content-[''] before:absolute before:left-1/2 before:-bottom-2 before:-translate-x-1/2 before:w-4 before:h-4 before:rotate-45 before:bg-inherit",
-          "hover:scale-110",
-          className
-        )}
-        onClick={onClick}
-      >
-        <MapPin className="h-5 w-5 text-white" />
-      </div>
+      {tooltip ? (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {markerElement}
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
+        markerElement
+      )}
       
       {children && (
         <div className={cn(

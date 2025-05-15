@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Map, Save, X, ArrowLeft, Mountains, Flag } from 'lucide-react';
+import { MapPin, Map, Save, X, ArrowLeft, Mountain, Flag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -288,7 +289,7 @@ const NewRoute = () => {
             {/* Quick Tutorial Box */}
             {showTutorial && (!isMobile || activeTab === 'map') && (
               <Alert className="mt-2">
-                <Mountains className="h-4 w-4" />
+                <Mountain className="h-4 w-4" />
                 <AlertDescription>
                   <p className="text-sm">
                     <strong>Dicas para criar sua rota:</strong>
