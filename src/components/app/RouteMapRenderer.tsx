@@ -2,19 +2,24 @@
 import React, { useEffect, useRef } from 'react';
 import { MapIcon } from 'lucide-react';
 import { config } from '@/config/env';
+import RouteMapMarker from '../routes/RouteMapMarker';
 
 interface RouteMapRendererProps {
   routeId?: string;
   zoom: number;
   isEditing?: boolean;
   points?: Array<[number, number]>;
+  showElevation?: boolean;
+  mapStyle?: 'streets' | 'outdoors' | 'satellite';
 }
 
 const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({ 
   routeId, 
   zoom, 
   isEditing = false,
-  points = []
+  points = [],
+  showElevation = true,
+  mapStyle = 'outdoors'
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   
@@ -40,10 +45,13 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({
     mapBackground.style.opacity = '1';
     mapBackground.style.borderRadius = 'inherit';
     
-    // Use different style based on zoom level
+    // Use different style based on zoom level and selected style
     const zoomParam = zoom.toString();
     const mapboxToken = config.mapboxToken || 'pk.placeholder';
-    mapBackground.style.backgroundImage = `url("https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/0,0,${zoomParam},0,0/800x500?access_token=${mapboxToken}")`;
+    const mapboxStyle = mapStyle === 'satellite' ? 'satellite-v9' : 
+                         mapStyle === 'streets' ? 'streets-v11' : 'outdoors-v11';
+    
+    mapBackground.style.backgroundImage = `url("https://api.mapbox.com/styles/v1/mapbox/${mapboxStyle}/static/0,0,${zoomParam},0,0/800x500?access_token=${mapboxToken}")`;
     
     // Add route path with SVG
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -54,35 +62,57 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({
     svg.style.left = '0';
     svg.style.pointerEvents = 'none';
     
-    // Path style changes based on selected route or editing mode
-    if (isEditing) {
-      // Show editing mode interface
-      const textOverlay = document.createElement('div');
-      textOverlay.style.position = 'absolute';
-      textOverlay.style.top = '10px';
-      textOverlay.style.left = '10px';
-      textOverlay.style.background = 'rgba(255,255,255,0.8)';
-      textOverlay.style.padding = '8px 12px';
-      textOverlay.style.borderRadius = '4px';
-      textOverlay.style.fontSize = '14px';
-      textOverlay.style.fontWeight = 'bold';
-      textOverlay.style.color = '#2ECC71';
-      textOverlay.textContent = 'Modo Edição';
-      mapContainer.appendChild(textOverlay);
+    // Route drawing logic
+    if (isEditing && points.length > 0) {
+      // Create path for route
+      if (points.length > 1) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        
+        // Convert points to SVG path
+        let pathData = `M${points[0][0]},${points[0][1]}`;
+        for (let i = 1; i < points.length; i++) {
+          pathData += ` L${points[i][0]},${points[i][1]}`;
+        }
+        
+        path.setAttribute('d', pathData);
+        path.setAttribute('stroke', '#2ECC71');
+        path.setAttribute('stroke-width', '3');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        path.setAttribute('stroke-opacity', '0.8');
+        svg.appendChild(path);
+      }
       
-      // We would add editing-specific elements here
-      // For now, just add a visual cue that the map is in editing mode
-      const editingOverlay = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      editingOverlay.setAttribute('width', '100%');
-      editingOverlay.setAttribute('height', '100%');
-      editingOverlay.setAttribute('fill', 'none');
-      editingOverlay.setAttribute('stroke', '#2ECC71');
-      editingOverlay.setAttribute('stroke-width', '6');
-      editingOverlay.setAttribute('stroke-opacity', '0.4');
-      svg.appendChild(editingOverlay);
-      
+      // Add markers for each point
+      points.forEach((point, index) => {
+        const isStart = index === 0;
+        const isEnd = index === points.length - 1;
+        const isWaypoint = !isStart && !isEnd;
+        
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        marker.setAttribute('cx', point[0].toString());
+        marker.setAttribute('cy', point[1].toString());
+        marker.setAttribute('r', '5');
+        
+        if (isStart) {
+          marker.setAttribute('fill', '#2ECC71');
+          marker.setAttribute('stroke', 'white');
+          marker.setAttribute('stroke-width', '2');
+        } else if (isEnd && points.length > 1) {
+          marker.setAttribute('fill', '#E74C3C');
+          marker.setAttribute('stroke', 'white');
+          marker.setAttribute('stroke-width', '2');
+        } else {
+          marker.setAttribute('fill', '#3498DB');
+          marker.setAttribute('stroke', 'white');
+          marker.setAttribute('stroke-width', '1.5');
+        }
+        
+        svg.appendChild(marker);
+      });
     } else if (routeId) {
-      // Create a more complex path if route is selected
+      // Create a more complex path if route is selected - from existing logic
       const routeType = routeId === '2' || routeId === '5' ? 'mountain' : 'road';
       const pathColor = routeType === 'mountain' ? '#2ECC71' : '#3498DB';
       
@@ -165,13 +195,13 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({
         mapContainer.removeChild(mapContainer.firstChild);
       }
     };
-  }, [routeId, zoom, isEditing, points]);
+  }, [routeId, zoom, isEditing, points, mapStyle]);
 
   return (
     <div 
       ref={mapRef} 
       className="relative w-full h-64 bg-gray-100 rounded-md"
-      style={{ minHeight: '250px', cursor: isEditing ? 'crosshair' : 'default' }}
+      style={{ minHeight: '350px', cursor: isEditing ? 'crosshair' : 'default' }}
     >
       <div className="absolute inset-0 flex items-center justify-center text-gray-400 z-0">
         <MapIcon className="h-8 w-8 opacity-20 mr-2" />
