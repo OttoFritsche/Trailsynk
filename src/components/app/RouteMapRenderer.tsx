@@ -200,8 +200,12 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({
   return (
     <div 
       ref={mapRef} 
-      className="relative w-full h-64 bg-gray-100 rounded-md"
-      style={{ minHeight: '350px', cursor: isEditing ? 'crosshair' : 'default' }}
+      className="relative w-full bg-gray-100 rounded-md"
+      style={{ 
+        minHeight: '500px', 
+        height: '70vh',
+        cursor: isEditing ? 'crosshair' : 'default'
+      }}
     >
       <div className="absolute inset-0 flex items-center justify-center text-gray-400 z-0">
         <MapIcon className="h-8 w-8 opacity-20 mr-2" />
@@ -212,3 +216,4 @@ const RouteMapRenderer: React.FC<RouteMapRendererProps> = ({
 };
 
 export default RouteMapRenderer;
+

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import RouteMapControls from './RouteMapControls';
@@ -227,8 +228,11 @@ const RouteMap: React.FC<RouteMapProps> = ({
     <Card className={`overflow-hidden ${className || ''}`}>
       <CardContent className="p-0">
         <div 
-          className="relative w-full h-64" 
-          style={{ minHeight: '350px' }}
+          className="relative w-full" 
+          style={{ 
+            minHeight: '500px',
+            height: '70vh'
+          }}
           onClick={handleMapClick}
         >
           <RouteMapRenderer 
@@ -284,3 +288,4 @@ const RouteMap: React.FC<RouteMapProps> = ({
 };
 
 export default RouteMap;
+
